@@ -1,0 +1,19 @@
+export const mergeAverages = (obj1: any, obj2: any, prevCount: number) => {
+  for (const [key, val] of Object.entries(obj2)) {
+    if (typeof val === "number") {
+      obj1[key] = (obj1[key] * prevCount + val) / (prevCount + 1);
+    } else if (typeof val === "object") {
+      mergeAverages(obj1[key], val, prevCount);
+    }
+  }
+};
+
+export const mergeTotals = (obj1: any, obj2: any) => {
+  for (const [key, val] of Object.entries(obj2)) {
+    if (typeof val === "number") {
+      obj1[key] = obj1[key] + val;
+    } else if (typeof val === "object") {
+      mergeTotals(obj1[key], val);
+    }
+  }
+};
