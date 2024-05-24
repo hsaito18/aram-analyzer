@@ -3,14 +3,12 @@ import "./profile.css";
 import ChampionTable from "../tables/ChampionTable";
 
 export default function Profile({
-  username,
-  puuid,
+  gameName,
+  tagLine,
 }: {
-  username: string;
-  puuid: string;
+  gameName: string;
+  tagLine: string;
 }) {
-  const gameName = "hsaito";
-  const tagLine = "NA1";
   const userData = { gameName, tagLine };
 
   function registerPlayer() {
@@ -29,7 +27,10 @@ export default function Profile({
     <>
       <div id="main">
         <div id="top-bar">
-          <h1 id="username"> {username} </h1>
+          <h1 id="username">
+            {" "}
+            {gameName}#{tagLine}{" "}
+          </h1>
           <Button
             id="register-button"
             variant="contained"

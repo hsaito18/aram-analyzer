@@ -6,13 +6,6 @@ import { createRoot } from "react-dom/client";
 // import Home from "./components/home/Home";
 import Profile from "./components/profile/Profile";
 
-const root = createRoot(document.body);
+const root = createRoot(document.getElementById("root"));
 // root.render(<Home />);
-root.render(
-  <Profile
-    username={"hsaito"}
-    puuid={
-      "XGOlma-Yb0Rs6b-7tH1cipe5LVujYmzoydUJmtMX182j7TALFlJYpx3m118LAFtROjnyGiUdLuazcg"
-    }
-  />
-);
+root.render(<Profile gameName={"CAPTAINOBVOIUS"} tagLine={"NA1"} />);
