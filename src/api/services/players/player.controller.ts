@@ -115,6 +115,10 @@ function getBlankPlayerStats(): PlayerStats {
       totalGold: 0,
       totalCCTime: 0,
       totalHealing: 0,
+      totalShielding: 0,
+      totalObjectiveDamage: 0,
+      totalDamageTaken: 0,
+      totalSelfMitigated: 0,
       totalKills: 0,
       totalDeaths: 0,
       totalAssists: 0,
@@ -124,6 +128,10 @@ function getBlankPlayerStats(): PlayerStats {
       goldPerMinute: 0,
       ccPerMinute: 0,
       healingPerMinute: 0,
+      shieldingPerMinute: 0,
+      objectiveDamagePerMinute: 0,
+      damageTakenPerMinute: 0,
+      selfMitigatedPerMinute: 0,
       killsPerMinute: 0,
       deathsPerMinute: 0,
       assistsPerMinute: 0,
@@ -151,6 +159,7 @@ export const createByUsername = async (
     analyzedMatches: [],
     champStats: {},
     playerStats: getBlankPlayerStats(),
+    profileIcon: 0,
   };
   players[puuid] = user;
   savePlayers();
@@ -251,6 +260,10 @@ function getDetailedChampStats(
     goldPerMinute: participant.goldEarned / minutes,
     ccPerMinute: participant.timeCCingOthers / minutes,
     healingPerMinute: participant.totalHeal / minutes,
+    shieldingPerMinute: participant.totalDamageShieldedOnTeammates / minutes,
+    objectiveDamagePerMinute: participant.damageDealtToObjectives / minutes,
+    damageTakenPerMinute: participant.totalDamageTaken / minutes,
+    selfMitigatedPerMinute: participant.damageSelfMitigated / minutes,
     killsPerMinute: participant.kills / minutes,
     deathsPerMinute: participant.deaths / minutes,
     assistsPerMinute: participant.assists / minutes,
@@ -272,10 +285,35 @@ function getMatchTotalStats(participant: Participant): TotalChampStats {
     totalGold: participant.goldEarned,
     totalCCTime: participant.timeCCingOthers,
     totalHealing: participant.totalHeal,
+    totalShielding: participant.totalDamageShieldedOnTeammates,
+    totalObjectiveDamage: participant.damageDealtToObjectives,
+    totalDamageTaken: participant.totalDamageTaken,
+    totalSelfMitigated: participant.damageSelfMitigated,
     totalKills: participant.kills,
     totalDeaths: participant.deaths,
     totalAssists: participant.assists,
   };
+}
+
+async function updateProfileIcon(player: Player): Promise<void> {
+  if (player.matches.length == 0) return;
+  const latestMatch = player.matches[0];
+  const matchData = await getMatchData(latestMatch);
+  if (!matchData) {
+    player.matches.shift();
+    updateProfileIcon(player);
+    return;
+  }
+  const participant = matchData.info.participants.find(
+    (participant: any) => participant.puuid === player.puuid
+  );
+  if (!participant) {
+    player.matches.shift();
+    updateProfileIcon(player);
+    return;
+  }
+  players[player.puuid].profileIcon = participant.profileIcon;
+  savePlayers();
 }
 
 export const analyzePlayerMatches = async (
@@ -283,6 +321,7 @@ export const analyzePlayerMatches = async (
 ): Promise<boolean> => {
   const player = await findByUsername(userData);
   if (!player) return false;
+  await updateProfileIcon(player);
   const champStats: ChampStats = player.champStats;
   const playerStats: PlayerStats = player.playerStats;
   for (const match of player.matches) {
@@ -353,6 +392,14 @@ export const getPlayerChampionStats = async (
   const player = await findByUsername(userData);
   if (!player) return null;
   return player.champStats;
+};
+
+export const getPlayerProfileIcon = async (
+  userData: UserData
+): Promise<number> => {
+  const player = await findByUsername(userData);
+  if (!player) return 0;
+  return player.profileIcon;
 };
 
 export const resetChampionStats = async (

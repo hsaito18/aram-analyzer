@@ -4,6 +4,7 @@ import {
   saveARAMMatches,
   analyzePlayerMatches,
   getPlayerChampionStats,
+  getPlayerProfileIcon,
 } from "./players/player.controller";
 
 ipcMain.handle("register-player", (event, userData) => {
@@ -26,6 +27,13 @@ function champDataArrayizer(obj: any) {
 ipcMain.handle("get-champ-stats", async (event, userData) => {
   const data = await getPlayerChampionStats(userData);
   const arrData = champDataArrayizer(data);
+  arrData.sort((a, b) => b.wins - a.wins);
   event.sender.send("champTableData", arrData);
   return arrData;
+});
+
+ipcMain.handle("get-profile-icon", async (event, userData) => {
+  console.log("getting profile icon for user", userData);
+  const icon = await getPlayerProfileIcon(userData);
+  return icon;
 });

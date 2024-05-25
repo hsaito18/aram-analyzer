@@ -8,4 +8,4 @@ import Profile from "./components/profile/Profile";
 
 const root = createRoot(document.getElementById("root"));
 // root.render(<Home />);
-root.render(<Profile gameName={"CAPTAINOBVOIUS"} tagLine={"NA1"} />);
+root.render(<Profile gameName={"hsaito"} tagLine={"NA1"} />);

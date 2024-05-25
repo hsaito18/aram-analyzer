@@ -4,14 +4,16 @@ export interface UserData {
 }
 
 export interface ChampStats {
-  [key: string]: {
-    wins: number;
-    losses: number;
-    winRate: number;
-    totalPlayed: number;
-    stats: DetailedChampStats;
-    totalStats: TotalChampStats;
-  };
+  [key: string]: SingleChampStats;
+}
+
+export interface SingleChampStats {
+  wins: number;
+  losses: number;
+  winRate: number;
+  totalPlayed: number;
+  stats: DetailedChampStats;
+  totalStats: TotalChampStats;
 }
 
 export interface DetailedChampStats {
@@ -19,6 +21,10 @@ export interface DetailedChampStats {
   goldPerMinute: number;
   ccPerMinute: number;
   healingPerMinute: number;
+  shieldingPerMinute: number;
+  objectiveDamagePerMinute: number;
+  damageTakenPerMinute: number;
+  selfMitigatedPerMinute: number;
   killsPerMinute: number;
   deathsPerMinute: number;
   assistsPerMinute: number;
@@ -37,6 +43,10 @@ export interface TotalChampStats {
   totalGold: number;
   totalCCTime: number;
   totalHealing: number;
+  totalShielding: number;
+  totalObjectiveDamage: number;
+  totalDamageTaken: number;
+  totalSelfMitigated: number;
   totalKills: number;
   totalDeaths: number;
   totalAssists: number;
@@ -56,6 +66,7 @@ export interface Player {
   analyzedMatches: string[];
   champStats: ChampStats;
   playerStats: PlayerStats;
+  profileIcon: number;
 }
 
 export interface Players {

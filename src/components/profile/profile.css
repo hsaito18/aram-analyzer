@@ -1,15 +1,3 @@
-#top-bar {
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #e0e0e0;
-  padding: 10px 0;
-  display: flex;
-  width: 450px;
-  justify-content: space-between;
-}
-
-#username {
-  background-color: pink;
-}
-
-#analyze-button {
+#main {
+  padding: 0px;
 }

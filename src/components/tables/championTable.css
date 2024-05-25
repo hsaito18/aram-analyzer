@@ -1,0 +1,12 @@
+#testHello {
+  background-color: red;
+  width: 25%;
+}
+
+#detailBoxContainer {
+  border-radius: 6px;
+  border: red 4px solid;
+  margin: -10px;
+  /* padding: 0px 12px 12px 12px; */
+  padding: 8px;
+}

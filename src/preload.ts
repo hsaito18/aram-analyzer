@@ -13,6 +13,8 @@ export const playerAPI = {
     ipcRenderer.on(channel, newFunc);
     return () => ipcRenderer.removeListener(channel, newFunc);
   },
+  getProfileIcon: (userData: UserData): Promise<number> =>
+    ipcRenderer.invoke("get-profile-icon", userData),
 };
 
 contextBridge.exposeInMainWorld("playerAPI", playerAPI);

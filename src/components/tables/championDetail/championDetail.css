@@ -1,0 +1,69 @@
+#champDetailMain {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr 2fr;
+  grid-template-areas: "picRow statsRow highlightsRow otherRow";
+  gap: 25px;
+}
+
+#picRow {
+  grid-area: picRow;
+  display: grid;
+  grid-template-rows: 1fr 250px 1fr;
+  grid-template-areas: "champTitle" "champPic" "picStatsRow";
+}
+
+#champTitle {
+  grid-area: champTitle;
+}
+
+#champPic {
+  grid-area: champPic;
+  border-radius: 50%;
+  height: 250px;
+  width: 250px;
+}
+
+#picStatsRow {
+  grid-area: picStatsRow;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#wlRow {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+#statsRow {
+  grid-area: statsRow;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.champStatsTable {
+  width: 100%;
+}
+
+.champStatsTable th:nth-child(1) {
+  width: 6rem;
+}
+
+.champStatsTable th:nth-child(2),
+.champStatsTable th:nth-child(3) {
+  width: 55px;
+}
+
+.champStatsTable tr {
+  height: 1rem;
+}
+
+.numberCell {
+  text-align: right;
+}
+
+#highlightsRow {
+  grid-area: highlightsRow;
+}
