@@ -81,3 +81,10 @@ export interface PlayerStats {
   stats: DetailedChampStats;
   totalStats: TotalChampStats;
 }
+
+export interface SimplePlayerStats {
+  wins: number;
+  losses: number;
+  winRate: number;
+  totalPlayed: number;
+}

@@ -1,15 +1,81 @@
 #top-bar {
-  background-color: orange;
   border-bottom: 1px solid #e0e0e0;
-  padding: 10px 0;
+  padding: 8px;
+  height: 10vh;
+}
+
+.topBarColumn {
+  float: left;
+  width: 33.33%;
+  height: 100%;
+}
+
+#top-bar:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#leftCol {
   display: flex;
-  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: space-between;
+  height: 100%;
+}
+
+#leftSide {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 450px;
+  height: 100%;
 }
 
 #username {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+#gameName {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+#tagLine {
+  font-size: 1.8rem;
+  opacity: 0.75;
 }
 
 #analyze-button {
-  height: 100px;
+  height: 50px;
+}
+
+#lastUpdatedBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#center {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+#rightCol {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+#rightSide {
+  width: 500px;
+}
+
+#stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }

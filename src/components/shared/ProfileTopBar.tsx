@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
-import useImage from "../../hooks/useImage";
+import { Home } from "@mui/icons-material";
+import { champRow } from "../tables/table.interface";
+import { SimplePlayerStats } from "../../api/services/players/player.interface";
 import "./profileTopBar.css";
 
 export default function ProfileTopBar({
@@ -21,35 +24,95 @@ export default function ProfileTopBar({
   //   fetchIcon();
   // });
 
+  const [data, setData] = useState<SimplePlayerStats>({
+    totalPlayed: 0,
+    wins: 0,
+    losses: 0,
+    winRate: 0,
+  });
+
+  useEffect(() => {
+    playerAPI.onPlayerStats("playerStatsData", (newData: champRow) => {
+      setData(newData);
+    });
+
+    return () => {
+      playerAPI.onPlayerStats("playerStatsData", () => {}); // remove listener
+    };
+  }, []);
+
+  const lastUpdatedDate = new Date()
+    .toLocaleString()
+    .replace(/T/, " ") // replace T with a space
+    .replace(/\..+/, ""); // delete the dot and everything after;
+
   function analyzeMatches(): void {
     playerAPI.analyzeMatches(userData);
   }
-  function registerPlayer() {
-    const out = playerAPI.registerPlayer(userData);
+
+  function registerPlayer(): void {
+    playerAPI.registerPlayer(userData);
   }
 
-  async function getChampStats(): Promise<void> {
-    const a = await playerAPI.getChampStats(userData);
+  const navigate = useNavigate();
+  function goHome(): void {
+    navigate("/");
   }
+
+  useEffect(() => {
+    playerAPI.getChampStats(userData);
+    playerAPI.getPlayerStats(userData);
+  }, []);
 
   return (
     <>
       <div id="top-bar">
         {/* <img id="profilePic" src={image}></img> */}
-        <h1 id="username">
-          {gameName}#{tagLine}
-        </h1>
-
-        <Button
-          id="analyze-button"
-          variant="contained"
-          onClick={analyzeMatches}
-        >
-          Update
-        </Button>
-
-        <button onClick={registerPlayer}>Register</button>
-        <button onClick={getChampStats}>Get Champ Stats</button>
+        <div className="topBarColumn">
+          <div id="leftCol">
+            <div id="navButtons">
+              <Button
+                variant="contained"
+                sx={{ minWidth: "0px", width: "40px", height: "40px" }}
+                onClick={goHome}
+              >
+                <Home></Home>
+              </Button>
+            </div>
+            <div id="leftSide">
+              <div id="username">
+                <div id="gameName">{gameName}</div>
+                <div id="tagLine">#{tagLine}</div>
+              </div>
+              <div id="topBarButtons">
+                <Button
+                  id="analyze-button"
+                  variant="contained"
+                  onClick={analyzeMatches}
+                >
+                  Update
+                </Button>
+              </div>
+              <div id="lastUpdatedBox">
+                <div id="lastUpdatedText">Last updated:</div>
+                <div id="lastUpdatedDate">{lastUpdatedDate}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="topBarColumn">
+          <div id="center">SOMETHING</div>
+        </div>
+        <div className="topBarColumn" id="rightCol">
+          <div id="rightSide">
+            <div id="stats">
+              <div>Played: {data.totalPlayed}</div>
+              <div>Wins: {data.wins}</div>
+              <div>Losses: {data.losses}</div>
+              <div>Winrate: {Number(data.winRate).toFixed(1)}%</div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

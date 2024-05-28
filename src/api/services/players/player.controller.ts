@@ -21,7 +21,6 @@ function loadPlayers(): Players {
   console.log("Loading players");
   try {
     const data = fs.readFileSync("players.json", "utf-8");
-    console.log(`Players : ${data}`);
     return JSON.parse(data);
   } catch (error) {
     console.log(`Error loading players: ${error}`);
@@ -409,6 +408,7 @@ export const resetChampionStats = async (
   if (!player) return null;
   player.champStats = {};
   player.analyzedMatches = [];
+  player.playerStats = getBlankPlayerStats();
   savePlayers();
   return 1;
 };

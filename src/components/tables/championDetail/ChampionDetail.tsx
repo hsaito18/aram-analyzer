@@ -11,7 +11,6 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
     <div id="champDetailMain">
       <div id="picRow">
         <h1 id="champTitle"> {champData.champName}</h1>
-        {/* <img src={placeholder} width={250} height={250}></img> */}
         <img id="champPic" src={image}></img>
         <div id="picStatsRow">
           <div id="wlRow">

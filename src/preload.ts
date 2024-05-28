@@ -8,7 +8,14 @@ export const playerAPI = {
     ipcRenderer.send("analyze-matches", userData),
   getChampStats: (userData: UserData) =>
     ipcRenderer.invoke("get-champ-stats", userData),
+  getPlayerStats: (userData: UserData) =>
+    ipcRenderer.send("get-player-stats", userData),
   onTableChampStats: (channel: string, func: any) => {
+    const newFunc = (_: any, data: any) => func(data);
+    ipcRenderer.on(channel, newFunc);
+    return () => ipcRenderer.removeListener(channel, newFunc);
+  },
+  onPlayerStats: (channel: string, func: any) => {
     const newFunc = (_: any, data: any) => func(data);
     ipcRenderer.on(channel, newFunc);
     return () => ipcRenderer.removeListener(channel, newFunc);
