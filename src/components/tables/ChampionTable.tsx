@@ -162,12 +162,15 @@ const ChampionTable = () => {
   const [data, setData] = useState<champRow[]>([]);
 
   useEffect(() => {
-    playerAPI.onTableChampStats("champTableData", (newData: champRow[]) => {
-      setData(newData);
-    });
+    const removeFunc = playerAPI.onTableChampStats(
+      "champTableData",
+      (newData: champRow[]) => {
+        setData(newData);
+      }
+    );
 
     return () => {
-      playerAPI.onTableChampStats("champTableData", () => {}); // remove listener
+      removeFunc();
     };
   }, []);
 
@@ -206,8 +209,7 @@ const ChampionTable = () => {
         "& .Mui-TableHeadCell-Content": {
           justifyContent: "center",
         },
-        "& .Mui-TableHeadCell-Content-Labels": {
-        },
+        "& .Mui-TableHeadCell-Content-Labels": {},
         padding: "0.2rem !important",
       },
     },

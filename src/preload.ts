@@ -22,6 +22,10 @@ export const playerAPI = {
   },
   getProfileIcon: (userData: UserData): Promise<number> =>
     ipcRenderer.invoke("get-profile-icon", userData),
+  checkPlayer: (userData: UserData): Promise<boolean> =>
+    ipcRenderer.invoke("check-player", userData),
+  createPlayer: (userData: UserData): Promise<boolean> =>
+    ipcRenderer.invoke("create-player", userData),
 };
 
 contextBridge.exposeInMainWorld("playerAPI", playerAPI);

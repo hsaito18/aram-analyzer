@@ -32,12 +32,15 @@ export default function ProfileTopBar({
   });
 
   useEffect(() => {
-    playerAPI.onPlayerStats("playerStatsData", (newData: champRow) => {
-      setData(newData);
-    });
+    const removeFunc = playerAPI.onPlayerStats(
+      "playerStatsData",
+      (newData: champRow) => {
+        setData(newData);
+      }
+    );
 
     return () => {
-      playerAPI.onPlayerStats("playerStatsData", () => {}); // remove listener
+      removeFunc();
     };
   }, []);
 

@@ -149,20 +149,25 @@ function getBlankPlayerStats(): PlayerStats {
 export const createByUsername = async (
   userData: UserData
 ): Promise<Player | null> => {
-  const puuid = await getPUUID(userData.gameName, userData.tagLine);
-  const user: Player = {
-    puuid,
-    gameName: userData.gameName,
-    tagLine: userData.tagLine,
-    matches: [],
-    analyzedMatches: [],
-    champStats: {},
-    playerStats: getBlankPlayerStats(),
-    profileIcon: 0,
-  };
-  players[puuid] = user;
-  savePlayers();
-  return user;
+  try {
+    const puuid = await getPUUID(userData.gameName, userData.tagLine);
+    const user: Player = {
+      puuid,
+      gameName: userData.gameName,
+      tagLine: userData.tagLine,
+      matches: [],
+      analyzedMatches: [],
+      champStats: {},
+      playerStats: getBlankPlayerStats(),
+      profileIcon: 0,
+    };
+    players[puuid] = user;
+    savePlayers();
+    return user;
+  } catch (error) {
+    console.error(`Failed to get PUUID: ${error}`);
+    return null;
+  }
 };
 
 export const findByUsername = async (
@@ -197,36 +202,38 @@ export const saveARAMMatches = async (
   return player.matches;
 };
 
+async function downloadMatch(id: string): Promise<boolean> {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-Riot-Token": RIOT_API_KEY,
+    },
+  };
+  const response = await axios
+    .get(
+      `https://americas.api.riotgames.com/lol/match/v5/matches/${id}`,
+      options
+    )
+    .catch((error) => {
+      if (error.response.status === 429) {
+        return 2;
+      }
+      return 1;
+    });
+  if (response == 2) return false;
+  if (response == 1) throw new Error(`Error downloading match ${id}`);
+  const matchData = response?.data;
+  if (matchData !== null) {
+    saveMatch(id, matchData);
+  }
+  return true;
+}
 async function getMatchData(id: string): Promise<Match | null> {
   let matchData: Match | null = null;
-  if (hasMatch(id)) {
-    matchData = loadMatch(id);
-  } else {
-    const options = {
-      method: "GET",
-      headers: {
-        "X-Riot-Token": RIOT_API_KEY,
-      },
-    };
-    const response = await axios
-      .get(
-        `https://americas.api.riotgames.com/lol/match/v5/matches/${id}`,
-        options
-      )
-      .catch((error) => {
-        console.log(`axios error: ${JSON.stringify(error.status)}`);
-        if (error.status === 429) {
-          setTimeout(() => {
-            getMatchData(id);
-          }, 120000);
-        }
-        return null;
-      });
-    matchData = response?.data;
-    if (matchData !== null) {
-      saveMatch(id, matchData);
-    }
+  if (!hasMatch(id)) {
+    await downloadMatch(id);
   }
+  matchData = loadMatch(id);
   return matchData;
 }
 
@@ -315,6 +322,23 @@ async function updateProfileIcon(player: Player): Promise<void> {
   savePlayers();
 }
 
+async function downloadMatches(matches: string[]): Promise<void> {
+  for (const match of matches) {
+    if (hasMatch(match)) continue;
+    try {
+      const res = await downloadMatch(match);
+      if (!res) {
+        console.log(`Rate limited, waiting 2 minutes...`);
+        await new Promise((resolve) => setTimeout(resolve, 120000));
+        await downloadMatch(match);
+      }
+    } catch (error) {
+      console.error(`Failed to download match: ${error}`);
+      // Handle the error appropriately here
+    }
+  }
+}
+
 export const analyzePlayerMatches = async (
   userData: UserData
 ): Promise<boolean> => {
@@ -323,6 +347,7 @@ export const analyzePlayerMatches = async (
   await updateProfileIcon(player);
   const champStats: ChampStats = player.champStats;
   const playerStats: PlayerStats = player.playerStats;
+  await downloadMatches(player.matches);
   for (const match of player.matches) {
     if (player.analyzedMatches.includes(match)) continue;
     const matchData = await getMatchData(match);

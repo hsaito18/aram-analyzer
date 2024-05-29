@@ -6,6 +6,7 @@ import {
   getPlayerChampionStats,
   getPlayerProfileIcon,
   getPlayerStats,
+  findByUsername,
 } from "./players/player.controller";
 import { UserData } from "./players/player.interface";
 
@@ -21,11 +22,17 @@ async function getChampStats(event: any, userData: UserData) {
   return arrData;
 }
 
+async function getPlayerStatsHandle(event: any, userData: UserData) {
+  const data = await getPlayerStats(userData);
+  event.sender.send("playerStatsData", data);
+}
+
 ipcMain.on("analyze-matches", async (event, userData) => {
   console.log("analyzing matches for user", userData);
   await saveARAMMatches(userData);
   await analyzePlayerMatches(userData);
   await getChampStats(event, userData);
+  await getPlayerStatsHandle(event, userData);
 });
 
 function champDataArrayizer(obj: any) {
@@ -43,7 +50,14 @@ ipcMain.handle("get-profile-icon", async (event, userData) => {
   return icon;
 });
 
-ipcMain.on("get-player-stats", async (event, userData) => {
-  const data = await getPlayerStats(userData);
-  event.sender.send("playerStatsData", data);
+ipcMain.on("get-player-stats", getPlayerStatsHandle);
+
+ipcMain.handle("check-player", async (event, userData) => {
+  const player = await findByUsername(userData);
+  return !!player;
+});
+
+ipcMain.handle("create-player", async (event, userData) => {
+  const out = await createByUsername(userData);
+  return !!out;
 });

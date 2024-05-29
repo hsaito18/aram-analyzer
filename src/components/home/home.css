@@ -1,0 +1,38 @@
+#home-main {
+  width: 100vw;
+  height: 100vh;
+  margin: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#usernameInput {
+  display: flex;
+  align-items: center;
+  margin: 40px;
+}
+
+#tagLineField {
+  width: 4rem;
+}
+
+#searchButton {
+  height: 56px;
+  width: 40px;
+  min-width: 40px;
+  border: darkgrey 1px solid;
+}
+
+::-webkit-scrollbar-track {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  display: none;
+}
