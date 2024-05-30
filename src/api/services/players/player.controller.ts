@@ -14,30 +14,32 @@ import { mergeAverages, mergeTotals } from "../object.service";
 import { RIOT_API_KEY } from "../../../config/apiConfig";
 import fs from "fs";
 import axios from "axios";
+import log from "electron-log/main";
 
+const playersFilePath = "players.json";
 let players: Players = loadPlayers();
 
 function loadPlayers(): Players {
-  console.log("Loading players");
+  log.info("Loading players");
   try {
-    const data = fs.readFileSync("players.json", "utf-8");
+    const data = fs.readFileSync(playersFilePath, "utf-8");
     return JSON.parse(data);
   } catch (error) {
-    console.log(`Error loading players: ${error}`);
+    log.info(`Error loading players: ${error}`);
     return {};
   }
 }
 
 function savePlayers() {
   try {
-    fs.writeFileSync("players.json", JSON.stringify(players), "utf-8");
-    console.log(`Player saved successfully!`);
+    fs.writeFileSync(playersFilePath, JSON.stringify(players), "utf-8");
+    log.info(`Player saved successfully!`);
   } catch (error) {
-    console.log(`Error : ${error}`);
+    log.info(`Error : ${error}`);
   }
 }
 
-async function getPUUID(gameName: string, tagLine: string): Promise<string> {
+async function getUserData(gameName: string, tagLine: string): Promise<any> {
   return new Promise((resolve, reject) => {
     const options = {
       method: "GET",
@@ -51,7 +53,7 @@ async function getPUUID(gameName: string, tagLine: string): Promise<string> {
         options
       )
       .then((res) => {
-        resolve(res.data.puuid);
+        resolve(res.data);
       })
       .catch((error) => {
         reject(error);
@@ -67,7 +69,7 @@ async function getAllARAMs(puuid: string): Promise<string[]> {
     allARAMs.push(...currBatch);
     currBatch = await getARAMs(puuid, 100, idx);
     idx += 100;
-    console.log(`Got ${allARAMs.length} ARAMs`);
+    log.info(`Got ${allARAMs.length} ARAMs`);
   }
   allARAMs.push(...currBatch);
   return allARAMs;
@@ -150,18 +152,21 @@ export const createByUsername = async (
   userData: UserData
 ): Promise<Player | null> => {
   try {
-    const puuid = await getPUUID(userData.gameName, userData.tagLine);
+    const actualUserData = await getUserData(
+      userData.gameName,
+      userData.tagLine
+    );
     const user: Player = {
-      puuid,
-      gameName: userData.gameName,
-      tagLine: userData.tagLine,
+      puuid: actualUserData.puuid,
+      gameName: actualUserData.gameName,
+      tagLine: actualUserData.tagLine,
       matches: [],
       analyzedMatches: [],
       champStats: {},
       playerStats: getBlankPlayerStats(),
       profileIcon: 0,
     };
-    players[puuid] = user;
+    players[actualUserData.puuid] = user;
     savePlayers();
     return user;
   } catch (error) {
@@ -176,8 +181,8 @@ export const findByUsername = async (
   const allPlayers = await findAll();
   const searchedPlayer = allPlayers.find(
     (result) =>
-      result.gameName === userData.gameName &&
-      result.tagLine === userData.tagLine
+      result.gameName.toLowerCase() === userData.gameName.toLowerCase() &&
+      result.tagLine.toLowerCase() === userData.tagLine.toLowerCase()
   );
   if (!searchedPlayer) return null;
   return searchedPlayer;
@@ -328,7 +333,7 @@ async function downloadMatches(matches: string[]): Promise<void> {
     try {
       const res = await downloadMatch(match);
       if (!res) {
-        console.log(`Rate limited, waiting 2 minutes...`);
+        log.info(`Rate limited, waiting 2 minutes...`);
         await new Promise((resolve) => setTimeout(resolve, 120000));
         await downloadMatch(match);
       }
@@ -448,7 +453,7 @@ export const getPlayerStats = async (
 
 export const resetAllChampionStats = async (): Promise<number> => {
   for (const player of Object.values(players)) {
-    console.log(`Resetting ${player.gameName}'s stats...`);
+    log.info(`Resetting ${player.gameName}'s stats...`);
     player.champStats = {};
     player.analyzedMatches = [];
     player.playerStats = getBlankPlayerStats();

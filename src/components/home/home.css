@@ -19,10 +19,42 @@
 }
 
 #searchButton {
-  height: 56px;
-  width: 40px;
-  min-width: 40px;
+  height: 63px;
+  width: 44px;
+  min-width: 44px;
   border: darkgrey 1px solid;
+}
+
+#searchHistoryBox {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: auto;
+}
+
+#searchHistoryTitle {
+  font-weight: 2000;
+  width: 100%;
+  font-size: 1.5rem;
+  padding-left: 10px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+#searchHistoryStack {
+  padding: 4px;
+  width: 95%;
+  border-radius: 8px;
+  border: darkgray 3px solid;
+}
+
+.searchHistoryItem {
+  display: flex;
+  height: 40px;
+}
+
+#searchHistoryTagLine {
+  font-size: 1rem;
 }
 
 ::-webkit-scrollbar-track {

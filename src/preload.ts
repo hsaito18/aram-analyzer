@@ -1,5 +1,6 @@
 import { UserData } from "./api/services/players/player.interface";
 import { contextBridge, ipcRenderer } from "electron/renderer";
+import { Search } from "./api/services/searchHistory";
 
 export const playerAPI = {
   registerPlayer: (userData: UserData) =>
@@ -26,6 +27,10 @@ export const playerAPI = {
     ipcRenderer.invoke("check-player", userData),
   createPlayer: (userData: UserData): Promise<boolean> =>
     ipcRenderer.invoke("create-player", userData),
+  searchPlayer: (userData: UserData): Promise<UserData> =>
+    ipcRenderer.invoke("player-search", userData),
+  getSearchHistory: (): Promise<Search[]> =>
+    ipcRenderer.invoke("get-search-history"),
 };
 
 contextBridge.exposeInMainWorld("playerAPI", playerAPI);

@@ -9,6 +9,8 @@ import {
   findByUsername,
 } from "./players/player.controller";
 import { UserData } from "./players/player.interface";
+import { getSearchHistory, addSearchHistory } from "./searchHistory";
+import Logger = require("electron-log/main");
 
 ipcMain.handle("register-player", (event, userData) => {
   return createByUsername(userData);
@@ -28,7 +30,7 @@ async function getPlayerStatsHandle(event: any, userData: UserData) {
 }
 
 ipcMain.on("analyze-matches", async (event, userData) => {
-  console.log("analyzing matches for user", userData);
+  Logger.log("analyzing matches for user", userData);
   await saveARAMMatches(userData);
   await analyzePlayerMatches(userData);
   await getChampStats(event, userData);
@@ -60,4 +62,15 @@ ipcMain.handle("check-player", async (event, userData) => {
 ipcMain.handle("create-player", async (event, userData) => {
   const out = await createByUsername(userData);
   return !!out;
+});
+
+ipcMain.handle("player-search", async (event, userData) => {
+  addSearchHistory(userData);
+  const player = await findByUsername(userData);
+  console.log(`searched for player ${userData.gameName}#${userData.tagLine}`);
+  return { gameName: player.gameName, tagLine: player.tagLine };
+});
+
+ipcMain.handle("get-search-history", async (event) => {
+  return getSearchHistory();
 });
