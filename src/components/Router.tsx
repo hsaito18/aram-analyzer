@@ -11,6 +11,7 @@ const theme = createTheme({
     secondary: {
       main: "#FF6978",
     },
+    mode: "dark",
   },
 });
 
@@ -18,7 +19,10 @@ export default function Router() {
   return (
     <ThemeProvider theme={theme}>
       <HashRouter>
-        <div className="App" style={{ width: "100%", height: "100%" }}>
+        <div
+          className="App"
+          style={{ width: "100%", height: "100%", overflow: "hidden" }}
+        >
           <Routes>
             <Route path="/" Component={Home} />
             <Route path="/profile" Component={Profile} />

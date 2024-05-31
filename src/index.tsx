@@ -8,5 +8,10 @@ import Home from "./components/home/Home";
 import Router from "./components/Router";
 
 const root = createRoot(document.getElementById("root"));
-root.render(<Router />);
+root.render(
+  <div>
+    {/* <div id="chrome">ARAM Analyzer</div> */}
+    <Router />
+  </div>
+);
 // root.render(<Profile gameName={"hsaito"} tagLine={"NA1"} />);

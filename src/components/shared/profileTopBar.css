@@ -1,7 +1,11 @@
 #top-bar {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #a0a0a0;
+  border-radius: 0px;
   padding: 8px;
   height: 10vh;
+  transform: translateY(-1px), translateX(-1px);
+  background-color: rgba(1, 1, 1, 0.7);
+  scale: calc(100%+2px);
 }
 
 .topBarColumn {
@@ -26,9 +30,10 @@
 
 #leftSide {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-end;
-  width: 450px;
+  gap: 12px;
+  width: 800px;
   height: 100%;
 }
 

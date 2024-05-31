@@ -80,58 +80,76 @@ export default function Home() {
   return (
     <>
       <div id="home-main">
-        <div id="home-title">ARAM ANALYZER</div>
-        <img src="static://assets/profileicon/0.png"></img>
-        <div id="usernameInput">
-          <TextField
-            id="gameNameField"
-            label="Game Name"
-            variant="outlined"
-            InputProps={{ sx: { fontSize: "1.3rem" } }}
-            sx={{ fontSize: "1.2rem" }}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                searchPlayer();
-              }
-            }}
-          ></TextField>
-          <TextField
-            id="tagLineField"
-            label="Tag Line"
-            variant="outlined"
-            defaultValue="NA1"
-            InputProps={{ sx: { fontSize: "1.3rem" } }}
-            sx={{ fontSize: "1.2rem" }}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                searchPlayer();
-              }
-            }}
-          ></TextField>
-          <Button
-            id="searchButton"
-            onClick={searchPlayer}
-            disabled={isSearching}
-          >
-            <Search />
-          </Button>
-        </div>
-        <div id="searchHistoryBox">
-          <div id="searchHistoryTitle">Recent</div>
-          <Stack id="searchHistoryStack" spacing={2}>
-            {searchHistory.map((item, index) => (
-              <Item
-                key={index}
-                onClick={() => {
-                  goToProfile(item);
-                }}
-                className="searchHistoryItem"
-              >
-                <div id="searchHistoryGameName">{item.gameName}</div>
-                <div id="searchHistoryTagLine">#{item.tagLine}</div>
-              </Item>
-            ))}
-          </Stack>
+        <div
+          id="backgroundImage"
+          style={{
+            backgroundImage: "url(static://assets/howling_abyss_nexus.jpg)",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            filter: "blur(5px)",
+            height: "100vh",
+            width: "100vw",
+            scale: "1.05",
+          }}
+        />
+        <div id="homeCard">
+          <div id="home-title">
+            <h1>ARAM ANALYZER</h1>
+          </div>
+          {/* <img src="static://assets/aram_logo.jpg"></img> */}
+          <div id="usernameInput">
+            <TextField
+              id="gameNameField"
+              label="Game Name"
+              variant="outlined"
+              InputProps={{ sx: { fontSize: "1.3rem" } }}
+              InputLabelProps={{ sx: { fontSize: "1.3rem" } }}
+              sx={{ fontSize: "1.3rem" }}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  searchPlayer();
+                }
+              }}
+            ></TextField>
+            <TextField
+              id="tagLineField"
+              label="Tag Line"
+              variant="outlined"
+              defaultValue="NA1"
+              InputProps={{ sx: { fontSize: "1.3rem" } }}
+              sx={{ fontSize: "1.3rem" }}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  searchPlayer();
+                }
+              }}
+            ></TextField>
+            <Button
+              id="searchButton"
+              onClick={searchPlayer}
+              disabled={isSearching}
+            >
+              <Search />
+            </Button>
+          </div>
+          <div id="searchHistoryBox">
+            <div id="searchHistoryTitle">Recent</div>
+            <Stack id="searchHistoryStack" spacing={2}>
+              {searchHistory.map((item, index) => (
+                <Item
+                  key={index}
+                  onClick={() => {
+                    goToProfile(item);
+                  }}
+                  className="searchHistoryItem"
+                >
+                  <div id="searchHistoryGameName">{item.gameName}</div>
+                  <div id="searchHistoryTagLine">#{item.tagLine}</div>
+                </Item>
+              ))}
+            </Stack>
+          </div>
         </div>
       </div>
     </>

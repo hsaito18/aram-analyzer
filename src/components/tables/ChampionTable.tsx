@@ -249,13 +249,15 @@ const ChampionTable = () => {
   });
 
   return (
-    <>
-      {data.length > 0 ? (
-        <MaterialReactTable table={table} />
-      ) : (
-        <div>Loading...</div>
-      )}
-    </>
+    <div id="tableMain">
+      <div className="content">
+        {data.length > 0 ? (
+          <MaterialReactTable table={table} />
+        ) : (
+          <div>Loading...</div>
+        )}
+      </div>
+    </div>
   );
 };
 

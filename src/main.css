@@ -20,5 +20,11 @@
 }
 
 html {
-  scrollbar-gutter: stable;
+  scrollbar-gutter: stable always;
+}
+
+#chrome {
+  width: 100%;
+  background-color: orange;
+  height: 2vh;
 }

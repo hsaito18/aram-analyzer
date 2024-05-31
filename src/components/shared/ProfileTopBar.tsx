@@ -5,6 +5,19 @@ import { Home } from "@mui/icons-material";
 import { champRow } from "../tables/table.interface";
 import { SimplePlayerStats } from "../../api/services/players/player.interface";
 import "./profileTopBar.css";
+import { styled } from "@mui/material";
+import Paper from "@mui/material/Paper";
+
+const TopBar = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#27303B" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+  display: "flex",
+  alignItems: "flex-end",
+  fontSize: "1.3rem",
+}));
 
 export default function ProfileTopBar({
   gameName,
@@ -69,7 +82,7 @@ export default function ProfileTopBar({
 
   return (
     <>
-      <div id="top-bar">
+      <TopBar id="top-bar">
         {/* <img id="profilePic" src={image}></img> */}
         <div className="topBarColumn">
           <div id="leftCol">
@@ -104,7 +117,7 @@ export default function ProfileTopBar({
           </div>
         </div>
         <div className="topBarColumn">
-          <div id="center">SOMETHING</div>
+          <div id="center"></div>
         </div>
         <div className="topBarColumn" id="rightCol">
           <div id="rightSide">
@@ -116,7 +129,7 @@ export default function ProfileTopBar({
             </div>
           </div>
         </div>
-      </div>
+      </TopBar>
     </>
   );
 }

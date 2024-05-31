@@ -1,3 +1,18 @@
 #main {
   padding: 0px;
+  background-color: transparent;
+  width: 100vw;
+  height: 100vh;
+  color: rgba(255, 255, 255, 0.7);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#profileContent {
+  height: 88vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

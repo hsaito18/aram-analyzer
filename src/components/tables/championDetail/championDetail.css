@@ -1,7 +1,7 @@
 #champDetailMain {
   display: grid;
   grid-template-columns: 1fr 2fr 2fr 2fr;
-  grid-template-areas: "picRow statsRow highlightsRow otherRow";
+  grid-template-areas: "picRow statsRow highlightsRow matchHistoryRow";
   gap: 25px;
 }
 
@@ -10,6 +10,9 @@
   display: grid;
   grid-template-rows: 1fr 250px 1fr;
   grid-template-areas: "champTitle" "champPic" "picStatsRow";
+  border-right: 1px solid darkgray;
+  margin-right: -12px;
+  padding-right: 12px;
 }
 
 #champTitle {
@@ -41,6 +44,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-right: 1px solid darkgray;
+  margin-right: -12px;
+  padding-right: 12px;
 }
 
 .champStatsTable {
@@ -66,4 +72,11 @@
 
 #highlightsRow {
   grid-area: highlightsRow;
+  border-right: 1px solid darkgray;
+  margin-right: -12px;
+  padding-right: 12px;
+}
+
+#matchHistoryRow {
+  grid-area: matchHistoryRow;
 }

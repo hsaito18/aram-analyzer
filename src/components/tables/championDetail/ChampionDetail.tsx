@@ -177,7 +177,8 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
           </tbody>
         </table>
       </div>
-      <div id="highlightsRow">aooo</div>
+      <div id="highlightsRow">Highlights</div>
+      <div id="matchHistoryRow">Match History</div>
     </div>
   );
 }
