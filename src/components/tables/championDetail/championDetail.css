@@ -75,6 +75,39 @@
   border-right: 1px solid darkgray;
   margin-right: -12px;
   padding-right: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#highlightsTable {
+  width: 100%;
+}
+
+#highlightsTable th:nth-child(1) {
+  width: 5rem;
+}
+
+#highlightsTable th:nth-child(2) {
+  width: 0.6rem;
+}
+
+#highlightsTable th:nth-child(3) {
+  width: 80px;
+}
+
+#highlightsTable tr td:nth-child(3) {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.perMinuteLabelCell {
+  display: flex;
+  align-items: baseline;
+}
+
+.perMinute {
+  font-size: 0.7rem;
 }
 
 #matchHistoryRow {

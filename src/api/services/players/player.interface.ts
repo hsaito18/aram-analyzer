@@ -14,6 +14,7 @@ export interface SingleChampStats {
   totalPlayed: number;
   stats: DetailedChampStats;
   totalStats: TotalChampStats;
+  highs: ChampHighs;
 }
 
 export interface DetailedChampStats {
@@ -50,6 +51,38 @@ export interface TotalChampStats {
   totalKills: number;
   totalDeaths: number;
   totalAssists: number;
+  pentakills: number;
+  quadrakills: number;
+  triplekills: number;
+  doublekills: number;
+}
+
+export interface ChampHighs {
+  mostKills: number;
+  mostDeaths: number;
+  mostAssists: number;
+  mostDamage: number;
+  mostTotalDamage: number;
+  mostGold: number;
+  mostTotalGold: number;
+  mostCCTime: number;
+  mostTotalCCTime: number;
+  mostHealing: number;
+  mostTotalHealing: number;
+  mostShielding: number;
+  mostTotalShielding: number;
+  mostObjectiveDamage: number;
+  mostTotalObjectiveDamage: number;
+  mostDamageTaken: number;
+  mostTotalDamageTaken: number;
+  mostSelfMitigated: number;
+  mostTotalSelfMitigated: number;
+  mostDamageShare: number;
+  mostGoldShare: number;
+  mostKillParticipation: number;
+  biggestCrit: number;
+  biggestMultikill: number;
+  biggestKillingSpree: number;
 }
 
 export interface TeamStats {

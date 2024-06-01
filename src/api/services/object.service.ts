@@ -17,3 +17,13 @@ export const mergeTotals = (obj1: any, obj2: any) => {
     }
   }
 };
+
+export const mergeMax = (obj1: any, obj2: any) => {
+  for (const [key, val] of Object.entries(obj2)) {
+    if (typeof val === "number") {
+      obj1[key] = Math.max(obj1[key], val);
+    } else if (typeof val === "object") {
+      mergeMax(obj1[key], val);
+    }
+  }
+};

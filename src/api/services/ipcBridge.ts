@@ -7,6 +7,7 @@ import {
   getPlayerProfileIcon,
   getPlayerStats,
   findByUsername,
+  resetChampionStats,
 } from "./players/player.controller";
 import { UserData } from "./players/player.interface";
 import { getSearchHistory, addSearchHistory } from "./searchHistory";
@@ -62,6 +63,10 @@ ipcMain.handle("check-player", async (event, userData) => {
 ipcMain.handle("create-player", async (event, userData) => {
   const out = await createByUsername(userData);
   return !!out;
+});
+
+ipcMain.on("reset-player", async (event, userData) => {
+  resetChampionStats(userData);
 });
 
 ipcMain.handle("player-search", async (event, userData) => {

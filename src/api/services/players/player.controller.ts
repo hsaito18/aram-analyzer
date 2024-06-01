@@ -5,12 +5,13 @@ import {
   ChampStats,
   DetailedChampStats,
   TotalChampStats,
+  ChampHighs,
   TeamStats,
   PlayerStats,
 } from "./player.interface";
 import { Match, Participant } from "../matches/match.interface";
 import { hasMatch, loadMatch, saveMatch } from "../matches/match.controller";
-import { mergeAverages, mergeTotals } from "../object.service";
+import { mergeAverages, mergeTotals, mergeMax } from "../object.service";
 import { RIOT_API_KEY } from "../../../config/apiConfig";
 import fs from "fs";
 import axios from "axios";
@@ -123,6 +124,10 @@ function getBlankPlayerStats(): PlayerStats {
       totalKills: 0,
       totalDeaths: 0,
       totalAssists: 0,
+      pentakills: 0,
+      quadrakills: 0,
+      triplekills: 0,
+      doublekills: 0,
     },
     stats: {
       damagePerMinute: 0,
@@ -303,7 +308,52 @@ function getMatchTotalStats(participant: Participant): TotalChampStats {
     totalKills: participant.kills,
     totalDeaths: participant.deaths,
     totalAssists: participant.assists,
+    pentakills: participant.pentaKills,
+    quadrakills: participant.quadraKills,
+    triplekills: participant.tripleKills,
+    doublekills: participant.doubleKills,
   };
+}
+
+function getMatchHighs(
+  matchTotalStats: TotalChampStats,
+  detailedChampStats: DetailedChampStats,
+  participant: Participant
+): ChampHighs {
+  return {
+    mostKills: matchTotalStats.totalKills,
+    mostDeaths: matchTotalStats.totalDeaths,
+    mostAssists: matchTotalStats.totalAssists,
+    mostDamage: detailedChampStats.damagePerMinute,
+    mostTotalDamage: matchTotalStats.totalDamage,
+    mostGold: detailedChampStats.goldPerMinute,
+    mostTotalGold: matchTotalStats.totalGold,
+    mostCCTime: detailedChampStats.ccPerMinute,
+    mostHealing: detailedChampStats.healingPerMinute,
+    mostShielding: detailedChampStats.shieldingPerMinute,
+    mostDamageShare: detailedChampStats.damageShare,
+    mostGoldShare: detailedChampStats.goldShare,
+    mostDamageTaken: detailedChampStats.damageTakenPerMinute,
+    mostObjectiveDamage: detailedChampStats.objectiveDamagePerMinute,
+    mostKillParticipation: detailedChampStats.killParticipation,
+    mostSelfMitigated: detailedChampStats.selfMitigatedPerMinute,
+    mostTotalCCTime: matchTotalStats.totalCCTime,
+    mostTotalHealing: matchTotalStats.totalHealing,
+    mostTotalShielding: matchTotalStats.totalShielding,
+    mostTotalObjectiveDamage: matchTotalStats.totalObjectiveDamage,
+    mostTotalDamageTaken: matchTotalStats.totalDamageTaken,
+    mostTotalSelfMitigated: matchTotalStats.totalSelfMitigated,
+    biggestCrit: participant.largestCriticalStrike,
+    biggestKillingSpree: participant.largestKillingSpree,
+    biggestMultikill: participant.largestMultiKill,
+  };
+}
+
+function updateChampionHighStats(
+  participant: Participant,
+  champStats: ChampStats
+) {
+  const champion = participant.championName;
 }
 
 async function updateProfileIcon(player: Player): Promise<void> {
@@ -367,6 +417,11 @@ export const analyzePlayerMatches = async (
     const teamStats = getTeamStats(matchData, teamId);
     const detailedChampStats = getDetailedChampStats(participant, teamStats);
     const currentTotalStats = getMatchTotalStats(participant);
+    const currentHighs = getMatchHighs(
+      currentTotalStats,
+      detailedChampStats,
+      participant
+    );
     if (champStats[champion]) {
       champStats[champion].wins += win ? 1 : 0;
       champStats[champion].losses += win ? 0 : 1;
@@ -379,6 +434,7 @@ export const analyzePlayerMatches = async (
       champStats[champion].totalPlayed = prevPlayed + 1;
       mergeAverages(champStats[champion].stats, detailedChampStats, prevPlayed);
       mergeTotals(champStats[champion].totalStats, currentTotalStats);
+      mergeMax(champStats[champion].highs, currentHighs);
       champStats[champion].stats.kda =
         (champStats[champion].stats.killsPerGame +
           champStats[champion].stats.assistsPerGame) /
@@ -391,6 +447,7 @@ export const analyzePlayerMatches = async (
         totalPlayed: 1,
         totalStats: currentTotalStats,
         stats: detailedChampStats,
+        highs: currentHighs,
       };
     }
     playerStats.wins += win ? 1 : 0;

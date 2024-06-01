@@ -66,6 +66,10 @@ export default function ProfileTopBar({
     playerAPI.analyzeMatches(userData);
   }
 
+  function resetPlayer(): void {
+    playerAPI.resetPlayer(userData);
+  }
+
   function registerPlayer(): void {
     playerAPI.registerPlayer(userData);
   }
@@ -108,6 +112,7 @@ export default function ProfileTopBar({
                 >
                   Update
                 </Button>
+                <Button onClick={resetPlayer}>RESET</Button>
               </div>
               <div id="lastUpdatedBox">
                 <div id="lastUpdatedText">Last updated:</div>

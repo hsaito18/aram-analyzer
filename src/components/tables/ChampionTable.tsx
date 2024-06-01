@@ -22,7 +22,7 @@ const allColumns = [
   {
     accessorKey: "champName", //access nested data with dot notation
     header: "Champion",
-    size: 125,
+    size: 160,
     visibleInShowHideMenu: false,
     enableHiding: false,
     Cell: ChampionNameCell,
@@ -30,7 +30,7 @@ const allColumns = [
   {
     accessorKey: "wins",
     header: "Wins",
-    size: 100,
+    size: 80,
     grow: false,
     Cell: StandardCell,
   },
@@ -44,7 +44,7 @@ const allColumns = [
   {
     accessorFn: (row: champRow) => `${Number(row.winRate).toFixed(0)}`,
     header: "Win Rate",
-    size: 100,
+    size: 110,
     grow: false,
     Cell: PercentageCell,
   },
@@ -52,21 +52,21 @@ const allColumns = [
     accessorFn: (row: champRow) =>
       `${Number(row.stats.killsPerGame).toFixed(1)}`,
     header: "Kills",
-    size: 100,
+    size: 105,
     Cell: PerGameCell,
   },
   {
     accessorFn: (row: champRow) =>
       `${Number(row.stats.deathsPerGame).toFixed(1)}`,
     header: "Deaths",
-    size: 100,
+    size: 105,
     Cell: PerGameCell,
   },
   {
     accessorFn: (row: champRow) =>
       `${Number(row.stats.assistsPerGame).toFixed(1)}`,
     header: "Assists",
-    size: 100,
+    size: 105,
     Cell: PerGameCell,
   },
 
@@ -97,7 +97,7 @@ const allColumns = [
     accessorFn: (row: champRow) =>
       `${Number(row.stats.shieldingPerMinute).toFixed(0)}`,
     header: "Shielding",
-    size: 100,
+    size: 110,
     Cell: PerMinuteCell,
   },
   {
@@ -113,7 +113,7 @@ const allColumns = [
     accessorFn: (row: champRow) =>
       `${Number(row.stats.objectiveDamagePerMinute).toFixed(0)}`,
     header: "Objective Damage",
-    size: 100,
+    size: 168,
     Cell: PerMinuteCell,
   },
   {
@@ -121,7 +121,7 @@ const allColumns = [
     accessorFn: (row: champRow) =>
       `${Number(row.stats.damageTakenPerMinute).toFixed(0)}`,
     header: "Damage Taken",
-    size: 100,
+    size: 145,
     Cell: PerMinuteCell,
   },
   {
@@ -129,7 +129,7 @@ const allColumns = [
     accessorFn: (row: champRow) =>
       `${Number(row.stats.selfMitigatedPerMinute).toFixed(0)}`,
     header: "Damage Mitigated",
-    size: 100,
+    size: 168,
     Cell: PerMinuteCell,
   },
   {
@@ -137,7 +137,7 @@ const allColumns = [
     accessorFn: (row: champRow) =>
       `${Number(row.stats.damageShare * 100).toFixed(1)}`,
     header: "Damage Share",
-    size: 100,
+    size: 144,
     Cell: PercentageCell,
   },
   {
@@ -145,15 +145,15 @@ const allColumns = [
     accessorFn: (row: champRow) =>
       `${Number(row.stats.goldShare * 100).toFixed(1)}`,
     header: "Gold Share",
-    size: 100,
+    size: 125,
     Cell: PercentageCell,
   },
   {
     accessorKey: "killParticipation",
     accessorFn: (row: champRow) =>
       `${Number(row.stats.killParticipation * 100).toFixed(1)}`,
-    header: "Kill Participation",
-    size: 100,
+    header: "KP%",
+    size: 80,
     Cell: PercentageCell,
   },
 ];
@@ -196,6 +196,7 @@ const ChampionTable = () => {
     },
     enableColumnActions: false,
     enableColumnOrdering: true,
+    layoutMode: "grid-no-grow",
     displayColumnDefOptions: {
       "mrt-row-expand": {
         visibleInShowHideMenu: false,

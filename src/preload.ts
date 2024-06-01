@@ -27,6 +27,8 @@ export const playerAPI = {
     ipcRenderer.invoke("check-player", userData),
   createPlayer: (userData: UserData): Promise<boolean> =>
     ipcRenderer.invoke("create-player", userData),
+  resetPlayer: (userData: UserData) =>
+    ipcRenderer.send("reset-player", userData),
   searchPlayer: (userData: UserData): Promise<UserData> =>
     ipcRenderer.invoke("player-search", userData),
   getSearchHistory: (): Promise<Search[]> =>
