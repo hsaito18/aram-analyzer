@@ -42,6 +42,7 @@ export default function ProfileTopBar({
     wins: 0,
     losses: 0,
     winRate: 0,
+    lastUpdatedTime: 0,
   });
 
   useEffect(() => {
@@ -57,10 +58,15 @@ export default function ProfileTopBar({
     };
   }, []);
 
-  const lastUpdatedDate = new Date()
-    .toLocaleString()
-    .replace(/T/, " ") // replace T with a space
-    .replace(/\..+/, ""); // delete the dot and everything after;
+  function formatDate(dateNum: number): string {
+    if (dateNum == 0) {
+      return "-";
+    }
+    return new Date(dateNum)
+      .toLocaleString()
+      .replace(/T/, " ") // replace T with a space
+      .replace(/\..+/, ""); // delete the dot and everything after;
+  }
 
   function analyzeMatches(): void {
     playerAPI.analyzeMatches(userData);
@@ -116,7 +122,9 @@ export default function ProfileTopBar({
               </div>
               <div id="lastUpdatedBox">
                 <div id="lastUpdatedText">Last updated:</div>
-                <div id="lastUpdatedDate">{lastUpdatedDate}</div>
+                <div id="lastUpdatedDate">
+                  {formatDate(data.lastUpdatedTime)}
+                </div>
               </div>
             </div>
           </div>

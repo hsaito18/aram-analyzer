@@ -82,14 +82,16 @@
 
 #highlightsTable {
   width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.25rem;
 }
 
 #highlightsTable th:nth-child(1) {
-  width: 5rem;
+  width: 8rem;
 }
 
 #highlightsTable th:nth-child(2) {
-  width: 0.6rem;
+  width: 5rem;
 }
 
 #highlightsTable th:nth-child(3) {
@@ -98,7 +100,9 @@
 
 #highlightsTable tr td:nth-child(3) {
   display: flex;
-  justify-content: flex-end;
+}
+#highlightsTable tr {
+  padding: 2px;
 }
 
 .perMinuteLabelCell {
@@ -108,6 +112,11 @@
 
 .perMinute {
   font-size: 0.7rem;
+}
+
+#matchDateCell {
+  width: 100%;
+  padding-left: 3rem;
 }
 
 #matchHistoryRow {

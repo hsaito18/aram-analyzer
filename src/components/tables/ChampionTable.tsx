@@ -6,7 +6,7 @@ import {
   MRT_GlobalFilterTextField,
   MRT_ShowHideColumnsButton,
 } from "material-react-table";
-import { Box, lighten } from "@mui/material";
+import { Box, lighten, CircularProgress } from "@mui/material";
 import ChampionDetail from "./championDetail/ChampionDetail";
 import { champRow } from "./table.interface";
 import {
@@ -156,10 +156,39 @@ const allColumns = [
     size: 80,
     Cell: PercentageCell,
   },
+  {
+    accessorKey: "doubleKills",
+    accessorFn: (row: champRow) => `${row.totalStats.doublekills}`,
+    header: "Double Kills",
+    size: 128,
+    Cell: StandardCell,
+  },
+  {
+    accessorKey: "tripleKills",
+    accessorFn: (row: champRow) => `${row.totalStats.triplekills}`,
+    header: "Triple Kills",
+    size: 118,
+    Cell: StandardCell,
+  },
+  {
+    accessorKey: "quadraKills",
+    accessorFn: (row: champRow) => `${row.totalStats.quadrakills}`,
+    header: "Quadra Kills",
+    size: 128,
+    Cell: StandardCell,
+  },
+  {
+    accessorKey: "pentaKills",
+    accessorFn: (row: champRow) => `${row.totalStats.pentakills}`,
+    header: "Penta Kills",
+    size: 118,
+    Cell: StandardCell,
+  },
 ];
 
 const ChampionTable = () => {
   const [data, setData] = useState<champRow[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const removeFunc = playerAPI.onTableChampStats(
@@ -169,8 +198,16 @@ const ChampionTable = () => {
       }
     );
 
+    const removeLoadingFunc = playerAPI.onListener(
+      "loadingData",
+      (loading: boolean) => {
+        setLoading(loading);
+      }
+    );
+
     return () => {
       removeFunc();
+      removeLoadingFunc();
     };
   }, []);
 
@@ -192,6 +229,10 @@ const ChampionTable = () => {
         damageMitigated: false,
         damageShare: false,
         goldShare: false,
+        doubleKills: false,
+        tripleKills: false,
+        quadraKills: false,
+        pentaKills: false,
       },
     },
     enableColumnActions: false,
@@ -252,10 +293,21 @@ const ChampionTable = () => {
   return (
     <div id="tableMain">
       <div className="content">
-        {data.length > 0 ? (
-          <MaterialReactTable table={table} />
+        {isLoading ? (
+          <div id="loadingBox">
+            <div id="loadingText">Downloading Matches...</div>
+            <div id="loadingSpinner">
+              <CircularProgress />
+            </div>
+          </div>
         ) : (
-          <div>Loading...</div>
+          <>
+            {data.length > 0 ? (
+              <MaterialReactTable table={table} />
+            ) : (
+              <div id="noDataFound">No Matches Saved</div>
+            )}
+          </>
         )}
       </div>
     </div>

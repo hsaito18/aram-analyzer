@@ -11,7 +11,7 @@ import {
 } from "./player.interface";
 import { Match, Participant } from "../matches/match.interface";
 import { hasMatch, loadMatch, saveMatch } from "../matches/match.controller";
-import { mergeAverages, mergeTotals, mergeMax } from "../object.service";
+import { mergeAverages, mergeTotals, mergeChampHighs } from "../object.service";
 import { RIOT_API_KEY } from "../../../config/apiConfig";
 import fs from "fs";
 import axios from "axios";
@@ -112,6 +112,7 @@ function getBlankPlayerStats(): PlayerStats {
     losses: 0,
     winRate: 0,
     totalPlayed: 0,
+    lastUpdatedTime: 0,
     totalStats: {
       totalDamage: 0,
       totalGold: 0,
@@ -318,34 +319,141 @@ function getMatchTotalStats(participant: Participant): TotalChampStats {
 function getMatchHighs(
   matchTotalStats: TotalChampStats,
   detailedChampStats: DetailedChampStats,
-  participant: Participant
+  participant: Participant,
+  matchId: string,
+  date: string
 ): ChampHighs {
   return {
-    mostKills: matchTotalStats.totalKills,
-    mostDeaths: matchTotalStats.totalDeaths,
-    mostAssists: matchTotalStats.totalAssists,
-    mostDamage: detailedChampStats.damagePerMinute,
-    mostTotalDamage: matchTotalStats.totalDamage,
-    mostGold: detailedChampStats.goldPerMinute,
-    mostTotalGold: matchTotalStats.totalGold,
-    mostCCTime: detailedChampStats.ccPerMinute,
-    mostHealing: detailedChampStats.healingPerMinute,
-    mostShielding: detailedChampStats.shieldingPerMinute,
-    mostDamageShare: detailedChampStats.damageShare,
-    mostGoldShare: detailedChampStats.goldShare,
-    mostDamageTaken: detailedChampStats.damageTakenPerMinute,
-    mostObjectiveDamage: detailedChampStats.objectiveDamagePerMinute,
-    mostKillParticipation: detailedChampStats.killParticipation,
-    mostSelfMitigated: detailedChampStats.selfMitigatedPerMinute,
-    mostTotalCCTime: matchTotalStats.totalCCTime,
-    mostTotalHealing: matchTotalStats.totalHealing,
-    mostTotalShielding: matchTotalStats.totalShielding,
-    mostTotalObjectiveDamage: matchTotalStats.totalObjectiveDamage,
-    mostTotalDamageTaken: matchTotalStats.totalDamageTaken,
-    mostTotalSelfMitigated: matchTotalStats.totalSelfMitigated,
-    biggestCrit: participant.largestCriticalStrike,
-    biggestKillingSpree: participant.largestKillingSpree,
-    biggestMultikill: participant.largestMultiKill,
+    mostKills: {
+      value: matchTotalStats.totalKills,
+      matchId,
+      date,
+    },
+    mostDeaths: {
+      value: matchTotalStats.totalDeaths,
+      matchId,
+      date,
+    },
+    mostAssists: {
+      value: matchTotalStats.totalAssists,
+      matchId,
+      date,
+    },
+    mostDamage: {
+      value: detailedChampStats.damagePerMinute,
+      matchId,
+      date,
+    },
+    mostTotalDamage: {
+      value: matchTotalStats.totalDamage,
+      matchId,
+      date,
+    },
+    mostGold: {
+      value: detailedChampStats.goldPerMinute,
+      matchId,
+      date,
+    },
+    mostTotalGold: {
+      value: matchTotalStats.totalGold,
+      matchId,
+      date,
+    },
+    mostTotalCS: {
+      value: participant.totalMinionsKilled,
+      matchId,
+      date,
+    },
+    mostCCTime: {
+      value: detailedChampStats.ccPerMinute,
+      matchId,
+      date,
+    },
+    mostHealing: {
+      value: detailedChampStats.healingPerMinute,
+      matchId,
+      date,
+    },
+    mostShielding: {
+      value: detailedChampStats.shieldingPerMinute,
+      matchId,
+      date,
+    },
+    mostDamageShare: {
+      value: detailedChampStats.damageShare,
+      matchId,
+      date,
+    },
+    mostGoldShare: {
+      value: detailedChampStats.goldShare,
+      matchId,
+      date,
+    },
+    mostDamageTaken: {
+      value: detailedChampStats.damageTakenPerMinute,
+      matchId,
+      date,
+    },
+    mostObjectiveDamage: {
+      value: detailedChampStats.objectiveDamagePerMinute,
+      matchId,
+      date,
+    },
+    mostKillParticipation: {
+      value: detailedChampStats.killParticipation,
+      matchId,
+      date,
+    },
+    mostSelfMitigated: {
+      value: detailedChampStats.selfMitigatedPerMinute,
+      matchId,
+      date,
+    },
+    mostTotalCCTime: {
+      value: matchTotalStats.totalCCTime,
+      matchId,
+      date,
+    },
+    mostTotalHealing: {
+      value: matchTotalStats.totalHealing,
+      matchId,
+      date,
+    },
+    mostTotalShielding: {
+      value: matchTotalStats.totalShielding,
+      matchId,
+      date,
+    },
+    mostTotalObjectiveDamage: {
+      value: matchTotalStats.totalObjectiveDamage,
+      matchId,
+      date,
+    },
+    mostTotalDamageTaken: {
+      value: matchTotalStats.totalDamageTaken,
+      matchId,
+      date,
+    },
+    mostTotalSelfMitigated: {
+      value: matchTotalStats.totalSelfMitigated,
+      matchId,
+      date,
+    },
+    biggestCrit: {
+      value: participant.largestCriticalStrike,
+      matchId,
+      date,
+    },
+    biggestKillingSpree: {
+      value: participant.largestKillingSpree,
+      matchId,
+      date,
+    },
+    biggestMultikill: {
+      value: participant.largestMultiKill,
+      matchId,
+      date,
+    },
   };
 }
 
@@ -420,7 +528,9 @@ export const analyzePlayerMatches = async (
     const currentHighs = getMatchHighs(
       currentTotalStats,
       detailedChampStats,
-      participant
+      participant,
+      match,
+      String(matchData.info.gameStartTimestamp)
     );
     if (champStats[champion]) {
       champStats[champion].wins += win ? 1 : 0;
@@ -434,7 +544,7 @@ export const analyzePlayerMatches = async (
       champStats[champion].totalPlayed = prevPlayed + 1;
       mergeAverages(champStats[champion].stats, detailedChampStats, prevPlayed);
       mergeTotals(champStats[champion].totalStats, currentTotalStats);
-      mergeMax(champStats[champion].highs, currentHighs);
+      mergeChampHighs(champStats[champion].highs, currentHighs);
       champStats[champion].stats.kda =
         (champStats[champion].stats.killsPerGame +
           champStats[champion].stats.assistsPerGame) /
@@ -465,6 +575,7 @@ export const analyzePlayerMatches = async (
       (playerStats.stats.killsPerGame + playerStats.stats.assistsPerGame) /
       playerStats.stats.deathsPerGame;
     player.analyzedMatches.push(match);
+    player.playerStats.lastUpdatedTime = Date.now();
   }
   player.champStats = champStats;
   player.playerStats = playerStats;

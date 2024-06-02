@@ -1,22 +1,31 @@
 import { champRow } from "../table.interface";
-import placeholder from "../../../../public/assets/placeholder.jpg";
 import useImage from "../../../hooks/useImage";
 import { Box } from "@mui/material";
 import "./championDetail.css";
 
 function MatchDateCell({ date, matchId }: { date: string; matchId: string }) {
+  const stringDate = new Date(Number(date)).toLocaleDateString();
+
+  function handleClick() {
+    console.log(`Match ID: ${matchId}`);
+  }
+
   return (
-    <Box
-      component="span"
-      sx={{
-        backgroundColor: "orange",
-        borderRadius: "0.25rem",
-        color: "#fff",
-        p: "0.25rem",
-      }}
-    >
-      {date}
-    </Box>
+    <div id="matchDateCell">
+      <Box
+        component="span"
+        sx={{
+          backgroundColor: "orange",
+          borderRadius: "0.25rem",
+          color: "#fff",
+          p: "0.25rem",
+          cursor: "pointer",
+        }}
+        onClick={handleClick}
+      >
+        {stringDate}
+      </Box>
+    </div>
   );
 }
 
@@ -37,7 +46,10 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
     <div id="champDetailMain">
       <div id="picRow">
         <h1 id="champTitle"> {champData.champName}</h1>
-        <img id="champPic" src={image}></img>
+        <img
+          id="champPic"
+          src={`static://assets/champion/${champData.champName}_0.jpg`}
+        ></img>
         <div id="picStatsRow">
           <div id="wlRow">
             <h3>W: {champData.wins}</h3>
@@ -204,7 +216,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
         </table>
       </div>
       <div id="highlightsRow">
-        <div>Game Highs</div>
+        <div style={{ width: "100%", fontWeight: "500" }}>Game Highs</div>
         <table id="highlightsTable">
           <thead>
             <tr>
@@ -217,28 +229,37 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
             <tr>
               <td>Kills</td>
               <td className="numberCell">
-                {Number(champData.highs.mostKills)}
+                {Number(champData.highs.mostKills.value)}
               </td>
               <td>
-                <MatchDateCell date={"2024-04-04"} matchId={"NA_3985656"} />
+                <MatchDateCell
+                  date={champData.highs.mostKills.date}
+                  matchId={champData.highs.mostKills.matchId}
+                />
               </td>
             </tr>
             <tr>
               <td>Deaths</td>
               <td className="numberCell">
-                {Number(champData.highs.mostDeaths)}
+                {Number(champData.highs.mostDeaths.value)}
               </td>
               <td>
-                <MatchDateCell date={"2024-04-04"} matchId={"NA_3985656"} />
+                <MatchDateCell
+                  date={champData.highs.mostDeaths.date}
+                  matchId={champData.highs.mostDeaths.matchId}
+                />
               </td>
             </tr>
             <tr>
               <td>Assists</td>
               <td className="numberCell">
-                {Number(champData.highs.mostAssists)}
+                {Number(champData.highs.mostAssists.value)}
               </td>
               <td>
-                <MatchDateCell date={"2024-04-04"} matchId={"NA_3985656"} />
+                <MatchDateCell
+                  date={champData.highs.mostAssists.date}
+                  matchId={champData.highs.mostAssists.matchId}
+                />
               </td>
             </tr>
             <tr>
@@ -246,10 +267,25 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
                 <PerMinuteLabelCell label="Damage" />
               </td>
               <td className="numberCell">
-                {Number(champData.highs.mostDamage).toFixed(0)}
+                {Number(champData.highs.mostDamage.value).toFixed(0)}
               </td>
               <td>
-                <MatchDateCell date={"2024-04-04"} matchId={"NA_3985656"} />
+                <MatchDateCell
+                  date={champData.highs.mostDamage.date}
+                  matchId={champData.highs.mostDamage.matchId}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Total Damage</td>
+              <td className="numberCell">
+                {Number(champData.highs.mostTotalDamage.value).toFixed(0)}
+              </td>
+              <td>
+                <MatchDateCell
+                  date={champData.highs.mostTotalDamage.date}
+                  matchId={champData.highs.mostTotalDamage.matchId}
+                />
               </td>
             </tr>
             <tr>
@@ -257,10 +293,53 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
                 <PerMinuteLabelCell label="Damage Taken" />
               </td>
               <td className="numberCell">
-                {Number(champData.highs.mostDamageTaken).toFixed(0)}
+                {Number(champData.highs.mostDamageTaken.value).toFixed(0)}
               </td>
               <td>
-                <MatchDateCell date={"2024-04-04"} matchId={"NA_3985656"} />
+                <MatchDateCell
+                  date={champData.highs.mostDamageTaken.date}
+                  matchId={champData.highs.mostDamageTaken.matchId}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <PerMinuteLabelCell label="Healing" />
+              </td>
+              <td className="numberCell">
+                {Number(champData.highs.mostHealing.value).toFixed(0)}
+              </td>
+              <td>
+                <MatchDateCell
+                  date={champData.highs.mostHealing.date}
+                  matchId={champData.highs.mostHealing.matchId}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <PerMinuteLabelCell label="Shielding" />
+              </td>
+              <td className="numberCell">
+                {Number(champData.highs.mostShielding.value).toFixed(0)}
+              </td>
+              <td>
+                <MatchDateCell
+                  date={champData.highs.mostShielding.date}
+                  matchId={champData.highs.mostShielding.matchId}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Total CC Time</td>
+              <td className="numberCell">
+                {Number(champData.highs.mostTotalCCTime.value).toFixed(0)}
+              </td>
+              <td>
+                <MatchDateCell
+                  date={champData.highs.mostTotalCCTime.date}
+                  matchId={champData.highs.mostTotalCCTime.matchId}
+                />
               </td>
             </tr>
             <tr>
@@ -268,46 +347,86 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
                 <PerMinuteLabelCell label="Gold" />
               </td>
               <td className="numberCell">
-                {Number(champData.highs.mostGold).toFixed(0)}
+                {Number(champData.highs.mostGold.value).toFixed(0)}
               </td>
               <td>
-                <MatchDateCell date={"2024-04-04"} matchId={"NA_3985656"} />
+                <MatchDateCell
+                  date={champData.highs.mostGold.date}
+                  matchId={champData.highs.mostGold.matchId}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>CS</td>
+              <td className="numberCell">
+                {Number(champData.highs.mostTotalCS.value).toFixed(0)}
+              </td>
+              <td>
+                <MatchDateCell
+                  date={champData.highs.mostTotalCS.date}
+                  matchId={champData.highs.mostTotalCS.matchId}
+                />
               </td>
             </tr>
             <tr>
               <td>Damage Share</td>
               <td className="numberCell">
-                {Number(champData.highs.mostDamageShare * 100).toFixed(1)}%
+                {Number(champData.highs.mostDamageShare.value * 100).toFixed(1)}
+                %
               </td>
               <td>
-                <MatchDateCell date={"2024-04-04"} matchId={"NA_3985656"} />
+                <MatchDateCell
+                  date={champData.highs.mostDamageShare.date}
+                  matchId={champData.highs.mostDamageShare.matchId}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Gold Share</td>
+              <td className="numberCell">
+                {Number(champData.highs.mostGoldShare.value * 100).toFixed(1)}%
+              </td>
+              <td>
+                <MatchDateCell
+                  date={champData.highs.mostGoldShare.date}
+                  matchId={champData.highs.mostGoldShare.matchId}
+                />
               </td>
             </tr>
             <tr>
               <td>Critical Strike</td>
               <td className="numberCell">
-                {Number(champData.highs.biggestCrit)}
+                {Number(champData.highs.biggestCrit.value)}
               </td>
               <td>
-                <MatchDateCell date={"2024-04-04"} matchId={"NA_3985656"} />
+                <MatchDateCell
+                  date={champData.highs.biggestCrit.date}
+                  matchId={champData.highs.biggestCrit.matchId}
+                />
               </td>
             </tr>
             <tr>
               <td>Killing Spree</td>
               <td className="numberCell">
-                {Number(champData.highs.biggestKillingSpree)}
+                {Number(champData.highs.biggestKillingSpree.value)}
               </td>
               <td>
-                <MatchDateCell date={"2024-04-04"} matchId={"NA_3985656"} />
+                <MatchDateCell
+                  date={champData.highs.biggestKillingSpree.date}
+                  matchId={champData.highs.biggestKillingSpree.matchId}
+                />
               </td>
             </tr>
             <tr>
               <td>Multikill</td>
               <td className="numberCell">
-                {Number(champData.highs.biggestMultikill)}
+                {Number(champData.highs.biggestMultikill.value)}
               </td>
               <td>
-                <MatchDateCell date={"2024-04-04"} matchId={"NA_3985656"} />
+                <MatchDateCell
+                  date={champData.highs.biggestMultikill.date}
+                  matchId={champData.highs.biggestMultikill.matchId}
+                />
               </td>
             </tr>
           </tbody>

@@ -8,6 +8,7 @@ import {
   getPlayerStats,
   findByUsername,
   resetChampionStats,
+  resetAllChampionStats,
 } from "./players/player.controller";
 import { UserData } from "./players/player.interface";
 import { getSearchHistory, addSearchHistory } from "./searchHistory";
@@ -32,10 +33,12 @@ async function getPlayerStatsHandle(event: any, userData: UserData) {
 
 ipcMain.on("analyze-matches", async (event, userData) => {
   Logger.log("analyzing matches for user", userData);
+  event.sender.send("loadingData", true);
   await saveARAMMatches(userData);
   await analyzePlayerMatches(userData);
   await getChampStats(event, userData);
   await getPlayerStatsHandle(event, userData);
+  event.sender.send("loadingData", false);
 });
 
 function champDataArrayizer(obj: any) {
@@ -67,6 +70,10 @@ ipcMain.handle("create-player", async (event, userData) => {
 
 ipcMain.on("reset-player", async (event, userData) => {
   resetChampionStats(userData);
+});
+
+ipcMain.on("reset-all", async (event) => {
+  resetAllChampionStats();
 });
 
 ipcMain.handle("player-search", async (event, userData) => {

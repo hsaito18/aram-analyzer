@@ -23,6 +23,10 @@ const Item = styled(Paper)(({ theme }) => ({
   fontSize: "1.3rem",
 }));
 
+function resetAllPlayers() {
+  playerAPI.resetAllPlayers();
+}
+
 export default function Home() {
   const navigate = useNavigate();
   const [searchHistory, setSearchHistory] = useState<any[]>([]);
@@ -150,6 +154,7 @@ export default function Home() {
               ))}
             </Stack>
           </div>
+          <Button onClick={resetAllPlayers}>RESET ALL PLAYERS</Button>
         </div>
       </div>
     </>

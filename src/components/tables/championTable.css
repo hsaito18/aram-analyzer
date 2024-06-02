@@ -1,10 +1,9 @@
 #detailBoxContainer {
   border-radius: 6px;
   border: darkgray 4px solid;
-  /* padding: 0px 12px 12px 12px; */
   padding: 8px;
   font-family: "Roboto";
-  width: 85vw;
+  width: 1370px;
 }
 
 #tableMain {
@@ -58,4 +57,40 @@
 
 .MuiTableContainer-root::-webkit-scrollbar-thumb {
   display: block !important;
+}
+
+#noDataFound {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 2rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+#loadingBox {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 2rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#loadingText {
+  height: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#loadingSpinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(20%);
+  scale: 4;
+  overflow: hidden;
+  height: 20%;
 }

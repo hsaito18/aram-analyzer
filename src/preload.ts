@@ -29,10 +29,16 @@ export const playerAPI = {
     ipcRenderer.invoke("create-player", userData),
   resetPlayer: (userData: UserData) =>
     ipcRenderer.send("reset-player", userData),
+  resetAllPlayers: () => ipcRenderer.send("reset-all"),
   searchPlayer: (userData: UserData): Promise<UserData> =>
     ipcRenderer.invoke("player-search", userData),
   getSearchHistory: (): Promise<Search[]> =>
     ipcRenderer.invoke("get-search-history"),
+  onListener: (channel: string, func: any) => {
+    const newFunc = (_: any, data: any) => func(data);
+    ipcRenderer.on(channel, newFunc);
+    return () => ipcRenderer.removeListener(channel, newFunc);
+  },
 };
 
 contextBridge.exposeInMainWorld("playerAPI", playerAPI);

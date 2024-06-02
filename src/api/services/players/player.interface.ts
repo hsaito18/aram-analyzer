@@ -58,31 +58,38 @@ export interface TotalChampStats {
 }
 
 export interface ChampHighs {
-  mostKills: number;
-  mostDeaths: number;
-  mostAssists: number;
-  mostDamage: number;
-  mostTotalDamage: number;
-  mostGold: number;
-  mostTotalGold: number;
-  mostCCTime: number;
-  mostTotalCCTime: number;
-  mostHealing: number;
-  mostTotalHealing: number;
-  mostShielding: number;
-  mostTotalShielding: number;
-  mostObjectiveDamage: number;
-  mostTotalObjectiveDamage: number;
-  mostDamageTaken: number;
-  mostTotalDamageTaken: number;
-  mostSelfMitigated: number;
-  mostTotalSelfMitigated: number;
-  mostDamageShare: number;
-  mostGoldShare: number;
-  mostKillParticipation: number;
-  biggestCrit: number;
-  biggestMultikill: number;
-  biggestKillingSpree: number;
+  mostKills: SuperlativeTrio;
+  mostDeaths: SuperlativeTrio;
+  mostAssists: SuperlativeTrio;
+  mostDamage: SuperlativeTrio;
+  mostTotalDamage: SuperlativeTrio;
+  mostGold: SuperlativeTrio;
+  mostTotalGold: SuperlativeTrio;
+  mostTotalCS: SuperlativeTrio;
+  mostCCTime: SuperlativeTrio;
+  mostTotalCCTime: SuperlativeTrio;
+  mostHealing: SuperlativeTrio;
+  mostTotalHealing: SuperlativeTrio;
+  mostShielding: SuperlativeTrio;
+  mostTotalShielding: SuperlativeTrio;
+  mostObjectiveDamage: SuperlativeTrio;
+  mostTotalObjectiveDamage: SuperlativeTrio;
+  mostDamageTaken: SuperlativeTrio;
+  mostTotalDamageTaken: SuperlativeTrio;
+  mostSelfMitigated: SuperlativeTrio;
+  mostTotalSelfMitigated: SuperlativeTrio;
+  mostDamageShare: SuperlativeTrio;
+  mostGoldShare: SuperlativeTrio;
+  mostKillParticipation: SuperlativeTrio;
+  biggestCrit: SuperlativeTrio;
+  biggestMultikill: SuperlativeTrio;
+  biggestKillingSpree: SuperlativeTrio;
+}
+
+export interface SuperlativeTrio {
+  value: number;
+  matchId: string;
+  date: string;
 }
 
 export interface TeamStats {
@@ -111,6 +118,7 @@ export interface PlayerStats {
   losses: number;
   winRate: number;
   totalPlayed: number;
+  lastUpdatedTime: number;
   stats: DetailedChampStats;
   totalStats: TotalChampStats;
 }
@@ -120,4 +128,5 @@ export interface SimplePlayerStats {
   losses: number;
   winRate: number;
   totalPlayed: number;
+  lastUpdatedTime: number;
 }
