@@ -1,5 +1,4 @@
 import { champRow } from "../table.interface";
-import useImage from "../../../hooks/useImage";
 import { Box } from "@mui/material";
 import "./championDetail.css";
 
@@ -39,9 +38,6 @@ function PerMinuteLabelCell({ label }: { label: string }) {
 }
 
 export default function ChampionDetail({ champData }: { champData: champRow }) {
-  const { loading, error, image } = useImage(
-    `champion/${champData.champName}_0.jpg`
-  );
   return (
     <div id="champDetailMain">
       <div id="picRow">

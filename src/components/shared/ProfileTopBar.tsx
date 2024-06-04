@@ -27,15 +27,6 @@ export default function ProfileTopBar({
   tagLine: string;
 }) {
   const userData = { gameName, tagLine };
-  // const [icon, setIcon] = useState(0);
-  // const { loading, error, image } = useImage(`profileicon/${icon}.png`);
-  // useEffect(() => {
-  //   async function fetchIcon() {
-  //     const out = await playerAPI.getProfileIcon(userData);
-  //     setIcon(out);
-  //   }
-  //   fetchIcon();
-  // });
 
   const [data, setData] = useState<SimplePlayerStats>({
     totalPlayed: 0,

@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import useImage from "../../hooks/useImage";
 import "./championTable.css";
 
 export function StandardCell({ cell }: { cell: any }) {
@@ -73,9 +72,6 @@ export function PercentageCell({ cell }: { cell: any }) {
 }
 
 export function ChampionNameCell({ cell }: { cell: any }) {
-  const { loading, error, image } = useImage(
-    `champion_icons/${cell.row.original.champName}.png`
-  );
   return (
     <Box
       component="span"
@@ -99,7 +95,7 @@ export function ChampionNameCell({ cell }: { cell: any }) {
         }}
       >
         <img
-          src={image}
+          src={`static://assets/champion_icons/${cell.row.original.champName}.jpg`}
           alt={cell.row.original.name}
           style={{
             width: "100%",

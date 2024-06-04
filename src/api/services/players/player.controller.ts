@@ -8,6 +8,7 @@ import {
   ChampHighs,
   TeamStats,
   PlayerStats,
+  getBlankPlayerStats,
 } from "./player.interface";
 import { Match, Participant } from "../matches/match.interface";
 import { hasMatch, loadMatch, saveMatch } from "../matches/match.controller";
@@ -105,54 +106,6 @@ async function getARAMs(
 export const findAll = async (): Promise<Player[]> => Object.values(players);
 
 export const findOne = async (id: string): Promise<Player> => players[id];
-
-function getBlankPlayerStats(): PlayerStats {
-  return {
-    wins: 0,
-    losses: 0,
-    winRate: 0,
-    totalPlayed: 0,
-    lastUpdatedTime: 0,
-    totalStats: {
-      totalDamage: 0,
-      totalGold: 0,
-      totalCCTime: 0,
-      totalHealing: 0,
-      totalShielding: 0,
-      totalObjectiveDamage: 0,
-      totalDamageTaken: 0,
-      totalSelfMitigated: 0,
-      totalKills: 0,
-      totalDeaths: 0,
-      totalAssists: 0,
-      pentakills: 0,
-      quadrakills: 0,
-      triplekills: 0,
-      doublekills: 0,
-    },
-    stats: {
-      damagePerMinute: 0,
-      goldPerMinute: 0,
-      ccPerMinute: 0,
-      healingPerMinute: 0,
-      shieldingPerMinute: 0,
-      objectiveDamagePerMinute: 0,
-      damageTakenPerMinute: 0,
-      selfMitigatedPerMinute: 0,
-      killsPerMinute: 0,
-      deathsPerMinute: 0,
-      assistsPerMinute: 0,
-      killParticipation: 0,
-      damageShare: 0,
-      goldShare: 0,
-      killShare: 0,
-      killsPerGame: 0,
-      deathsPerGame: 0,
-      assistsPerGame: 0,
-      kda: 0,
-    },
-  };
-}
 
 export const createByUsername = async (
   userData: UserData

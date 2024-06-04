@@ -1,0 +1,92 @@
+#detailBoxContainer {
+  border-radius: 6px;
+  border: darkgray 4px solid;
+  padding: 8px;
+  font-family: "Roboto";
+  width: 1370px;
+}
+
+#profileMain {
+  width: 90vw;
+  height: 100%;
+  border-radius: 8px;
+  border: rgba(255, 255, 255, 0.7) 2px solid;
+  background-color: rgb(29, 29, 29);
+  position: relative;
+}
+
+#profileMain .content {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  box-sizing: content-box;
+  color: transparent;
+}
+
+.content .MuiPaper-root {
+  min-width: 100%;
+  width: max-content;
+  --table-width: 100%;
+}
+
+#playerStatsContainer {
+  color: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+}
+
+#playerStatsCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas: "winsCol killsCol statsCol";
+}
+
+#winRatesCol {
+  grid-area: winsCol;
+}
+
+#killsCol {
+  grid-area: killsCol;
+}
+
+#statsCol {
+  grid-area: statsCol;
+}
+
+#noDataFound {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 2rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+#loadingBox {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 2rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#loadingText {
+  height: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#loadingSpinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(20%);
+  scale: 4;
+  overflow: hidden;
+  height: 20%;
+}

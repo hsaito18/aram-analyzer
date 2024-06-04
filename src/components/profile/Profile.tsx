@@ -1,12 +1,24 @@
 import "./profile.css";
+import { useState } from "react";
 import ChampionTable from "../tables/ChampionTable";
+import ProfileTable from "../tables/ProfileTable/ProfileTable";
 import ProfileTopBar from "../shared/ProfileTopBar";
 import { useLocation } from "react-router-dom";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 export default function Profile() {
+  const [page, setPage] = useState<number>(1);
   const location = useLocation();
   const { gameName, tagLine } = location.state.data;
-  //static://assets/profileicon/0.png
+
+  const responsive = {
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 1,
+    },
+  };
+
   return (
     <>
       <div
@@ -24,9 +36,37 @@ export default function Profile() {
       />
       <div id="main">
         <ProfileTopBar gameName={gameName} tagLine={tagLine} />
-        <div id="profileContent">
-          <ChampionTable />
-        </div>
+        <Carousel
+          additionalTransfrom={0}
+          arrows
+          centerMode={false}
+          containerClass="carousel-container"
+          dotListClass=""
+          focusOnSelect={false}
+          itemClass=""
+          keyBoardControl
+          pauseOnHover
+          renderArrowsWhenDisabled={false}
+          renderButtonGroupOutside={false}
+          renderDotsOutside={false}
+          responsive={{
+            desktop: {
+              breakpoint: {
+                max: 3000,
+                min: 1024,
+              },
+              items: 1,
+            },
+          }}
+          showDots
+        >
+          <div className="carousel-item">
+            <ChampionTable />
+          </div>
+          <div className="carousel-item">
+            <ProfileTable />
+          </div>
+        </Carousel>
       </div>
     </>
   );
