@@ -1,1 +1,1 @@
-export const RIOT_API_KEY = "RGAPI-01fdc3ab-49ad-4919-930f-e70ac6288f40";
+export const RIOT_API_KEY = "RGAPI-295ebc12-8a71-47a0-b59d-953fd678df9f";

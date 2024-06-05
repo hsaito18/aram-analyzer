@@ -4,19 +4,30 @@ import ChampionTable from "../tables/ChampionTable";
 import ProfileTable from "../tables/ProfileTable/ProfileTable";
 import ProfileTopBar from "../shared/ProfileTopBar";
 import { useLocation } from "react-router-dom";
-import Carousel from "react-multi-carousel";
+import { Button } from "@mui/material";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import "react-multi-carousel/lib/styles.css";
 
 export default function Profile() {
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
+  const MAX_PAGES = 3;
   const location = useLocation();
   const { gameName, tagLine } = location.state.data;
 
-  const responsive = {
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 1,
-    },
+  const nextPage = () => {
+    if (page === MAX_PAGES - 1) {
+      setPage(0);
+      return;
+    }
+    setPage(page + 1);
+  };
+
+  const prevPage = () => {
+    if (page === 0) {
+      setPage(MAX_PAGES - 1);
+      return;
+    }
+    setPage(page - 1);
   };
 
   return (
@@ -36,37 +47,32 @@ export default function Profile() {
       />
       <div id="main">
         <ProfileTopBar gameName={gameName} tagLine={tagLine} />
-        <Carousel
-          additionalTransfrom={0}
-          arrows
-          centerMode={false}
-          containerClass="carousel-container"
-          dotListClass=""
-          focusOnSelect={false}
-          itemClass=""
-          keyBoardControl
-          pauseOnHover
-          renderArrowsWhenDisabled={false}
-          renderButtonGroupOutside={false}
-          renderDotsOutside={false}
-          responsive={{
-            desktop: {
-              breakpoint: {
-                max: 3000,
-                min: 1024,
-              },
-              items: 1,
-            },
-          }}
-          showDots
-        >
-          <div className="carousel-item">
-            <ChampionTable />
+        <div id="profileMainBox">
+          <div id="profileLeft" className="profileSide">
+            <button className="profileButton" onClick={prevPage}>
+              <ChevronLeft />
+            </button>
           </div>
-          <div className="carousel-item">
-            <ProfileTable />
+          <div id="profileContent">
+            <div
+              className="carousel-item"
+              style={{ display: page == 0 ? "flex" : "none" }}
+            >
+              <ProfileTable />
+            </div>
+            <div
+              className="carousel-item"
+              style={{ display: page == 1 ? "flex" : "none" }}
+            >
+              <ChampionTable />
+            </div>
           </div>
-        </Carousel>
+          <div id="profileRight" className="profileSide">
+            <button className="profileButton" onClick={nextPage}>
+              <ChevronRight />
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );

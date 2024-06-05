@@ -6,7 +6,6 @@ import {
   MRT_GlobalFilterTextField,
   MRT_ShowHideColumnsButton,
 } from "material-react-table";
-import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Box, lighten, CircularProgress } from "@mui/material";
 import { PlayerStats } from "../../../api/services/players/player.interface";
@@ -97,23 +96,110 @@ const ProfileTable = () => {
                       <tbody>
                         <tr>
                           <td>Assassins</td>
-                          <td className="numberCell">{Number(data.wins)}</td>
-                          <td className="numberCell">{Number(data.wins)}</td>
-                        </tr>
-                        <tr>
-                          <td>Losses</td>
-                          <td className="numberCell">{Number(data.losses)}</td>
-                        </tr>
-                        <tr>
-                          <td>Win Rate</td>
                           <td className="numberCell">
-                            {Number(data.winRate).toFixed(1)}%
+                            {Number(data.classWinRates.assassin.wins)}
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.assassin.losses)}
                           </td>
                         </tr>
                         <tr>
-                          <td>Total Played</td>
+                          <td>Burst Mages</td>
                           <td className="numberCell">
-                            {Number(data.totalPlayed)}
+                            {Number(data.classWinRates.burst.wins)}
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.burst.losses)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Battle Mages</td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.battlemage.wins)}
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.battlemage.losses)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Artillery</td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.artillery.wins)}
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.artillery.losses)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Marksmen</td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.marksman.wins)}
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.marksman.losses)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Skirmishers</td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.skirmisher.wins)}
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.skirmisher.losses)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Juggernauts</td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.juggernaut.wins)}
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.juggernaut.losses)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Divers</td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.diver.wins)}
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.diver.losses)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Vanguards</td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.vanguard.wins)}
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.vanguard.losses)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Wardens</td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.warden.wins)}
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.warden.losses)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Enchanters</td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.enchanter.wins)}
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.enchanter.losses)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Catcher</td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.catcher.wins)}
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.classWinRates.catcher.losses)}
                           </td>
                         </tr>
                       </tbody>

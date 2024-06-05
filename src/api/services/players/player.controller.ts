@@ -9,10 +9,12 @@ import {
   TeamStats,
   PlayerStats,
   getBlankPlayerStats,
+  ClassWinRates,
 } from "./player.interface";
 import { Match, Participant } from "../matches/match.interface";
 import { hasMatch, loadMatch, saveMatch } from "../matches/match.controller";
 import { mergeAverages, mergeTotals, mergeChampHighs } from "../object.service";
+import { ChampionClasses } from "../../../static/championClasses";
 import { RIOT_API_KEY } from "../../../config/apiConfig";
 import fs from "fs";
 import axios from "axios";
@@ -485,6 +487,21 @@ export const analyzePlayerMatches = async (
       match,
       String(matchData.info.gameStartTimestamp)
     );
+    let championClass =
+      ChampionClasses[champion as keyof typeof ChampionClasses];
+    if (!Array.isArray(championClass)) {
+      championClass = [championClass];
+    }
+    for (const champClass of championClass) {
+      if (win) {
+        playerStats.classWinRates[champClass as keyof ClassWinRates].wins += 1;
+      } else {
+        playerStats.classWinRates[
+          champClass as keyof ClassWinRates
+        ].losses += 1;
+      }
+    }
+
     if (champStats[champion]) {
       champStats[champion].wins += win ? 1 : 0;
       champStats[champion].losses += win ? 0 : 1;
