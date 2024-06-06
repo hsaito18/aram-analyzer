@@ -86,6 +86,11 @@ export interface ChampHighs {
   biggestKillingSpree: SuperlativeTrio;
 }
 
+export interface PlayerHighs extends ChampHighs {
+  longestWinStreak: number;
+  longestLossStreak: number;
+}
+
 export interface SuperlativeTrio {
   value: number;
   matchId: string;
@@ -140,8 +145,11 @@ export interface PlayerStats {
   lastUpdatedTime: number;
   stats: DetailedChampStats;
   totalStats: TotalChampStats;
-  highs: ChampHighs;
+  highs: PlayerHighs;
   classWinRates: ClassWinRates;
+  results: number[];
+  lastTen: number[];
+  currentStreak: number;
 }
 
 export interface SimplePlayerStats {
@@ -224,6 +232,8 @@ export function getBlankPlayerStats(): PlayerStats {
       biggestCrit: { value: 0, matchId: "", date: "" },
       biggestMultikill: { value: 0, matchId: "", date: "" },
       biggestKillingSpree: { value: 0, matchId: "", date: "" },
+      longestWinStreak: 0,
+      longestLossStreak: 0,
     },
     classWinRates: {
       enchanter: { wins: 0, losses: 0 },
@@ -239,5 +249,8 @@ export function getBlankPlayerStats(): PlayerStats {
       vanguard: { wins: 0, losses: 0 },
       warden: { wins: 0, losses: 0 },
     },
+    results: [],
+    lastTen: [0, 0],
+    currentStreak: 0,
   };
 }

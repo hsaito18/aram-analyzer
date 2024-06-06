@@ -457,6 +457,56 @@ async function downloadMatches(matches: string[]): Promise<void> {
   }
 }
 
+// TODO: add LotQD analysis
+function analyzeWinStreaks(results: number[]): {
+  longestWinStreak: number;
+  longestLossStreak: number;
+  lastTenRecord: number[];
+  currentStreak: { isWinStreak: boolean; length: number };
+} {
+  let currentWinStreak = 0;
+  let currentLossStreak = 0;
+  let longestWinStreak = 0;
+  let longestLossStreak = 0;
+
+  let lastTenWins = 0;
+
+  const firstResult = results[0];
+  const currentStreakType = firstResult == 1;
+  let isCurrentWinStreakDone = false;
+  let currentStreakLength = 1;
+
+  for (let i = 0; i < results.length; i++) {
+    const result = results[i];
+    if (i < 10) {
+      lastTenWins += result;
+    }
+    if (i > 0 && !isCurrentWinStreakDone) {
+      if (result == firstResult) {
+        currentStreakLength++;
+      } else {
+        isCurrentWinStreakDone = true;
+      }
+    }
+    if (result == 1) {
+      currentWinStreak++;
+      currentLossStreak = 0;
+      longestWinStreak = Math.max(longestWinStreak, currentWinStreak);
+    } else {
+      currentLossStreak++;
+      currentWinStreak = 0;
+      longestLossStreak = Math.max(longestLossStreak, currentLossStreak);
+    }
+  }
+  const lastTenLosses = 10 - lastTenWins;
+  const lastTenRecord = [lastTenWins, lastTenLosses];
+  const currentStreak = {
+    isWinStreak: currentStreakType,
+    length: currentStreakLength,
+  };
+  return { longestWinStreak, longestLossStreak, lastTenRecord, currentStreak };
+}
+
 export const analyzePlayerMatches = async (
   userData: UserData
 ): Promise<boolean> => {
@@ -466,6 +516,7 @@ export const analyzePlayerMatches = async (
   const champStats: ChampStats = player.champStats;
   const playerStats: PlayerStats = player.playerStats;
   await downloadMatches(player.matches);
+  const currentResults = []; // This should work as long as all the games that have not been analyzed are all newer than all the analyzed games
   for (const match of player.matches) {
     if (player.analyzedMatches.includes(match)) continue;
     const matchData = await getMatchData(match);
@@ -534,6 +585,7 @@ export const analyzePlayerMatches = async (
     playerStats.losses += win ? 0 : 1;
     playerStats.winRate =
       (playerStats.wins / (playerStats.wins + playerStats.losses)) * 100;
+    currentResults.push(win ? 1 : 0);
     mergeAverages(
       playerStats.stats,
       detailedChampStats,
@@ -547,6 +599,14 @@ export const analyzePlayerMatches = async (
     player.analyzedMatches.push(match);
     player.playerStats.lastUpdatedTime = Date.now();
   }
+  player.playerStats.results = currentResults.concat(
+    player.playerStats.results
+  );
+  const winStreaksObj = analyzeWinStreaks(player.playerStats.results);
+  player.playerStats.highs.longestWinStreak = winStreaksObj.longestWinStreak;
+  player.playerStats.highs.longestLossStreak = winStreaksObj.longestLossStreak;
+  player.playerStats.lastTen = winStreaksObj.lastTenRecord;
+  player.playerStats.currentStreak = winStreaksObj.currentStreak.length;
   player.champStats = champStats;
   player.playerStats = playerStats;
   savePlayers();

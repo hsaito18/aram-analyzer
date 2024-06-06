@@ -19,10 +19,6 @@
   height: 12px;
 }
 
-html {
-  scrollbar-gutter: stable always;
-}
-
 #chrome {
   width: 100%;
   background-color: orange;

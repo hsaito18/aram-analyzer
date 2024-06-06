@@ -26,7 +26,6 @@
 .content .MuiPaper-root {
   min-width: 100%;
   width: max-content;
-  --table-width: 100%;
 }
 
 #playerStatsContainer {
@@ -39,8 +38,10 @@
 
 #playerStatsCols {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-areas: "winsCol killsCol statsCol";
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-areas: "winsCol killsCol highsCol teammatesCol";
+  margin-top: -8px;
+  font-size: 1.15rem;
 }
 
 #winRatesCol {
@@ -49,10 +50,66 @@
 
 #killsCol {
   grid-area: killsCol;
+  display: flex;
+  flex-direction: column;
+  padding: 0 60px 60px;
 }
 
-#statsCol {
-  grid-area: statsCol;
+#highsCol {
+  grid-area: highsCol;
+}
+
+#teammatesCol {
+  grid-area: teammatesCol;
+}
+
+.baseTable {
+  margin-bottom: 14px;
+}
+
+.tableTitle {
+  font-weight: 1000;
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.classWinRatesTable th:nth-child(1) {
+  width: 7.25rem;
+  text-align: left;
+}
+
+.classWinRatesTable th:nth-child(2) {
+  width: 2.8rem;
+  text-align: right;
+}
+
+.classWinRatesTable th:nth-child(3),
+.classWinRatesTable th:nth-child(4) {
+  width: 5.5rem;
+  text-align: right;
+}
+
+#killsTable th:nth-child(1) {
+  width: 7.5rem;
+  text-align: left;
+}
+
+#damageTitleRow {
+  transform: translateX(-2px);
+  font-weight: 800;
+}
+
+.smallBreak {
+  height: 4px;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
 }
 
 #noDataFound {

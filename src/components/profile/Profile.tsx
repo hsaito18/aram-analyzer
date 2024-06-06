@@ -6,7 +6,6 @@ import ProfileTopBar from "../shared/ProfileTopBar";
 import { useLocation } from "react-router-dom";
 import { Button } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
-import "react-multi-carousel/lib/styles.css";
 
 export default function Profile() {
   const [page, setPage] = useState<number>(0);
