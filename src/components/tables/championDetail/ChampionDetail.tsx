@@ -2,7 +2,13 @@ import { champRow } from "../table.interface";
 import { Box } from "@mui/material";
 import "./championDetail.css";
 
-function MatchDateCell({ date, matchId }: { date: string; matchId: string }) {
+export function MatchDateCell({
+  date,
+  matchId,
+}: {
+  date: string;
+  matchId: string;
+}) {
   const stringDate = new Date(Number(date)).toLocaleDateString();
 
   function handleClick() {
@@ -28,7 +34,7 @@ function MatchDateCell({ date, matchId }: { date: string; matchId: string }) {
   );
 }
 
-function PerMinuteLabelCell({ label }: { label: string }) {
+export function PerMinuteLabelCell({ label }: { label: string }) {
   return (
     <div className="perMinuteLabelCell">
       <div>{label}</div>
@@ -327,7 +333,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               </td>
             </tr>
             <tr>
-              <td>Total CC Time</td>
+              <td>CC Time</td>
               <td className="numberCell">
                 {Number(champData.highs.mostTotalCCTime.value).toFixed(0)}
               </td>

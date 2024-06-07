@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import {
+  puuidToName,
   createByUsername,
   saveARAMMatches,
   analyzePlayerMatches,
@@ -86,3 +87,5 @@ ipcMain.handle("player-search", async (event, userData) => {
 ipcMain.handle("get-search-history", async (event) => {
   return getSearchHistory();
 });
+
+ipcMain.handle("puuid-to-name", (event, puuid) => puuidToName(puuid));

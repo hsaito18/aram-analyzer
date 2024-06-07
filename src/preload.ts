@@ -1,6 +1,6 @@
-import { UserData } from "./api/services/players/player.interface";
+import { UserData } from "./api/players/player.interface";
 import { contextBridge, ipcRenderer } from "electron/renderer";
-import { Search } from "./api/services/searchHistory";
+import { Search } from "./api/searchHistory";
 
 export const playerAPI = {
   registerPlayer: (userData: UserData) =>
@@ -39,6 +39,8 @@ export const playerAPI = {
     ipcRenderer.on(channel, newFunc);
     return () => ipcRenderer.removeListener(channel, newFunc);
   },
+  getUserData: (puuid: string): Promise<UserData> =>
+    ipcRenderer.invoke("puuid-to-name", puuid),
 };
 
 contextBridge.exposeInMainWorld("playerAPI", playerAPI);

@@ -6,20 +6,77 @@ import {
   MRT_GlobalFilterTextField,
   MRT_ShowHideColumnsButton,
 } from "material-react-table";
-import { Box, lighten, CircularProgress } from "@mui/material";
-import { PlayerStats } from "../../../api/services/players/player.interface";
-import { getBlankPlayerStats } from "../../../api/services/players/player.interface";
+import { CircularProgress } from "@mui/material";
+import { formatLargeInteger } from "../../../services/string.service";
+import {
+  MatchDateCell,
+  PerMinuteLabelCell,
+} from "../championDetail/ChampionDetail";
+import {
+  PlayerStats,
+  getBlankPlayerStats,
+} from "../../../api/players/player.interface";
 import "./profileTable.css";
+
+const NUM_TEAMMATES_SHOWN = 20;
+
+interface TeammateData {
+  puuid: string;
+  wins: number;
+  losses: number;
+  winRate: number;
+  totalPlayed: number;
+  gameName: string;
+  tagLine: string;
+}
+
+function teammateDataArrayizer(teammates: object): TeammateData[] {
+  const teammateArray: TeammateData[] = [];
+  for (const [key, value] of Object.entries(teammates)) {
+    const currTeammate = { puuid: key, ...value };
+    currTeammate["totalPlayed"] = currTeammate.wins + currTeammate.losses;
+    currTeammate["winRate"] = currTeammate.wins / currTeammate.totalPlayed;
+    teammateArray.push(currTeammate);
+  }
+  return teammateArray;
+}
+
+function teammateDataSorter(
+  teammates: TeammateData[],
+  num: number
+): TeammateData[] {
+  teammates.sort((a, b) => b.totalPlayed - a.totalPlayed);
+  return teammates.slice(0, num);
+}
+
+async function teammateDataNamer(
+  teammates: TeammateData[]
+): Promise<TeammateData[]> {
+  for (const teammate of teammates) {
+    const userData = await playerAPI.getUserData(teammate.puuid);
+    teammate["gameName"] = userData.gameName;
+    teammate["tagLine"] = userData.tagLine;
+  }
+  return teammates;
+}
 
 const ProfileTable = () => {
   const [data, setData] = useState<PlayerStats>(getBlankPlayerStats());
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [teammateData, setTeammateData] = useState<TeammateData[]>([]);
 
   useEffect(() => {
     const removeFunc = playerAPI.onPlayerStats(
       "playerStatsData",
-      (newData: PlayerStats) => {
+      async (newData: PlayerStats) => {
         setData(newData);
+        const allTeammates = teammateDataArrayizer(newData.teammates);
+        const topTeammates = teammateDataSorter(
+          allTeammates,
+          NUM_TEAMMATES_SHOWN
+        );
+        const finalTeammatesData = await teammateDataNamer(topTeammates);
+        setTeammateData(finalTeammatesData);
       }
     );
 
@@ -340,16 +397,57 @@ const ProfileTable = () => {
                             <div className="smallBreak"></div>
                           </td>
                         </tr>
+                        <tr className="titleRow">
+                          <td>Damage:</td>
+                        </tr>
+                        <tr>
+                          <td>Champions</td>
+                          <td className="numberCell">
+                            {formatLargeInteger(data.totalStats.totalDamage)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Taken</td>
+                          <td className="numberCell">
+                            {formatLargeInteger(
+                              data.totalStats.totalDamageTaken
+                            )}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Objectives</td>
+                          <td className="numberCell">
+                            {formatLargeInteger(
+                              data.totalStats.totalObjectiveDamage
+                            )}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Self Mitigated</td>
+                          <td className="numberCell">
+                            {formatLargeInteger(
+                              data.totalStats.totalSelfMitigated
+                            )}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <div className="smallBreak"></div>
+                          </td>
+                        </tr>
+                        <tr className="titleRow">
+                          <td>Other:</td>
+                        </tr>
                         <tr>
                           <td>Healing</td>
                           <td className="numberCell">
-                            {Number(data.totalStats.totalHealing)}
+                            {formatLargeInteger(data.totalStats.totalHealing)}
                           </td>
                         </tr>
                         <tr>
                           <td>Shielding</td>
                           <td className="numberCell">
-                            {Number(data.totalStats.totalShielding)}
+                            {formatLargeInteger(data.totalStats.totalShielding)}
                           </td>
                         </tr>
                         <tr>
@@ -361,39 +459,7 @@ const ProfileTable = () => {
                         <tr>
                           <td>Gold</td>
                           <td className="numberCell">
-                            {Number(data.totalStats.totalGold)}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <div className="smallBreak"></div>
-                          </td>
-                        </tr>
-                        <tr id="damageTitleRow">
-                          <td>Damage:</td>
-                        </tr>
-                        <tr>
-                          <td>Champions</td>
-                          <td className="numberCell">
-                            {Number(data.totalStats.totalDamage)}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Taken</td>
-                          <td className="numberCell">
-                            {Number(data.totalStats.totalDamageTaken)}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Objectives</td>
-                          <td className="numberCell">
-                            {Number(data.totalStats.totalObjectiveDamage)}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Self Mitigated</td>
-                          <td className="numberCell">
-                            {Number(data.totalStats.totalSelfMitigated)}
+                            {formatLargeInteger(data.totalStats.totalGold)}
                           </td>
                         </tr>
                       </tbody>
@@ -401,8 +467,242 @@ const ProfileTable = () => {
                   </div>
                   <div id="highsCol">
                     <div className="tableTitle">Career Highs</div>
+                    <table id="highsTable" className="baseTable">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Kills</td>
+                          <td className="numberCell">
+                            {Number(data.highs.mostKills.value)}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.mostKills.date}
+                              matchId={data.highs.mostKills.matchId}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Deaths</td>
+                          <td className="numberCell">
+                            {Number(data.highs.mostDeaths.value)}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.mostDeaths.date}
+                              matchId={data.highs.mostDeaths.matchId}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Assists</td>
+                          <td className="numberCell">
+                            {Number(data.highs.mostAssists.value)}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.mostAssists.date}
+                              matchId={data.highs.mostAssists.matchId}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <PerMinuteLabelCell label="Damage" />
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.highs.mostDamage.value).toFixed(0)}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.mostDamage.date}
+                              matchId={data.highs.mostDamage.matchId}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <PerMinuteLabelCell label="Damage Taken" />
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.highs.mostDamageTaken.value).toFixed(
+                              0
+                            )}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.mostDamageTaken.date}
+                              matchId={data.highs.mostDamageTaken.matchId}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <PerMinuteLabelCell label="Healing" />
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.highs.mostHealing.value).toFixed(0)}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.mostHealing.date}
+                              matchId={data.highs.mostHealing.matchId}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <PerMinuteLabelCell label="Shielding" />
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.highs.mostShielding.value).toFixed(0)}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.mostShielding.date}
+                              matchId={data.highs.mostShielding.matchId}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>CC Time</td>
+                          <td className="numberCell">
+                            {Number(data.highs.mostTotalCCTime.value).toFixed(
+                              0
+                            )}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.mostTotalCCTime.date}
+                              matchId={data.highs.mostTotalCCTime.matchId}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <PerMinuteLabelCell label="Gold" />
+                          </td>
+                          <td className="numberCell">
+                            {Number(data.highs.mostGold.value).toFixed(0)}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.mostGold.date}
+                              matchId={data.highs.mostGold.matchId}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>CS</td>
+                          <td className="numberCell">
+                            {Number(data.highs.mostTotalCS.value).toFixed(0)}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.mostTotalCS.date}
+                              matchId={data.highs.mostTotalCS.matchId}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Damage Share</td>
+                          <td className="numberCell">
+                            {Number(
+                              data.highs.mostDamageShare.value * 100
+                            ).toFixed(1)}
+                            %
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.mostDamageShare.date}
+                              matchId={data.highs.mostDamageShare.matchId}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Gold Share</td>
+                          <td className="numberCell">
+                            {Number(
+                              data.highs.mostGoldShare.value * 100
+                            ).toFixed(1)}
+                            %
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.mostGoldShare.date}
+                              matchId={data.highs.mostGoldShare.matchId}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Critical Strike</td>
+                          <td className="numberCell">
+                            {Number(data.highs.biggestCrit.value)}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.biggestCrit.date}
+                              matchId={data.highs.biggestCrit.matchId}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Killing Spree</td>
+                          <td className="numberCell">
+                            {Number(data.highs.biggestKillingSpree.value)}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <MatchDateCell
+                              date={data.highs.biggestKillingSpree.date}
+                              matchId={data.highs.biggestKillingSpree.matchId}
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                  <div id="teammatesCol"></div>
+                  <div id="teammatesCol">
+                    <div className="tableTitle">Teammates</div>
+                    <table id="teammateTable" className="baseTable">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>GP</th>
+                          <th>W</th>
+                          <th>L</th>
+                          <th>WR</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {teammateData.map((teammate, index) => (
+                          <tr key={index}>
+                            <td>
+                              <div className="teammateGameName">
+                                {teammate.gameName}
+                              </div>
+                              {/* <div className="teammateTagLine">
+                                #{teammate.tagLine}
+                              </div> */}
+                            </td>
+                            <td className="numberCell">
+                              {teammate.totalPlayed}
+                            </td>
+                            <td className="numberCell">{teammate.wins}</td>
+                            <td className="numberCell">{teammate.losses}</td>
+                            <td className="numberCell">
+                              {(teammate.winRate * 100).toFixed(1)}%
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             ) : (

@@ -1,4 +1,4 @@
-import { SingleChampStats } from "../../api/services/players/player.interface";
+import { SingleChampStats } from "../../api/players/player.interface";
 
 export type champRow = {
   champName: string;

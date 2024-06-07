@@ -33,7 +33,8 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding-left: 20px;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
 }
 
 #playerStatsCols {
@@ -42,35 +43,54 @@
   grid-template-areas: "winsCol killsCol highsCol teammatesCol";
   margin-top: -8px;
   font-size: 1.15rem;
+  gap: 1.5rem;
 }
 
 #winRatesCol {
   grid-area: winsCol;
+  border-right: 1px solid darkgray;
+  margin-right: -0.75rem;
+  padding-right: 0.75rem;
 }
 
 #killsCol {
   grid-area: killsCol;
   display: flex;
   flex-direction: column;
-  padding: 0 60px 60px;
+  border-right: 1px solid darkgray;
+  margin-right: -0.75rem;
+  padding-right: 0.75rem;
 }
 
 #highsCol {
   grid-area: highsCol;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid darkgray;
+  margin-right: -0.75rem;
+  padding-right: 0.75rem;
 }
 
 #teammatesCol {
   grid-area: teammatesCol;
+  display: flex;
+  flex-direction: column;
 }
 
 .baseTable {
   margin-bottom: 14px;
+  border-collapse: separate;
+  border-spacing: 0 0.25rem;
 }
 
 .tableTitle {
   font-weight: 1000;
   font-size: 1.2rem;
   margin-bottom: 4px;
+}
+
+#winRatesTable {
+  width: 100%;
 }
 
 .classWinRatesTable th:nth-child(1) {
@@ -94,7 +114,7 @@
   text-align: left;
 }
 
-#damageTitleRow {
+.titleRow {
   transform: translateX(-2px);
   font-weight: 800;
 }
@@ -110,6 +130,50 @@ hr {
   border-top: 1px solid #ccc;
   margin: 1em 0;
   padding: 0;
+}
+
+#highsTable {
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+  margin-top: -0.5rem;
+}
+
+#highsTable th:nth-child(1) {
+  width: 10rem;
+  text-align: left;
+}
+
+.profileMatchDateCell {
+  width: 3rem;
+}
+
+.profileMatchDateCell > #matchDateCell {
+  padding-left: 0.5rem !important;
+}
+
+#teammateTable {
+  font-size: 1.05rem;
+  border-spacing: 0 0.5rem;
+  width: 100%;
+}
+
+#teammateTable th:nth-child(2),
+#teammateTable th:nth-child(3),
+#teammateTable th:nth-child(4) {
+  text-align: right;
+}
+
+#teammateTable th:nth-child(5) {
+  text-align: right;
+  width: 4rem;
+}
+
+.teammateTagLine {
+  font-size: 0.75rem;
+}
+
+.teammateGameName {
+  max-width: 8rem;
 }
 
 #noDataFound {

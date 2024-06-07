@@ -150,6 +150,7 @@ export interface PlayerStats {
   results: number[];
   lastTen: number[];
   currentStreak: number;
+  teammates: { [key: string]: { wins: number; losses: number } };
 }
 
 export interface SimplePlayerStats {
@@ -252,5 +253,6 @@ export function getBlankPlayerStats(): PlayerStats {
     results: [],
     lastTen: [0, 0],
     currentStreak: 0,
+    teammates: {},
   };
 }

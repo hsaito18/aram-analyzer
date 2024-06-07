@@ -12,6 +12,10 @@ export const mergeAverages = (obj1: any, obj2: any, prevCount: number) => {
 
 export const mergeTotals = (obj1: any, obj2: any) => {
   for (const [key, val] of Object.entries(obj2)) {
+    if (!(key in obj1)) {
+      obj1[key] = val;
+      continue;
+    }
     if (typeof val === "number") {
       obj1[key] = obj1[key] + val;
     } else if (typeof val === "object") {

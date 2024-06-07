@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { Home } from "@mui/icons-material";
 import { champRow } from "../tables/table.interface";
-import { SimplePlayerStats } from "../../api/services/players/player.interface";
+import { SimplePlayerStats } from "../../api/players/player.interface";
 import "./profileTopBar.css";
 import { styled } from "@mui/material";
 import Paper from "@mui/material/Paper";

@@ -14,19 +14,22 @@ import {
 import { Match, Participant } from "../matches/match.interface";
 import { hasMatch, loadMatch, saveMatch } from "../matches/match.controller";
 import { mergeAverages, mergeTotals, mergeChampHighs } from "../object.service";
-import { ChampionClasses } from "../../../static/championClasses";
-import { RIOT_API_KEY } from "../../../config/apiConfig";
+import { ChampionClasses } from "../../static/championClasses";
+import { RIOT_API_KEY } from "../../config/API_KEY/apiConfig";
 import fs from "fs";
 import axios from "axios";
 import log from "electron-log/main";
 
 const playersFilePath = "players.json";
-let players: Players = loadPlayers();
+let players: Players = loadFile(playersFilePath);
 
-function loadPlayers(): Players {
+const puuidMapFilePath = "puuid-map.json";
+let puuidMap = loadFile(puuidMapFilePath);
+
+function loadFile(filePath: string): any {
   log.info("Loading players");
   try {
-    const data = fs.readFileSync(playersFilePath, "utf-8");
+    const data = fs.readFileSync(filePath, "utf-8");
     return JSON.parse(data);
   } catch (error) {
     log.info(`Error loading players: ${error}`);
@@ -34,13 +37,17 @@ function loadPlayers(): Players {
   }
 }
 
-function savePlayers() {
+function saveFile(filePath: string, data: any) {
   try {
-    fs.writeFileSync(playersFilePath, JSON.stringify(players), "utf-8");
-    log.info(`Player saved successfully!`);
+    fs.writeFileSync(filePath, JSON.stringify(data), "utf-8");
+    log.info(`${filePath} saved successfully!`);
   } catch (error) {
     log.info(`Error : ${error}`);
   }
+}
+
+function savePlayers() {
+  saveFile(playersFilePath, players);
 }
 
 async function getUserData(gameName: string, tagLine: string): Promise<any> {
@@ -61,6 +68,35 @@ async function getUserData(gameName: string, tagLine: string): Promise<any> {
       })
       .catch((error) => {
         reject(error);
+      });
+  });
+}
+
+async function getNameFromPuuid(puuid: string): Promise<UserData> {
+  console.log(`puuid: ${puuid}`);
+  return new Promise((resolve, reject) => {
+    const options = {
+      method: "GET",
+      headers: {
+        "X-Riot-Token": RIOT_API_KEY,
+      },
+    };
+    axios
+      .get(
+        `https://americas.api.riotgames.com/riot/account/v1/accounts/by-puuid/${puuid}`,
+        options
+      )
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch(async (error) => {
+        if (error.response.status === 429) {
+          log.info(`Rate limited, waiting 2 minutes...`);
+          await new Promise((resolve) => setTimeout(resolve, 120000));
+          resolve(getNameFromPuuid(puuid));
+        } else {
+          reject(error);
+        }
       });
   });
 }
@@ -109,6 +145,10 @@ export const findAll = async (): Promise<Player[]> => Object.values(players);
 
 export const findOne = async (id: string): Promise<Player> => players[id];
 
+export const puuidToName = (puuid: string): UserData => {
+  return puuidMap[puuid];
+};
+
 export const createByUsername = async (
   userData: UserData
 ): Promise<Player | null> => {
@@ -129,6 +169,13 @@ export const createByUsername = async (
     };
     players[actualUserData.puuid] = user;
     savePlayers();
+    if (!(actualUserData.puuid in puuidMap)) {
+      puuidMap[actualUserData.puuid] = {
+        gameName: actualUserData.gameName,
+        tagLine: actualUserData.tagLine,
+      };
+      saveFile(puuidMapFilePath, puuidMap);
+    }
     return user;
   } catch (error) {
     console.error(`Failed to get PUUID: ${error}`);
@@ -412,13 +459,6 @@ function getMatchHighs(
   };
 }
 
-function updateChampionHighStats(
-  participant: Participant,
-  champStats: ChampStats
-) {
-  const champion = participant.championName;
-}
-
 async function updateProfileIcon(player: Player): Promise<void> {
   if (player.matches.length == 0) return;
   const latestMatch = player.matches[0];
@@ -452,7 +492,6 @@ async function downloadMatches(matches: string[]): Promise<void> {
       }
     } catch (error) {
       console.error(`Failed to download match: ${error}`);
-      // Handle the error appropriately here
     }
   }
 }
@@ -507,6 +546,64 @@ function analyzeWinStreaks(results: number[]): {
   return { longestWinStreak, longestLossStreak, lastTenRecord, currentStreak };
 }
 
+const getTeammates = (
+  matchData: Match,
+  puuid: string,
+  teamId: number
+): string[] => {
+  const teammates = [];
+  for (const participant of matchData.info.participants) {
+    if (participant.puuid === puuid || participant.teamId !== teamId) continue;
+    teammates.push(participant.puuid);
+  }
+  return teammates;
+};
+
+const puuidMapRegisterTeammates = async (teammates: string[]) => {
+  for (const teammate of teammates) {
+    if (teammate in puuidMap) continue;
+    try {
+      const res = await registerPuuid(teammate);
+      if (!res) {
+        log.info(`Rate limited, waiting 2 minutes...`);
+        await new Promise((resolve) => setTimeout(resolve, 120000));
+        await registerPuuid(teammate);
+      }
+    } catch (error) {
+      log.error(`Error registering game name for ${teammate} - ${error}`);
+    }
+  }
+};
+
+async function registerPuuid(puuid: string) {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-Riot-Token": RIOT_API_KEY,
+    },
+  };
+  const response = await axios
+    .get(
+      `https://americas.api.riotgames.com/riot/account/v1/accounts/by-puuid/${puuid}`,
+      options
+    )
+    .catch((error) => {
+      if (error.response.status === 429) {
+        return 2;
+      }
+      return 1;
+    });
+  if (response == 2) return false;
+  if (response == 1) throw new Error(`Error registering puuid ${puuid}`);
+  const userData = response?.data;
+  delete userData["puuid"];
+  if (userData !== null) {
+    puuidMap[puuid] = userData;
+    console.log(`Registered ${userData.gameName}#${userData.tagLine}`);
+  }
+  return true;
+}
+
 export const analyzePlayerMatches = async (
   userData: UserData
 ): Promise<boolean> => {
@@ -529,6 +626,15 @@ export const analyzePlayerMatches = async (
     const champion = participant.championName;
     const teamId = participant.teamId;
     const teamStats = getTeamStats(matchData, teamId);
+    const teammates = getTeammates(matchData, player.puuid, participant.teamId);
+    await puuidMapRegisterTeammates(teammates);
+    const teammatesWinObject = teammates.reduce((obj, teammate) => {
+      obj[teammate] = {
+        wins: win ? 1 : 0,
+        losses: win ? 0 : 1,
+      };
+      return obj;
+    }, {} as Record<string, { wins: number; losses: number }>);
     const detailedChampStats = getDetailedChampStats(participant, teamStats);
     const currentTotalStats = getMatchTotalStats(participant);
     const currentHighs = getMatchHighs(
@@ -586,6 +692,7 @@ export const analyzePlayerMatches = async (
     playerStats.winRate =
       (playerStats.wins / (playerStats.wins + playerStats.losses)) * 100;
     currentResults.push(win ? 1 : 0);
+    mergeTotals(playerStats.teammates, teammatesWinObject);
     mergeAverages(
       playerStats.stats,
       detailedChampStats,
@@ -593,6 +700,7 @@ export const analyzePlayerMatches = async (
     );
     playerStats.totalPlayed += 1;
     mergeTotals(playerStats.totalStats, currentTotalStats);
+    mergeChampHighs(playerStats.highs, currentHighs);
     playerStats.stats.kda =
       (playerStats.stats.killsPerGame + playerStats.stats.assistsPerGame) /
       playerStats.stats.deathsPerGame;
@@ -610,6 +718,7 @@ export const analyzePlayerMatches = async (
   player.champStats = champStats;
   player.playerStats = playerStats;
   savePlayers();
+  saveFile(puuidMapFilePath, puuidMap);
   return true;
 };
 
