@@ -45,7 +45,12 @@ function teammateDataSorter(
   teammates: TeammateData[],
   num: number
 ): TeammateData[] {
-  teammates.sort((a, b) => b.totalPlayed - a.totalPlayed);
+  teammates.sort((a, b) => {
+    if (b.totalPlayed !== a.totalPlayed) {
+      return b.totalPlayed - a.totalPlayed;
+    }
+    return b.wins - a.wins;
+  });
   return teammates.slice(0, num);
 }
 
