@@ -155,6 +155,9 @@ export default function Home() {
             </Stack>
           </div>
           <Button onClick={resetAllPlayers}>RESET ALL PLAYERS</Button>
+          <Button onClick={playerAPI.attachAllMatches}>
+            Attach all matches
+          </Button>
         </div>
       </div>
     </>

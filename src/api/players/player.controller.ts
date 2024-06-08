@@ -12,7 +12,12 @@ import {
   ClassWinRates,
 } from "./player.interface";
 import { Match, Participant } from "../matches/match.interface";
-import { hasMatch, loadMatch, saveMatch } from "../matches/match.controller";
+import {
+  hasMatch,
+  downloadMatch,
+  getMatchData,
+  matches_set,
+} from "../matches/match.controller";
 import { mergeAverages, mergeTotals, mergeChampHighs } from "../object.service";
 import { ChampionClasses } from "../../static/championClasses";
 import { RIOT_API_KEY } from "../../config/API_KEY/apiConfig";
@@ -145,7 +150,10 @@ export const findAll = async (): Promise<Player[]> => Object.values(players);
 
 export const findOne = async (id: string): Promise<Player> => players[id];
 
-export const puuidToName = (puuid: string): UserData => {
+export const puuidToName = async (puuid: string): Promise<UserData> => {
+  if (puuid in puuidMap) return puuidMap[puuid];
+  const res = await registerPuuid(puuid);
+  if (!res) return { gameName: "unknown", tagLine: "" };
   return puuidMap[puuid];
 };
 
@@ -210,45 +218,10 @@ export const saveARAMMatches = async (
   if (!player) return null;
   const puuid = player.puuid;
   const matches = await getAllARAMs(puuid);
-  player.matches = matches;
+  player.matches = [...new Set([...player.matches, ...matches])];
   savePlayers();
   return player.matches;
 };
-
-async function downloadMatch(id: string): Promise<boolean> {
-  const options = {
-    method: "GET",
-    headers: {
-      "X-Riot-Token": RIOT_API_KEY,
-    },
-  };
-  const response = await axios
-    .get(
-      `https://americas.api.riotgames.com/lol/match/v5/matches/${id}`,
-      options
-    )
-    .catch((error) => {
-      if (error.response.status === 429) {
-        return 2;
-      }
-      return 1;
-    });
-  if (response == 2) return false;
-  if (response == 1) throw new Error(`Error downloading match ${id}`);
-  const matchData = response?.data;
-  if (matchData !== null) {
-    saveMatch(id, matchData);
-  }
-  return true;
-}
-async function getMatchData(id: string): Promise<Match | null> {
-  let matchData: Match | null = null;
-  if (!hasMatch(id)) {
-    await downloadMatch(id);
-  }
-  matchData = loadMatch(id);
-  return matchData;
-}
 
 function getTeamStats(match: Match, teamId: number): TeamStats {
   let totalKills = 0;
@@ -330,131 +303,157 @@ function getMatchHighs(
       value: matchTotalStats.totalKills,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostDeaths: {
       value: matchTotalStats.totalDeaths,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostAssists: {
       value: matchTotalStats.totalAssists,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostDamage: {
       value: detailedChampStats.damagePerMinute,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostTotalDamage: {
       value: matchTotalStats.totalDamage,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostGold: {
       value: detailedChampStats.goldPerMinute,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostTotalGold: {
       value: matchTotalStats.totalGold,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostTotalCS: {
       value: participant.totalMinionsKilled,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostCCTime: {
       value: detailedChampStats.ccPerMinute,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostHealing: {
       value: detailedChampStats.healingPerMinute,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostShielding: {
       value: detailedChampStats.shieldingPerMinute,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostDamageShare: {
       value: detailedChampStats.damageShare,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostGoldShare: {
       value: detailedChampStats.goldShare,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostDamageTaken: {
       value: detailedChampStats.damageTakenPerMinute,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostObjectiveDamage: {
       value: detailedChampStats.objectiveDamagePerMinute,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostKillParticipation: {
       value: detailedChampStats.killParticipation,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostSelfMitigated: {
       value: detailedChampStats.selfMitigatedPerMinute,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostTotalCCTime: {
       value: matchTotalStats.totalCCTime,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostTotalHealing: {
       value: matchTotalStats.totalHealing,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostTotalShielding: {
       value: matchTotalStats.totalShielding,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostTotalObjectiveDamage: {
       value: matchTotalStats.totalObjectiveDamage,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostTotalDamageTaken: {
       value: matchTotalStats.totalDamageTaken,
       matchId,
       date,
+      champName: participant.championName,
     },
     mostTotalSelfMitigated: {
       value: matchTotalStats.totalSelfMitigated,
       matchId,
       date,
+      champName: participant.championName,
     },
     biggestCrit: {
       value: participant.largestCriticalStrike,
       matchId,
       date,
+      champName: participant.championName,
     },
     biggestKillingSpree: {
       value: participant.largestKillingSpree,
       matchId,
       date,
+      champName: participant.championName,
     },
     biggestMultikill: {
       value: participant.largestMultiKill,
       matchId,
       date,
+      champName: participant.championName,
     },
   };
 }
@@ -627,7 +626,7 @@ export const analyzePlayerMatches = async (
     const teamId = participant.teamId;
     const teamStats = getTeamStats(matchData, teamId);
     const teammates = getTeammates(matchData, player.puuid, participant.teamId);
-    await puuidMapRegisterTeammates(teammates);
+    // await puuidMapRegisterTeammates(teammates);
     const teammatesWinObject = teammates.reduce((obj, teammate) => {
       obj[teammate] = {
         wins: win ? 1 : 0,
@@ -767,4 +766,23 @@ export const resetAllChampionStats = async (): Promise<number> => {
   }
   savePlayers();
   return 1;
+};
+
+export const attachAllMatches = async () => {
+  log.info(`Beginning match attachment...`);
+  for (const matchId of matches_set) {
+    if (matchId.length < 10) continue;
+    const matchData = await getMatchData(matchId);
+    if (!matchData) continue;
+    for (const participant of matchData.info.participants) {
+      if (
+        participant.puuid in players &&
+        !(matchId in players[participant.puuid].matches)
+      ) {
+        players[participant.puuid].matches.push(matchId);
+      }
+    }
+  }
+  log.info(`Finished match attachment!`);
+  savePlayers();
 };

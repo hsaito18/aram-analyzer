@@ -10,8 +10,11 @@ import {
   findByUsername,
   resetChampionStats,
   resetAllChampionStats,
+  attachAllMatches,
 } from "./players/player.controller";
 import { UserData } from "./players/player.interface";
+import { getMatchData } from "./matches/match.controller";
+import { Match } from "./matches/match.interface";
 import { getSearchHistory, addSearchHistory } from "./searchHistory";
 import Logger = require("electron-log/main");
 
@@ -19,7 +22,10 @@ ipcMain.handle("register-player", (event, userData) => {
   return createByUsername(userData);
 });
 
-async function getChampStats(event: any, userData: UserData) {
+async function getChampStats(
+  event: Electron.IpcMainInvokeEvent,
+  userData: UserData
+) {
   const data = await getPlayerChampionStats(userData);
   const arrData = champDataArrayizer(data);
   arrData.sort((a, b) => b.wins - a.wins);
@@ -27,9 +33,21 @@ async function getChampStats(event: any, userData: UserData) {
   return arrData;
 }
 
-async function getPlayerStatsHandle(event: any, userData: UserData) {
+async function getPlayerStatsHandle(
+  event: Electron.IpcMainInvokeEvent,
+  userData: UserData
+) {
   const data = await getPlayerStats(userData);
   event.sender.send("playerStatsData", data);
+}
+
+async function getMatchStats(
+  event: Electron.IpcMainInvokeEvent,
+  matchId: string
+) {
+  const data = await getMatchData(matchId);
+  event.sender.send("matchData", data);
+  return data;
 }
 
 ipcMain.on("analyze-matches", async (event, userData) => {
@@ -89,3 +107,9 @@ ipcMain.handle("get-search-history", async (event) => {
 });
 
 ipcMain.handle("puuid-to-name", (event, puuid) => puuidToName(puuid));
+
+ipcMain.handle("get-match-data", (event, matchId) => {
+  return getMatchStats(event, matchId);
+});
+
+ipcMain.on("attach-all-matches", () => attachAllMatches());

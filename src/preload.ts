@@ -41,6 +41,7 @@ export const playerAPI = {
   },
   getUserData: (puuid: string): Promise<UserData> =>
     ipcRenderer.invoke("puuid-to-name", puuid),
+attachAllMatches: () => ipcRenderer.send("attach-all-matches"),
 };
 
 contextBridge.exposeInMainWorld("playerAPI", playerAPI);

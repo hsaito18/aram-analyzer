@@ -6,12 +6,9 @@ import {
   MRT_GlobalFilterTextField,
   MRT_ShowHideColumnsButton,
 } from "material-react-table";
-import { CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { formatLargeInteger } from "../../../services/string.service";
-import {
-  MatchDateCell,
-  PerMinuteLabelCell,
-} from "../championDetail/ChampionDetail";
+import { PerMinuteLabelCell } from "../championDetail/ChampionDetail";
 import {
   PlayerStats,
   getBlankPlayerStats,
@@ -51,7 +48,8 @@ function teammateDataSorter(
     }
     return b.wins - a.wins;
   });
-  return teammates.slice(0, num);
+  const topNTeammates = teammates.slice(0, num);
+  return topNTeammates.filter((teammate) => teammate.totalPlayed > 1);
 }
 
 async function teammateDataNamer(
@@ -63,6 +61,38 @@ async function teammateDataNamer(
     teammate["tagLine"] = userData.tagLine;
   }
   return teammates;
+}
+
+export function PlayerHighDateCell({
+  data,
+}: {
+  data: { value: number; matchId: string; date: string; champName: string };
+}) {
+  const stringDate = new Date(Number(data.date)).toLocaleDateString();
+  function handleClick() {
+    console.log(`Match ID: ${data.matchId}`);
+  }
+  return (
+    <div id="matchDateCell">
+      <img
+        className="profileHighChampIcon"
+        src={`static://assets/champion_icons/${data.champName}.jpg`}
+      ></img>
+      <Box
+        component="span"
+        sx={{
+          backgroundColor: "orange",
+          borderRadius: "0.25rem",
+          color: "#fff",
+          p: "0.25rem",
+          cursor: "pointer",
+        }}
+        onClick={handleClick}
+      >
+        {stringDate}
+      </Box>
+    </div>
+  );
 }
 
 const ProfileTable = () => {
@@ -487,10 +517,7 @@ const ProfileTable = () => {
                             {Number(data.highs.mostKills.value)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.mostKills.date}
-                              matchId={data.highs.mostKills.matchId}
-                            />
+                            <PlayerHighDateCell data={data.highs.mostKills} />
                           </td>
                         </tr>
                         <tr>
@@ -499,10 +526,7 @@ const ProfileTable = () => {
                             {Number(data.highs.mostDeaths.value)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.mostDeaths.date}
-                              matchId={data.highs.mostDeaths.matchId}
-                            />
+                            <PlayerHighDateCell data={data.highs.mostDeaths} />
                           </td>
                         </tr>
                         <tr>
@@ -511,10 +535,7 @@ const ProfileTable = () => {
                             {Number(data.highs.mostAssists.value)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.mostAssists.date}
-                              matchId={data.highs.mostAssists.matchId}
-                            />
+                            <PlayerHighDateCell data={data.highs.mostAssists} />
                           </td>
                         </tr>
                         <tr>
@@ -525,10 +546,7 @@ const ProfileTable = () => {
                             {Number(data.highs.mostDamage.value).toFixed(0)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.mostDamage.date}
-                              matchId={data.highs.mostDamage.matchId}
-                            />
+                            <PlayerHighDateCell data={data.highs.mostDamage} />
                           </td>
                         </tr>
                         <tr>
@@ -541,9 +559,8 @@ const ProfileTable = () => {
                             )}
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.mostDamageTaken.date}
-                              matchId={data.highs.mostDamageTaken.matchId}
+                            <PlayerHighDateCell
+                              data={data.highs.mostDamageTaken}
                             />
                           </td>
                         </tr>
@@ -555,10 +572,7 @@ const ProfileTable = () => {
                             {Number(data.highs.mostHealing.value).toFixed(0)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.mostHealing.date}
-                              matchId={data.highs.mostHealing.matchId}
-                            />
+                            <PlayerHighDateCell data={data.highs.mostHealing} />
                           </td>
                         </tr>
                         <tr>
@@ -569,9 +583,8 @@ const ProfileTable = () => {
                             {Number(data.highs.mostShielding.value).toFixed(0)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.mostShielding.date}
-                              matchId={data.highs.mostShielding.matchId}
+                            <PlayerHighDateCell
+                              data={data.highs.mostShielding}
                             />
                           </td>
                         </tr>
@@ -583,9 +596,8 @@ const ProfileTable = () => {
                             )}
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.mostTotalCCTime.date}
-                              matchId={data.highs.mostTotalCCTime.matchId}
+                            <PlayerHighDateCell
+                              data={data.highs.mostTotalCCTime}
                             />
                           </td>
                         </tr>
@@ -597,10 +609,7 @@ const ProfileTable = () => {
                             {Number(data.highs.mostGold.value).toFixed(0)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.mostGold.date}
-                              matchId={data.highs.mostGold.matchId}
-                            />
+                            <PlayerHighDateCell data={data.highs.mostGold} />
                           </td>
                         </tr>
                         <tr>
@@ -609,9 +618,20 @@ const ProfileTable = () => {
                             {Number(data.highs.mostTotalCS.value).toFixed(0)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.mostTotalCS.date}
-                              matchId={data.highs.mostTotalCS.matchId}
+                            <PlayerHighDateCell data={data.highs.mostTotalCS} />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>KP%</td>
+                          <td className="numberCell">
+                            {Number(
+                              data.highs.mostKillParticipation.value * 100
+                            ).toFixed(0)}
+                            %
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <PlayerHighDateCell
+                              data={data.highs.mostKillParticipation}
                             />
                           </td>
                         </tr>
@@ -624,9 +644,8 @@ const ProfileTable = () => {
                             %
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.mostDamageShare.date}
-                              matchId={data.highs.mostDamageShare.matchId}
+                            <PlayerHighDateCell
+                              data={data.highs.mostDamageShare}
                             />
                           </td>
                         </tr>
@@ -639,9 +658,8 @@ const ProfileTable = () => {
                             %
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.mostGoldShare.date}
-                              matchId={data.highs.mostGoldShare.matchId}
+                            <PlayerHighDateCell
+                              data={data.highs.mostGoldShare}
                             />
                           </td>
                         </tr>
@@ -651,10 +669,7 @@ const ProfileTable = () => {
                             {Number(data.highs.biggestCrit.value)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.biggestCrit.date}
-                              matchId={data.highs.biggestCrit.matchId}
-                            />
+                            <PlayerHighDateCell data={data.highs.biggestCrit} />
                           </td>
                         </tr>
                         <tr>
@@ -663,9 +678,8 @@ const ProfileTable = () => {
                             {Number(data.highs.biggestKillingSpree.value)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <MatchDateCell
-                              date={data.highs.biggestKillingSpree.date}
-                              matchId={data.highs.biggestKillingSpree.matchId}
+                            <PlayerHighDateCell
+                              data={data.highs.biggestKillingSpree}
                             />
                           </td>
                         </tr>

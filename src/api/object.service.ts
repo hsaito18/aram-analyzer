@@ -41,6 +41,7 @@ export const mergeChampHighs = (obj1: ChampHighs, obj2: ChampHighs) => {
         value: val.value,
         matchId: val.matchId,
         date: val.date,
+        champName: val.champName,
       };
     }
   }

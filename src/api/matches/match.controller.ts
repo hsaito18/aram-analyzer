@@ -1,8 +1,9 @@
 import { Match } from "./match.interface";
+import { RIOT_API_KEY } from "../../config/API_KEY/apiConfig";
 import fs from "fs";
 import axios from "axios";
 
-const matches_set: Set<string> = loadMatchesSet();
+export const matches_set: Set<string> = loadMatchesSet();
 console.log(`Loaded ${matches_set.size} matches`);
 
 function loadMatchesSet(): Set<string> {
@@ -52,6 +53,42 @@ export function saveMatch(id: string, match: Match) {
 
 export function hasMatch(id: string): boolean {
   return matches_set.has(id);
+}
+
+export async function downloadMatch(id: string): Promise<boolean> {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-Riot-Token": RIOT_API_KEY,
+    },
+  };
+  const response = await axios
+    .get(
+      `https://americas.api.riotgames.com/lol/match/v5/matches/${id}`,
+      options
+    )
+    .catch((error) => {
+      if (error.response.status === 429) {
+        return 2;
+      }
+      return 1;
+    });
+  if (response == 2) return false;
+  if (response == 1) throw new Error(`Error downloading match ${id}`);
+  const matchData = response?.data;
+  if (matchData !== null) {
+    saveMatch(id, matchData);
+  }
+  return true;
+}
+
+export async function getMatchData(id: string): Promise<Match | null> {
+  let matchData: Match | null = null;
+  if (!hasMatch(id)) {
+    await downloadMatch(id);
+  }
+  matchData = loadMatch(id);
+  return matchData;
 }
 
 export const getMatchTimeline = async (

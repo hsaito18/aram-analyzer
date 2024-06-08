@@ -95,6 +95,7 @@ export interface SuperlativeTrio {
   value: number;
   matchId: string;
   date: string;
+  champName: string;
 }
 
 export interface TeamStats {
@@ -161,6 +162,10 @@ export interface SimplePlayerStats {
   lastUpdatedTime: number;
 }
 
+function getBlankSuperlative(): SuperlativeTrio {
+  return { value: 0, matchId: "", date: "", champName: "" };
+}
+
 export function getBlankPlayerStats(): PlayerStats {
   return {
     wins: 0,
@@ -207,32 +212,42 @@ export function getBlankPlayerStats(): PlayerStats {
       kda: 0,
     },
     highs: {
-      mostKills: { value: 0, matchId: "", date: "" },
-      mostDeaths: { value: 0, matchId: "", date: "" },
-      mostAssists: { value: 0, matchId: "", date: "" },
-      mostDamage: { value: 0, matchId: "", date: "" },
-      mostTotalDamage: { value: 0, matchId: "", date: "" },
-      mostGold: { value: 0, matchId: "", date: "" },
-      mostTotalGold: { value: 0, matchId: "", date: "" },
-      mostTotalCS: { value: 0, matchId: "", date: "" },
-      mostCCTime: { value: 0, matchId: "", date: "" },
-      mostTotalCCTime: { value: 0, matchId: "", date: "" },
-      mostHealing: { value: 0, matchId: "", date: "" },
-      mostTotalHealing: { value: 0, matchId: "", date: "" },
-      mostShielding: { value: 0, matchId: "", date: "" },
-      mostTotalShielding: { value: 0, matchId: "", date: "" },
-      mostObjectiveDamage: { value: 0, matchId: "", date: "" },
-      mostTotalObjectiveDamage: { value: 0, matchId: "", date: "" },
-      mostDamageTaken: { value: 0, matchId: "", date: "" },
-      mostTotalDamageTaken: { value: 0, matchId: "", date: "" },
-      mostSelfMitigated: { value: 0, matchId: "", date: "" },
-      mostTotalSelfMitigated: { value: 0, matchId: "", date: "" },
-      mostDamageShare: { value: 0, matchId: "", date: "" },
-      mostGoldShare: { value: 0, matchId: "", date: "" },
-      mostKillParticipation: { value: 0, matchId: "", date: "" },
-      biggestCrit: { value: 0, matchId: "", date: "" },
-      biggestMultikill: { value: 0, matchId: "", date: "" },
-      biggestKillingSpree: { value: 0, matchId: "", date: "" },
+      mostKills: getBlankSuperlative(),
+      mostDeaths: getBlankSuperlative(),
+      mostAssists: getBlankSuperlative(),
+      mostDamage: getBlankSuperlative(),
+      mostTotalDamage: getBlankSuperlative(),
+      mostGold: getBlankSuperlative(),
+      mostTotalGold: getBlankSuperlative(),
+      mostTotalCS: getBlankSuperlative(),
+      mostCCTime: getBlankSuperlative(),
+      mostTotalCCTime: getBlankSuperlative(),
+      mostHealing: getBlankSuperlative(),
+      mostTotalHealing: getBlankSuperlative(),
+      mostShielding: getBlankSuperlative(),
+      mostTotalShielding: getBlankSuperlative(),
+      mostObjectiveDamage: getBlankSuperlative(),
+      mostTotalObjectiveDamage: {
+        value: 0,
+        matchId: "",
+        date: "",
+        champName: "",
+      },
+      mostDamageTaken: getBlankSuperlative(),
+      mostTotalDamageTaken: getBlankSuperlative(),
+      mostSelfMitigated: getBlankSuperlative(),
+      mostTotalSelfMitigated: {
+        value: 0,
+        matchId: "",
+        date: "",
+        champName: "",
+      },
+      mostDamageShare: getBlankSuperlative(),
+      mostGoldShare: getBlankSuperlative(),
+      mostKillParticipation: getBlankSuperlative(),
+      biggestCrit: getBlankSuperlative(),
+      biggestMultikill: getBlankSuperlative(),
+      biggestKillingSpree: getBlankSuperlative(),
       longestWinStreak: 0,
       longestLossStreak: 0,
     },
