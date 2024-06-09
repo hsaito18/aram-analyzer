@@ -1,9 +1,16 @@
-#detailBoxContainer {
-  border-radius: 6px;
-  border: darkgray 4px solid;
-  padding: 8px;
-  font-family: "Roboto";
-  width: 1370px;
+#staticProfileMain {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(29, 29, 29);
+  position: relative;
+}
+
+#staticProfileMain .content {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: content-box;
+  color: transparent;
 }
 
 #profileMain {

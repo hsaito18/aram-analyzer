@@ -617,6 +617,10 @@ export const analyzePlayerMatches = async (
     if (player.analyzedMatches.includes(match)) continue;
     const matchData = await getMatchData(match);
     if (!matchData) continue;
+    if (matchData.info.participants[0].gameEndedInEarlySurrender) {
+      player.analyzedMatches.push(match);
+      continue;
+    }
     const participant = matchData?.info?.participants?.find(
       (participant: any) => participant.puuid === player.puuid
     );

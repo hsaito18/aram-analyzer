@@ -1,8 +1,4 @@
 import { useMemo, useState, useEffect } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import ProfileTableStatic from "./ProfileTableStatic";
-import download from "downloadjs";
-import { toPng } from "html-to-image";
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -34,42 +30,6 @@ interface TeammateData {
   tagLine: string;
 }
 
-function teammateDataArrayizer(teammates: object): TeammateData[] {
-  const teammateArray: TeammateData[] = [];
-  for (const [key, value] of Object.entries(teammates)) {
-    const currTeammate = { puuid: key, ...value };
-    currTeammate["totalPlayed"] = currTeammate.wins + currTeammate.losses;
-    currTeammate["winRate"] = currTeammate.wins / currTeammate.totalPlayed;
-    teammateArray.push(currTeammate);
-  }
-  return teammateArray;
-}
-
-function teammateDataSorter(
-  teammates: TeammateData[],
-  num: number
-): TeammateData[] {
-  teammates.sort((a, b) => {
-    if (b.totalPlayed !== a.totalPlayed) {
-      return b.totalPlayed - a.totalPlayed;
-    }
-    return b.wins - a.wins;
-  });
-  const topNTeammates = teammates.slice(0, num);
-  return topNTeammates.filter((teammate) => teammate.totalPlayed > 1);
-}
-
-async function teammateDataNamer(
-  teammates: TeammateData[]
-): Promise<TeammateData[]> {
-  for (const teammate of teammates) {
-    const userData = await playerAPI.getUserData(teammate.puuid);
-    teammate["gameName"] = userData.gameName;
-    teammate["tagLine"] = userData.tagLine;
-  }
-  return teammates;
-}
-
 export function PlayerHighDateCell({
   data,
 }: {
@@ -83,7 +43,7 @@ export function PlayerHighDateCell({
     <div id="matchDateCell">
       <img
         className="profileHighChampIcon"
-        src={`static://assets/champion_icons/${data.champName}.jpg`}
+        src={`PATH_TO_ASSETS/assets/champion_icons/${data.champName}.jpg`}
       ></img>
       <Box
         component="span"
@@ -102,46 +62,13 @@ export function PlayerHighDateCell({
   );
 }
 
-const ProfileTable = () => {
-  const [data, setData] = useState<PlayerStats>(getBlankPlayerStats());
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const [teammateData, setTeammateData] = useState<TeammateData[]>([]);
-  // const [state, convertImage, ref] = useToPng<HTMLDivElement>({
-  //   onSuccess: (data) => {
-  //     const img = new Image();
-  //     img.src = data;
-  //     console.log(`data: ${data}`);
-  //     document.body.appendChild(img);
-  //   },
-  // });
-  useEffect(() => {
-    const removeFunc = playerAPI.onPlayerStats(
-      "playerStatsData",
-      async (newData: PlayerStats) => {
-        setData(newData);
-        const allTeammates = teammateDataArrayizer(newData.teammates);
-        const topTeammates = teammateDataSorter(
-          allTeammates,
-          NUM_TEAMMATES_SHOWN
-        );
-        const finalTeammatesData = await teammateDataNamer(topTeammates);
-        setTeammateData(finalTeammatesData);
-      }
-    );
-
-    const removeLoadingFunc = playerAPI.onListener(
-      "loadingData",
-      (loading: boolean) => {
-        setLoading(loading);
-      }
-    );
-
-    return () => {
-      removeFunc();
-      removeLoadingFunc();
-    };
-  }, []);
-
+const ProfileTableStatic = ({
+  data,
+  teammateData,
+}: {
+  data: PlayerStats;
+  teammateData: TeammateData[];
+}) => {
   const WinRateCell = ({
     data,
   }: {
@@ -152,51 +79,10 @@ const ProfileTable = () => {
     return <>{Number((data.wins / totalPlayed) * 100).toFixed(1)}%</>;
   };
 
-  const printRef = React.useRef();
-  const handleDownloadImage = async () => {
-    const element = printRef.current;
-    const canvas = await html2canvas(element, {
-      windowHeight: 1200,
-      windowWidth: 1600,
-    });
-
-    const data = canvas.toDataURL("image/jpg");
-    const link = document.createElement("a");
-
-    if (typeof link.download === "string") {
-      link.href = data;
-      link.download = "image.jpg";
-
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else {
-      window.open(data);
-    }
-  };
-
-  const renderHTML = () => {
-    const html = renderToStaticMarkup(
-      <ProfileTableStatic data={data} teammateData={teammateData} />
-    );
-    console.log(html);
-  };
-
-  const somethingElse = async () => {
-    playerAPI.generatePlayerGraphic();
-  };
-
   return (
-    <div id="profileMain">
+    <div id="staticProfileMain">
       <div className="content">
-        {isLoading ? (
-          <div id="loadingBox">
-            <div id="loadingText">Downloading Matches...</div>
-            <div id="loadingSpinner">
-              <CircularProgress />
-            </div>
-          </div>
-        ) : (
+        {
           <>
             {data.totalPlayed > 0 ? (
               <div id="playerStatsContainer">
@@ -776,11 +662,10 @@ const ProfileTable = () => {
               <div id="noDataFound">No Matches Saved</div>
             )}
           </>
-        )}
+        }
       </div>
-      <button onClick={somethingElse}> TEST</button>
     </div>
   );
 };
 
-export default ProfileTable;
+export default ProfileTableStatic;

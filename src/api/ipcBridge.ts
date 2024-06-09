@@ -16,6 +16,7 @@ import { UserData } from "./players/player.interface";
 import { getMatchData } from "./matches/match.controller";
 import { Match } from "./matches/match.interface";
 import { getSearchHistory, addSearchHistory } from "./searchHistory";
+import { generateGraphic } from "./graphics.service";
 import Logger = require("electron-log/main");
 
 ipcMain.handle("register-player", (event, userData) => {
@@ -113,3 +114,5 @@ ipcMain.handle("get-match-data", (event, matchId) => {
 });
 
 ipcMain.on("attach-all-matches", () => attachAllMatches());
+
+ipcMain.on("generate-player-graphic", () => generateGraphic());
