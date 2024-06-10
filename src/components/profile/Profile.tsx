@@ -57,7 +57,7 @@ export default function Profile() {
               className="carousel-item"
               style={{ display: page == 0 ? "flex" : "none" }}
             >
-              <ProfileTable />
+              <ProfileTable gameName={gameName} tagLine={tagLine} />
             </div>
             <div
               className="carousel-item"

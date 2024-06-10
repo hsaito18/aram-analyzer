@@ -65,10 +65,17 @@ export function PlayerHighDateCell({
 const ProfileTableStatic = ({
   data,
   teammateData,
+  gameName,
+  tagLine,
 }: {
   data: PlayerStats;
   teammateData: TeammateData[];
+  gameName: string;
+  tagLine: string;
 }) => {
+  ///
+  ///
+  ///
   const WinRateCell = ({
     data,
   }: {
@@ -86,7 +93,9 @@ const ProfileTableStatic = ({
           <>
             {data.totalPlayed > 0 ? (
               <div id="playerStatsContainer">
-                <h2>Player Stats</h2>
+                <h2>
+                  {gameName}#{tagLine} Player Stats
+                </h2>
                 <div id="playerStatsCols">
                   <div id="winRatesCol">
                     <div className="tableTitle">Wins and Losses</div>

@@ -3,22 +3,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import puppeteer from "puppeteer";
 import ProfileTableStatic from "../components/tables/ProfileTable/ProfileTableStatic";
 import { getPlayerStats, puuidToName } from "./players/player.controller";
-import { PlayerStats } from "./players/player.interface";
+import { PlayerStats, UserData } from "./players/player.interface";
 import fs from "fs";
 import path from "path";
-
-const initialize = async () => {
-  data = await getPlayerStats({ gameName: "hsaito", tagLine: "NA1" });
-  console.log(`got data for ${data.currentStreak}`);
-  const allTeammates = teammateDataArrayizer(data.teammates);
-  const topTeammates = teammateDataSorter(allTeammates, NUM_TEAMMATES_SHOWN);
-  teammateData = await teammateDataNamer(topTeammates);
-  console.log(`teammate data: ${teammateData}`);
-};
-
-let data: PlayerStats;
-let teammateData: TeammateData[];
-initialize();
 
 interface TeammateData {
   puuid: string;
@@ -68,10 +55,23 @@ async function teammateDataNamer(
   return teammates;
 }
 
-export const generateGraphic = async () => {
+const getGraphicData = async (
+  userData: UserData
+): Promise<[PlayerStats, TeammateData[]]> => {
+  const playerData = await getPlayerStats(userData);
+  const allTeammates = teammateDataArrayizer(playerData.teammates);
+  const topTeammates = teammateDataSorter(allTeammates, NUM_TEAMMATES_SHOWN);
+  const teammateData = await teammateDataNamer(topTeammates);
+  return [playerData, teammateData];
+};
+
+export const generateGraphic = async (userData: UserData): Promise<string> => {
+  const [data, teammateData] = await getGraphicData(userData);
   const reactComp = React.createElement(ProfileTableStatic, {
     data: data,
     teammateData: teammateData,
+    gameName: userData.gameName,
+    tagLine: userData.tagLine,
   });
   const output = renderToStaticMarkup(reactComp);
 
@@ -109,9 +109,7 @@ export const generateGraphic = async () => {
     path.join(__dirname, "..", "renderer")
   );
 
-  console.log(html);
   const outputPathHTML = path.resolve(__dirname, "output.html");
-  console.log(outputPathHTML);
   fs.writeFileSync(outputPathHTML, html);
 
   // Use puppeteer to take a screenshot of the rendered HTML
@@ -119,14 +117,17 @@ export const generateGraphic = async () => {
   const page = await browser.newPage();
 
   await page.setViewport({
-    width: 1400,
+    width: 1480,
     height: 900,
   });
 
   // Load the HTML file in Puppeteer and wait for all network connections to be idle
   await page.goto(`file://${outputPathHTML}`, { waitUntil: "networkidle0" });
 
-  const screenshot = await page.screenshot();
+  const screenshot = await page.screenshot({
+    encoding: "base64",
+    type: "png",
+  });
 
   await browser.close();
 
@@ -134,5 +135,5 @@ export const generateGraphic = async () => {
   const outputPath = path.resolve(__dirname, "output.jpeg");
   fs.writeFileSync(outputPath, screenshot);
 
-  return outputPath;
+  return screenshot;
 };

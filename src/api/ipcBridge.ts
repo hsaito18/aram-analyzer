@@ -115,4 +115,6 @@ ipcMain.handle("get-match-data", (event, matchId) => {
 
 ipcMain.on("attach-all-matches", () => attachAllMatches());
 
-ipcMain.on("generate-player-graphic", () => generateGraphic());
+ipcMain.on("generate-player-graphic", () =>
+  generateGraphic({ gameName: "hsaito", tagLine: "NA1" })
+);

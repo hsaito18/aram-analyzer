@@ -102,7 +102,13 @@ export function PlayerHighDateCell({
   );
 }
 
-const ProfileTable = () => {
+const ProfileTable = ({
+  gameName,
+  tagLine,
+}: {
+  gameName: string;
+  tagLine: string;
+}) => {
   const [data, setData] = useState<PlayerStats>(getBlankPlayerStats());
   const [isLoading, setLoading] = useState<boolean>(false);
   const [teammateData, setTeammateData] = useState<TeammateData[]>([]);
@@ -152,36 +158,6 @@ const ProfileTable = () => {
     return <>{Number((data.wins / totalPlayed) * 100).toFixed(1)}%</>;
   };
 
-  const printRef = React.useRef();
-  const handleDownloadImage = async () => {
-    const element = printRef.current;
-    const canvas = await html2canvas(element, {
-      windowHeight: 1200,
-      windowWidth: 1600,
-    });
-
-    const data = canvas.toDataURL("image/jpg");
-    const link = document.createElement("a");
-
-    if (typeof link.download === "string") {
-      link.href = data;
-      link.download = "image.jpg";
-
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else {
-      window.open(data);
-    }
-  };
-
-  const renderHTML = () => {
-    const html = renderToStaticMarkup(
-      <ProfileTableStatic data={data} teammateData={teammateData} />
-    );
-    console.log(html);
-  };
-
   const somethingElse = async () => {
     playerAPI.generatePlayerGraphic();
   };
@@ -200,7 +176,9 @@ const ProfileTable = () => {
           <>
             {data.totalPlayed > 0 ? (
               <div id="playerStatsContainer">
-                <h2>Player Stats</h2>
+                <h2>
+                  {gameName}#{tagLine} Player Stats
+                </h2>
                 <div id="playerStatsCols">
                   <div id="winRatesCol">
                     <div className="tableTitle">Wins and Losses</div>
