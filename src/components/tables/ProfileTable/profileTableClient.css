@@ -1,0 +1,16 @@
+#profileMain {
+  width: 90vw !important;
+  height: 100% !important;
+  border-radius: 8px !important;
+  border: rgba(255, 255, 255, 0.7) 2px solid !important;
+  background-color: rgb(29, 29, 29) !important;
+  position: relative !important;
+}
+
+#profileMain .content {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: scroll !important;
+  box-sizing: content-box !important;
+  color: transparent !important;
+}

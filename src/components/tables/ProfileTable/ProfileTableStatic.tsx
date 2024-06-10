@@ -1,24 +1,8 @@
-import { useMemo, useState, useEffect } from "react";
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-  type MRT_ColumnDef,
-  MRT_GlobalFilterTextField,
-  MRT_ShowHideColumnsButton,
-} from "material-react-table";
-import { Box, CircularProgress } from "@mui/material";
-import { useToPng } from "@hugocxl/react-to-image";
-import html2canvas from "html2canvas";
+import { Box } from "@mui/material";
 import { formatLargeInteger } from "../../../services/string.service";
 import { PerMinuteLabelCell } from "../championDetail/ChampionDetail";
-import {
-  PlayerStats,
-  getBlankPlayerStats,
-} from "../../../api/players/player.interface";
+import { PlayerStats } from "../../../api/players/player.interface";
 import "./profileTable.css";
-import React from "react";
-
-const NUM_TEAMMATES_SHOWN = 20;
 
 interface TeammateData {
   puuid: string;
@@ -32,18 +16,17 @@ interface TeammateData {
 
 export function PlayerHighDateCell({
   data,
+  imgSrc,
 }: {
   data: { value: number; matchId: string; date: string; champName: string };
+  imgSrc: string;
 }) {
   const stringDate = new Date(Number(data.date)).toLocaleDateString();
-  function handleClick() {
-    console.log(`Match ID: ${data.matchId}`);
-  }
   return (
     <div id="matchDateCell">
       <img
         className="profileHighChampIcon"
-        src={`PATH_TO_ASSETS/assets/champion_icons/${data.champName}.jpg`}
+        src={`${imgSrc}/assets/champion_icons/${data.champName}.jpg`}
       ></img>
       <Box
         component="span"
@@ -54,7 +37,6 @@ export function PlayerHighDateCell({
           p: "0.25rem",
           cursor: "pointer",
         }}
-        onClick={handleClick}
       >
         {stringDate}
       </Box>
@@ -67,15 +49,18 @@ const ProfileTableStatic = ({
   teammateData,
   gameName,
   tagLine,
+  isElectron,
 }: {
   data: PlayerStats;
   teammateData: TeammateData[];
   gameName: string;
   tagLine: string;
+  isElectron: boolean;
 }) => {
   ///
   ///
   ///
+  const IMG_SOURCE = isElectron ? "static://" : "PATH_TO_ASSETS";
   const WinRateCell = ({
     data,
   }: {
@@ -87,7 +72,7 @@ const ProfileTableStatic = ({
   };
 
   return (
-    <div id="staticProfileMain">
+    <div id="profileMain">
       <div className="content">
         {
           <>
@@ -460,7 +445,10 @@ const ProfileTableStatic = ({
                             {Number(data.highs.mostKills.value)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <PlayerHighDateCell data={data.highs.mostKills} />
+                            <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
+                              data={data.highs.mostKills}
+                            />
                           </td>
                         </tr>
                         <tr>
@@ -469,7 +457,10 @@ const ProfileTableStatic = ({
                             {Number(data.highs.mostDeaths.value)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <PlayerHighDateCell data={data.highs.mostDeaths} />
+                            <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
+                              data={data.highs.mostDeaths}
+                            />
                           </td>
                         </tr>
                         <tr>
@@ -478,7 +469,10 @@ const ProfileTableStatic = ({
                             {Number(data.highs.mostAssists.value)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <PlayerHighDateCell data={data.highs.mostAssists} />
+                            <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
+                              data={data.highs.mostAssists}
+                            />
                           </td>
                         </tr>
                         <tr>
@@ -489,7 +483,10 @@ const ProfileTableStatic = ({
                             {Number(data.highs.mostDamage.value).toFixed(0)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <PlayerHighDateCell data={data.highs.mostDamage} />
+                            <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
+                              data={data.highs.mostDamage}
+                            />
                           </td>
                         </tr>
                         <tr>
@@ -503,6 +500,7 @@ const ProfileTableStatic = ({
                           </td>
                           <td className="profileMatchDateCell">
                             <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
                               data={data.highs.mostDamageTaken}
                             />
                           </td>
@@ -515,7 +513,10 @@ const ProfileTableStatic = ({
                             {Number(data.highs.mostHealing.value).toFixed(0)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <PlayerHighDateCell data={data.highs.mostHealing} />
+                            <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
+                              data={data.highs.mostHealing}
+                            />
                           </td>
                         </tr>
                         <tr>
@@ -527,6 +528,7 @@ const ProfileTableStatic = ({
                           </td>
                           <td className="profileMatchDateCell">
                             <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
                               data={data.highs.mostShielding}
                             />
                           </td>
@@ -540,6 +542,7 @@ const ProfileTableStatic = ({
                           </td>
                           <td className="profileMatchDateCell">
                             <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
                               data={data.highs.mostTotalCCTime}
                             />
                           </td>
@@ -552,7 +555,10 @@ const ProfileTableStatic = ({
                             {Number(data.highs.mostGold.value).toFixed(0)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <PlayerHighDateCell data={data.highs.mostGold} />
+                            <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
+                              data={data.highs.mostGold}
+                            />
                           </td>
                         </tr>
                         <tr>
@@ -561,7 +567,10 @@ const ProfileTableStatic = ({
                             {Number(data.highs.mostTotalCS.value).toFixed(0)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <PlayerHighDateCell data={data.highs.mostTotalCS} />
+                            <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
+                              data={data.highs.mostTotalCS}
+                            />
                           </td>
                         </tr>
                         <tr>
@@ -574,6 +583,7 @@ const ProfileTableStatic = ({
                           </td>
                           <td className="profileMatchDateCell">
                             <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
                               data={data.highs.mostKillParticipation}
                             />
                           </td>
@@ -588,6 +598,7 @@ const ProfileTableStatic = ({
                           </td>
                           <td className="profileMatchDateCell">
                             <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
                               data={data.highs.mostDamageShare}
                             />
                           </td>
@@ -602,6 +613,7 @@ const ProfileTableStatic = ({
                           </td>
                           <td className="profileMatchDateCell">
                             <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
                               data={data.highs.mostGoldShare}
                             />
                           </td>
@@ -612,7 +624,10 @@ const ProfileTableStatic = ({
                             {Number(data.highs.biggestCrit.value)}
                           </td>
                           <td className="profileMatchDateCell">
-                            <PlayerHighDateCell data={data.highs.biggestCrit} />
+                            <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
+                              data={data.highs.biggestCrit}
+                            />
                           </td>
                         </tr>
                         <tr>
@@ -622,6 +637,7 @@ const ProfileTableStatic = ({
                           </td>
                           <td className="profileMatchDateCell">
                             <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
                               data={data.highs.biggestKillingSpree}
                             />
                           </td>

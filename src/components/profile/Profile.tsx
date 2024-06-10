@@ -1,7 +1,7 @@
 import "./profile.css";
 import { useState } from "react";
 import ChampionTable from "../tables/ChampionTable";
-import ProfileTable from "../tables/ProfileTable/ProfileTable";
+import ProfileTable from "../tables/ProfileTable/ProfileTableClient";
 import ProfileTopBar from "../shared/ProfileTopBar";
 import { useLocation } from "react-router-dom";
 import { Button } from "@mui/material";

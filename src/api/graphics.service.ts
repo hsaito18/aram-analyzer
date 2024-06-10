@@ -72,6 +72,7 @@ export const generateGraphic = async (userData: UserData): Promise<string> => {
     teammateData: teammateData,
     gameName: userData.gameName,
     tagLine: userData.tagLine,
+    isElectron: false,
   });
   const output = renderToStaticMarkup(reactComp);
 

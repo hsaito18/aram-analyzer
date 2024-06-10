@@ -1,23 +1,6 @@
-#staticProfileMain {
+#profileMain {
   width: 100vw;
   height: 100vh;
-  background-color: rgb(29, 29, 29);
-  position: relative;
-}
-
-#staticProfileMain .content {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  box-sizing: content-box;
-  color: transparent;
-}
-
-#profileMain {
-  width: 90vw;
-  height: 100%;
-  border-radius: 8px;
-  border: rgba(255, 255, 255, 0.7) 2px solid;
   background-color: rgb(29, 29, 29);
   position: relative;
 }
@@ -25,7 +8,7 @@
 #profileMain .content {
   width: 100%;
   height: 100%;
-  overflow: scroll;
+  overflow: hidden;
   box-sizing: content-box;
   color: transparent;
 }
