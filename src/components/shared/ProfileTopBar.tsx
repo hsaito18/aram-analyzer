@@ -39,7 +39,7 @@ export default function ProfileTopBar({
   useEffect(() => {
     const removeFunc = playerAPI.onPlayerStats(
       "playerStatsData",
-      (newData: champRow) => {
+      (newData: SimplePlayerStats) => {
         setData(newData);
       }
     );

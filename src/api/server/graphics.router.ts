@@ -13,6 +13,9 @@ graphicsRouter.get(
         tagLine: req.params.tagLine,
       };
       const graphic = await generateGraphic(userData);
+      if (graphic === "No matches saved!") {
+        return res.status(StatusCodes.NO_CONTENT).json({ msg: graphic });
+      }
       if (!graphic) {
         return res
           .status(StatusCodes.BAD_REQUEST)

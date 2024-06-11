@@ -15,6 +15,7 @@ import {
 import { UserData } from "./players/player.interface";
 import { getMatchData } from "./matches/match.controller";
 import { Match } from "./matches/match.interface";
+import { champRow } from "../components/tables/table.interface";
 import { getSearchHistory, addSearchHistory } from "./searchHistory";
 import { generateGraphic } from "./graphics.service";
 import Logger = require("electron-log/main");
@@ -32,6 +33,18 @@ async function getChampStats(
   arrData.sort((a, b) => b.wins - a.wins);
   event.sender.send("champTableData", arrData);
   return arrData;
+}
+
+async function getSingleChampionStats(
+  event: Electron.IpcMainInvokeEvent,
+  userData: UserData,
+  champName: string
+) {
+  const data = await getPlayerChampionStats(userData);
+  const champData: champRow = { ...data[champName], champName };
+  champData["champName"] = champName;
+  event.sender.send("champData", champData);
+  return champData;
 }
 
 async function getPlayerStatsHandle(

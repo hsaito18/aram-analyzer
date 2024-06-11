@@ -31,6 +31,8 @@ let players: Players = loadFile(playersFilePath);
 const puuidMapFilePath = "puuid-map.json";
 let puuidMap = loadFile(puuidMapFilePath);
 
+let status = "Ready!";
+
 function loadFile(filePath: string): any {
   log.info("Loading players");
   try {
@@ -78,7 +80,6 @@ async function getUserData(gameName: string, tagLine: string): Promise<any> {
 }
 
 async function getNameFromPuuid(puuid: string): Promise<UserData> {
-  console.log(`puuid: ${puuid}`);
   return new Promise((resolve, reject) => {
     const options = {
       method: "GET",
@@ -157,14 +158,21 @@ export const puuidToName = async (puuid: string): Promise<UserData> => {
   return puuidMap[puuid];
 };
 
+export type CREATE_BY_USERNAME_RESPONSE =
+  | Player
+  | "ALREADY_EXISTS"
+  | "NOT_FOUND"
+  | "BUSY";
+
 export const createByUsername = async (
   userData: UserData
-): Promise<Player | null> => {
+): Promise<CREATE_BY_USERNAME_RESPONSE> => {
   try {
     const actualUserData = await getUserData(
       userData.gameName,
       userData.tagLine
     );
+    if (actualUserData.puuid in players) return "ALREADY_EXISTS";
     const user: Player = {
       puuid: actualUserData.puuid,
       gameName: actualUserData.gameName,
@@ -187,7 +195,10 @@ export const createByUsername = async (
     return user;
   } catch (error) {
     console.error(`Failed to get PUUID: ${error}`);
-    return null;
+    if (error.response.status === 429) {
+      return "BUSY";
+    }
+    return "NOT_FOUND";
   }
 };
 
@@ -213,13 +224,15 @@ export const remove = async (id: string): Promise<null | void> => {
 
 export const saveARAMMatches = async (
   userData: UserData
-): Promise<string[] | null> => {
+): Promise<string[] | string> => {
   const player = await findByUsername(userData);
-  if (!player) return null;
+  if (!player) return "NOT_FOUND";
   const puuid = player.puuid;
+  status = `Getting ARAMs for ${player.gameName}#${player.tagLine}`;
   const matches = await getAllARAMs(puuid);
   player.matches = [...new Set([...player.matches, ...matches])];
   savePlayers();
+  status = "Ready!";
   return player.matches;
 };
 
@@ -611,7 +624,9 @@ export const analyzePlayerMatches = async (
   await updateProfileIcon(player);
   const champStats: ChampStats = player.champStats;
   const playerStats: PlayerStats = player.playerStats;
+  status = `Downloading matches for ${player.gameName}#${player.tagLine}...`;
   await downloadMatches(player.matches);
+  status = `Analyzing matches for ${player.gameName}#${player.tagLine}...`;
   const currentResults = []; // This should work as long as all the games that have not been analyzed are all newer than all the analyzed games
   for (const match of player.matches) {
     if (player.analyzedMatches.includes(match)) continue;
@@ -722,6 +737,7 @@ export const analyzePlayerMatches = async (
   player.playerStats = playerStats;
   savePlayers();
   saveFile(puuidMapFilePath, puuidMap);
+  status = "Ready!";
   return true;
 };
 
@@ -790,3 +806,5 @@ export const attachAllMatches = async () => {
   log.info(`Finished match attachment!`);
   savePlayers();
 };
+
+export const getControllerStatus = () => status;

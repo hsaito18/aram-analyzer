@@ -67,6 +67,7 @@ const getGraphicData = async (
 
 export const generateGraphic = async (userData: UserData): Promise<string> => {
   const [data, teammateData] = await getGraphicData(userData);
+  if (data.totalPlayed == 0) return "No matches saved!";
   const reactComp = React.createElement(ProfileTableStatic, {
     data: data,
     teammateData: teammateData,
@@ -137,4 +138,11 @@ export const generateGraphic = async (userData: UserData): Promise<string> => {
   fs.writeFileSync(outputPath, screenshot);
 
   return screenshot;
+};
+
+export const generateChampionGraphic = async (
+  userData: UserData,
+  champName: string
+): Promise<string> => {
+  return "Not implemented yet.";
 };
