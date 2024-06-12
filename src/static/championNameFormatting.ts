@@ -156,6 +156,7 @@ export const champNameLowercaseToOfficial = {
   xayah: "Xayah",
   xerath: "Xerath",
   xinzhao: "XinZhao",
+  wukong: "MonkeyKing",
   yasuo: "Yasuo",
   yorick: "Yorick",
   yone: "Yone",

@@ -633,6 +633,7 @@ export const analyzePlayerMatches = async (
     if (player.analyzedMatches.includes(match)) continue;
     const matchData = await getMatchData(match);
     if (!matchData) continue;
+    if (matchData.info.participants.length < 1) continue;
     if (matchData.info.participants[0].gameEndedInEarlySurrender) {
       player.analyzedMatches.push(match);
       continue;
