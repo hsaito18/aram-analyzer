@@ -3,6 +3,7 @@ import {
   Player,
   Players,
   ChampStats,
+  SingleChampStats,
   DetailedChampStats,
   TotalChampStats,
   ChampHighs,
@@ -747,6 +748,17 @@ export const getPlayerChampionStats = async (
   const player = await findByUsername(userData);
   if (!player) return null;
   return player.champStats;
+};
+
+export type CHAMP_STATS_ERROR = "PLAYER_NOT_FOUND" | "CHAMP_NOT_FOUND";
+export const getPlayerSingleChampionStats = async (
+  userData: UserData,
+  champName: string
+): Promise<SingleChampStats | CHAMP_STATS_ERROR> => {
+  const player = await findByUsername(userData);
+  if (!player) return "PLAYER_NOT_FOUND";
+  if (!(champName in player.champStats)) return "CHAMP_NOT_FOUND";
+  return player.champStats[champName];
 };
 
 export const getPlayerProfileIcon = async (

@@ -20,7 +20,7 @@ export function MatchDateCell({
       <Box
         component="span"
         sx={{
-          backgroundColor: "orange",
+          backgroundColor: "rgb(205,127,50)",
           borderRadius: "0.25rem",
           color: "#fff",
           p: "0.25rem",
@@ -65,7 +65,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
         <table className="champStatsTable" id="perGameStats">
           <thead>
             <tr>
-              <th>KDA</th>
+              <th className="textHeader">KDA</th>
               <th className="numberCell">Per Game</th>
               <th className="numberCell">Total</th>
             </tr>
@@ -99,7 +99,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
         <table className="champStatsTable" id="damageStats">
           <thead>
             <tr>
-              <th>Damage</th>
+              <th className="textHeader">Damage</th>
               <th className="numberCell">Per Minute</th>
               <th></th>
             </tr>
@@ -144,7 +144,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
         <table className="champStatsTable" id="perMinuteStats">
           <thead>
             <tr>
-              <th>Stats</th>
+              <th className="textHeader">Stats</th>
               <th></th>
               <th></th>
             </tr>
@@ -187,7 +187,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
         <table className="champStatsTable" id="percentageStats">
           <thead>
             <tr>
-              <th>Team Shares</th>
+              <th className="textHeader">Team Shares</th>
               <th></th>
               <th></th>
             </tr>
@@ -218,7 +218,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
         </table>
       </div>
       <div id="highlightsRow">
-        <div style={{ width: "100%", fontWeight: "500" }}>Game Highs</div>
+        <div id="gameHighsTitle">Game Highs</div>
         <table id="highlightsTable">
           <thead>
             <tr>

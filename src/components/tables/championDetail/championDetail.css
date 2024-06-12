@@ -80,6 +80,11 @@
   align-items: center;
 }
 
+#gameHighsTitle {
+  width: 100%;
+  font-weight: bold;
+}
+
 #highlightsTable {
   width: 100%;
   border-collapse: separate;

@@ -17,7 +17,10 @@ import { getMatchData } from "./matches/match.controller";
 import { Match } from "./matches/match.interface";
 import { champRow } from "../components/tables/table.interface";
 import { getSearchHistory, addSearchHistory } from "./searchHistory";
-import { generateGraphic } from "./graphics.service";
+import {
+  generatePlayerGraphic,
+  generateChampionGraphic,
+} from "./graphics.service";
 import Logger = require("electron-log/main");
 
 ipcMain.handle("register-player", (event, userData) => {
@@ -128,6 +131,11 @@ ipcMain.handle("get-match-data", (event, matchId) => {
 
 ipcMain.on("attach-all-matches", () => attachAllMatches());
 
+// Testing graphic generation API
 ipcMain.on("generate-player-graphic", () =>
-  generateGraphic({ gameName: "hsaito", tagLine: "NA1" })
+  generatePlayerGraphic({ gameName: "hsaito", tagLine: "NA1" })
+);
+
+ipcMain.on("generate-champion-graphic", () =>
+  generateChampionGraphic({ gameName: "hsaito", tagLine: "NA1" }, "Leblanc")
 );

@@ -43,6 +43,7 @@ export const playerAPI = {
     ipcRenderer.invoke("puuid-to-name", puuid),
   attachAllMatches: () => ipcRenderer.send("attach-all-matches"),
   generatePlayerGraphic: () => ipcRenderer.send("generate-player-graphic"),
+  generateChampionGraphic: () => ipcRenderer.send("generate-champion-graphic"),
 };
 
 contextBridge.exposeInMainWorld("playerAPI", playerAPI);

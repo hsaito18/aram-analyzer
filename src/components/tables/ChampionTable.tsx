@@ -211,6 +211,11 @@ const ChampionTable = () => {
     };
   }, []);
 
+  // For testing. Should be removed later.
+  function generateChampionGraphic() {
+    playerAPI.generateChampionGraphic();
+  }
+
   //should be memoized or stable
   const columns = useMemo<MRT_ColumnDef<champRow>[]>(() => allColumns, []);
 
@@ -311,6 +316,7 @@ const ChampionTable = () => {
           </>
         )}
       </div>
+      <button onClick={generateChampionGraphic}>Test Champion Graphic</button>
     </div>
   );
 };

@@ -1,0 +1,27 @@
+#graphicRoot {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(29, 29, 29);
+  color: white;
+  position: relative;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+#playerTitle {
+  font-size: 1.5rem;
+  padding-top: 4px;
+  margin-bottom: -1rem;
+}
+
+#highlightsRow {
+  padding-top: 0.5rem;
+}
+
+#matchHistoryRow {
+  display: none !important;
+}
+
+.textHeader {
+  text-align: left;
+}
