@@ -1,4 +1,5 @@
 import { champRow } from "../table.interface";
+import { TotalChampStats } from "../../../api/players/player.interface";
 import { Box } from "@mui/material";
 import "./championDetail.css";
 
@@ -43,7 +44,28 @@ export function PerMinuteLabelCell({ label }: { label: string }) {
   );
 }
 
+const MULTIKILL_NAME_MAP: { [key: number]: keyof TotalChampStats } = {
+  2: "doublekills",
+  3: "triplekills",
+  4: "quadrakills",
+  5: "pentakills",
+};
+
 export default function ChampionDetail({ champData }: { champData: champRow }) {
+  let biggestMultikillText = champData.highs.biggestMultikill.value.toString();
+  const biggestMultikillName =
+    champData.highs.biggestMultikill.value > 1
+      ? MULTIKILL_NAME_MAP[
+          champData.highs.biggestMultikill.value as 2 | 3 | 4 | 5
+        ]
+      : "";
+  champData.totalStats;
+  if (biggestMultikillName) {
+    const highestMultkillOccurrences =
+      champData.totalStats[biggestMultikillName];
+    biggestMultikillText = `${biggestMultikillText} (x${highestMultkillOccurrences})`;
+  }
+
   return (
     <div id="champDetailMain">
       <div id="picRow">
@@ -421,9 +443,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
             </tr>
             <tr>
               <td>Multikill</td>
-              <td className="numberCell">
-                {Number(champData.highs.biggestMultikill.value)}
-              </td>
+              <td className="numberCell">{biggestMultikillText}</td>
               <td>
                 <MatchDateCell
                   date={champData.highs.biggestMultikill.date}

@@ -58,32 +58,32 @@ export interface TotalChampStats {
 }
 
 export interface ChampHighs {
-  mostKills: SuperlativeTrio;
-  mostDeaths: SuperlativeTrio;
-  mostAssists: SuperlativeTrio;
-  mostDamage: SuperlativeTrio;
-  mostTotalDamage: SuperlativeTrio;
-  mostGold: SuperlativeTrio;
-  mostTotalGold: SuperlativeTrio;
-  mostTotalCS: SuperlativeTrio;
-  mostCCTime: SuperlativeTrio;
-  mostTotalCCTime: SuperlativeTrio;
-  mostHealing: SuperlativeTrio;
-  mostTotalHealing: SuperlativeTrio;
-  mostShielding: SuperlativeTrio;
-  mostTotalShielding: SuperlativeTrio;
-  mostObjectiveDamage: SuperlativeTrio;
-  mostTotalObjectiveDamage: SuperlativeTrio;
-  mostDamageTaken: SuperlativeTrio;
-  mostTotalDamageTaken: SuperlativeTrio;
-  mostSelfMitigated: SuperlativeTrio;
-  mostTotalSelfMitigated: SuperlativeTrio;
-  mostDamageShare: SuperlativeTrio;
-  mostGoldShare: SuperlativeTrio;
-  mostKillParticipation: SuperlativeTrio;
-  biggestCrit: SuperlativeTrio;
-  biggestMultikill: SuperlativeTrio;
-  biggestKillingSpree: SuperlativeTrio;
+  mostKills: Superlative;
+  mostDeaths: Superlative;
+  mostAssists: Superlative;
+  mostDamage: Superlative;
+  mostTotalDamage: Superlative;
+  mostGold: Superlative;
+  mostTotalGold: Superlative;
+  mostTotalCS: Superlative;
+  mostCCTime: Superlative;
+  mostTotalCCTime: Superlative;
+  mostHealing: Superlative;
+  mostTotalHealing: Superlative;
+  mostShielding: Superlative;
+  mostTotalShielding: Superlative;
+  mostObjectiveDamage: Superlative;
+  mostTotalObjectiveDamage: Superlative;
+  mostDamageTaken: Superlative;
+  mostTotalDamageTaken: Superlative;
+  mostSelfMitigated: Superlative;
+  mostTotalSelfMitigated: Superlative;
+  mostDamageShare: Superlative;
+  mostGoldShare: Superlative;
+  mostKillParticipation: Superlative;
+  biggestCrit: Superlative;
+  biggestMultikill: Superlative;
+  biggestKillingSpree: Superlative;
 }
 
 export interface PlayerHighs extends ChampHighs {
@@ -91,7 +91,7 @@ export interface PlayerHighs extends ChampHighs {
   longestLossStreak: number;
 }
 
-export interface SuperlativeTrio {
+export interface Superlative {
   value: number;
   matchId: string;
   date: string;
@@ -162,7 +162,7 @@ export interface SimplePlayerStats {
   lastUpdatedTime: number;
 }
 
-function getBlankSuperlative(): SuperlativeTrio {
+function getBlankSuperlative(): Superlative {
   return { value: 0, matchId: "", date: "", champName: "" };
 }
 
