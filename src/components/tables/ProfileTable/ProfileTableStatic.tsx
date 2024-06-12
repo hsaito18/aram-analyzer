@@ -66,7 +66,6 @@ const ProfileTableStatic = ({
   ///
   ///
   ///
-  // const IMG_SOURCE = isElectron ? "static://" : "PATH_TO_ASSETS";
   const IMG_SOURCE = "static://";
   const WinRateCell = ({
     data,
