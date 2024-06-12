@@ -84,6 +84,8 @@ export interface ChampHighs {
   biggestCrit: Superlative;
   biggestMultikill: Superlative;
   biggestKillingSpree: Superlative;
+  longestGame: Superlative;
+  shortestGame: Superlative;
 }
 
 export interface PlayerHighs extends ChampHighs {
@@ -250,6 +252,8 @@ export function getBlankPlayerStats(): PlayerStats {
       biggestKillingSpree: getBlankSuperlative(),
       longestWinStreak: 0,
       longestLossStreak: 0,
+      longestGame: getBlankSuperlative(),
+      shortestGame: getBlankSuperlative(),
     },
     classWinRates: {
       enchanter: { wins: 0, losses: 0 },

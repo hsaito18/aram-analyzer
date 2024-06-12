@@ -231,7 +231,7 @@ export const saveARAMMatches = async (
   const puuid = player.puuid;
   status = `Getting ARAMs for ${player.gameName}#${player.tagLine}`;
   const matches = await getAllARAMs(puuid);
-  player.matches = [...new Set([...player.matches, ...matches])];
+  player.matches = [...new Set([...matches, ...player.matches])];
   savePlayers();
   status = "Ready!";
   return player.matches;
@@ -465,6 +465,18 @@ function getMatchHighs(
     },
     biggestMultikill: {
       value: participant.largestMultiKill,
+      matchId,
+      date,
+      champName: participant.championName,
+    },
+    longestGame: {
+      value: participant.timePlayed,
+      matchId,
+      date,
+      champName: participant.championName,
+    },
+    shortestGame: {
+      value: participant.timePlayed,
       matchId,
       date,
       champName: participant.championName,
@@ -782,6 +794,17 @@ export const resetChampionStats = async (
   return 1;
 };
 
+export const clearPlayerMatches = async (
+  userData: UserData
+): Promise<boolean> => {
+  const player = await findByUsername(userData);
+  if (!player) return false;
+  player.matches = [];
+  resetChampionStats(userData);
+  savePlayers();
+  return true;
+};
+
 export const getPlayerStats = async (
   userData: UserData
 ): Promise<PlayerStats | null> => {
@@ -793,6 +816,18 @@ export const getPlayerStats = async (
 export const resetAllChampionStats = async (): Promise<number> => {
   for (const player of Object.values(players)) {
     log.info(`Resetting ${player.gameName}'s stats...`);
+    player.champStats = {};
+    player.analyzedMatches = [];
+    player.playerStats = getBlankPlayerStats();
+  }
+  savePlayers();
+  return 1;
+};
+
+export const clearAllPlayerMatches = async (): Promise<number> => {
+  for (const player of Object.values(players)) {
+    log.info(`Clearing ${player.gameName}'s matches...`);
+    player.matches = [];
     player.champStats = {};
     player.analyzedMatches = [];
     player.playerStats = getBlankPlayerStats();

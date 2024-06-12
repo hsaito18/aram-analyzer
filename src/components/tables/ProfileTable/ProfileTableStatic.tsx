@@ -44,6 +44,12 @@ export function PlayerHighDateCell({
   );
 }
 
+export function matchTimeFormatter(seconds: number): string {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+}
+
 const ProfileTableStatic = ({
   data,
   teammateData,
@@ -60,7 +66,8 @@ const ProfileTableStatic = ({
   ///
   ///
   ///
-  const IMG_SOURCE = isElectron ? "static://" : "PATH_TO_ASSETS";
+  // const IMG_SOURCE = isElectron ? "static://" : "PATH_TO_ASSETS";
+  const IMG_SOURCE = "static://";
   const WinRateCell = ({
     data,
   }: {
@@ -639,6 +646,30 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.biggestKillingSpree}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Longest Match</td>
+                          <td className="numberCell">
+                            {matchTimeFormatter(data.highs.longestGame.value)}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
+                              data={data.highs.longestGame}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Shortest Match</td>
+                          <td className="numberCell">
+                            {matchTimeFormatter(data.highs.shortestGame.value)}
+                          </td>
+                          <td className="profileMatchDateCell">
+                            <PlayerHighDateCell
+                              imgSrc={IMG_SOURCE}
+                              data={data.highs.shortestGame}
                             />
                           </td>
                         </tr>

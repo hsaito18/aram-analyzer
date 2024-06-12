@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import { Player, UserData, ChampStats } from "./player.interface";
 import { StatusCodes } from "http-status-codes";
 import * as playerController from "./player.controller";
+import log from "electron-log/main";
 
 export const playerRouter = express.Router();
 
@@ -176,6 +177,35 @@ playerRouter.post("/reset-all-stats", async (req: Request, res: Response) => {
         .json({ error: `Error resetting all.` });
     }
     return res.status(StatusCodes.OK).json({ success });
+  } catch (error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
+  }
+});
+
+playerRouter.post("/clear-all-matches", async (req: Request, res: Response) => {
+  try {
+    const success: number = await playerController.clearAllPlayerMatches();
+    if (!success) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: `Error clearing all.` });
+    }
+    return res.status(StatusCodes.OK).json({ success });
+  } catch (error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
+  }
+});
+
+playerRouter.post("/update-player-set", async (req: Request, res: Response) => {
+  try {
+    const players: UserData[] = req.body;
+    for (const playerData of players) {
+      await playerController.saveARAMMatches(playerData);
+      await playerController.analyzePlayerMatches(playerData);
+    }
+    return res
+      .status(StatusCodes.OK)
+      .json({ success: true, num_updated: players.length });
   } catch (error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
   }
