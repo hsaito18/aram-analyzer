@@ -19,10 +19,11 @@ import {
   getMatchData,
   matches_set,
 } from "../matches/match.controller";
+import { analyzeMatchLineup } from "../lineups/lineup.controller";
 import { mergeAverages, mergeTotals, mergeChampHighs } from "../object.service";
 import { ChampionClasses } from "../../static/championClasses";
 import { RIOT_API_KEY } from "../../config/API_KEY/apiConfig";
-import fs from "fs";
+import { loadFile, saveFile } from "../fs.service";
 import axios from "axios";
 import log from "electron-log/main";
 
@@ -33,30 +34,6 @@ const puuidMapFilePath = "puuid-map.json";
 let puuidMap = loadFile(puuidMapFilePath);
 
 let status = "Ready!";
-
-function loadFile(filePath: string): any {
-  log.info("Loading players");
-  try {
-    const data = fs.readFileSync(filePath, "utf-8");
-    return JSON.parse(data);
-  } catch (error) {
-    log.info(`Error loading players: ${error}`);
-    return {};
-  }
-}
-
-function saveFile(filePath: string, data: any) {
-  try {
-    fs.writeFileSync(filePath, JSON.stringify(data), "utf-8");
-    log.info(`${filePath} saved successfully!`);
-  } catch (error) {
-    log.info(`Error : ${error}`);
-  }
-}
-
-function savePlayers() {
-  saveFile(playersFilePath, players);
-}
 
 async function getUserData(gameName: string, tagLine: string): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -76,34 +53,6 @@ async function getUserData(gameName: string, tagLine: string): Promise<any> {
       })
       .catch((error) => {
         reject(error);
-      });
-  });
-}
-
-async function getNameFromPuuid(puuid: string): Promise<UserData> {
-  return new Promise((resolve, reject) => {
-    const options = {
-      method: "GET",
-      headers: {
-        "X-Riot-Token": RIOT_API_KEY,
-      },
-    };
-    axios
-      .get(
-        `https://americas.api.riotgames.com/riot/account/v1/accounts/by-puuid/${puuid}`,
-        options
-      )
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch(async (error) => {
-        if (error.response.status === 429) {
-          log.info(`Rate limited, waiting 2 minutes...`);
-          await new Promise((resolve) => setTimeout(resolve, 120000));
-          resolve(getNameFromPuuid(puuid));
-        } else {
-          reject(error);
-        }
       });
   });
 }
@@ -185,7 +134,7 @@ export const createByUsername = async (
       profileIcon: 0,
     };
     players[actualUserData.puuid] = user;
-    savePlayers();
+    saveFile(playersFilePath, players);
     if (!(actualUserData.puuid in puuidMap)) {
       puuidMap[actualUserData.puuid] = {
         gameName: actualUserData.gameName,
@@ -220,7 +169,7 @@ export const remove = async (id: string): Promise<null | void> => {
   const player = await findOne(id);
   if (!player) return null;
   delete players[id];
-  savePlayers();
+  saveFile(playersFilePath, players);
 };
 
 export const saveARAMMatches = async (
@@ -232,7 +181,7 @@ export const saveARAMMatches = async (
   status = `Getting ARAMs for ${player.gameName}#${player.tagLine}`;
   const matches = await getAllARAMs(puuid);
   player.matches = [...new Set([...matches, ...player.matches])];
-  savePlayers();
+  saveFile(playersFilePath, players);
   status = "Ready!";
   return player.matches;
 };
@@ -502,7 +451,7 @@ async function updateProfileIcon(player: Player): Promise<void> {
     return;
   }
   players[player.puuid].profileIcon = participant.profileIcon;
-  savePlayers();
+  saveFile(playersFilePath, players);
 }
 
 async function downloadMatches(matches: string[]): Promise<void> {
@@ -584,22 +533,6 @@ const getTeammates = (
   return teammates;
 };
 
-const puuidMapRegisterTeammates = async (teammates: string[]) => {
-  for (const teammate of teammates) {
-    if (teammate in puuidMap) continue;
-    try {
-      const res = await registerPuuid(teammate);
-      if (!res) {
-        log.info(`Rate limited, waiting 2 minutes...`);
-        await new Promise((resolve) => setTimeout(resolve, 120000));
-        await registerPuuid(teammate);
-      }
-    } catch (error) {
-      log.error(`Error registering game name for ${teammate} - ${error}`);
-    }
-  }
-};
-
 async function registerPuuid(puuid: string) {
   const options = {
     method: "GET",
@@ -659,6 +592,7 @@ export const analyzePlayerMatches = async (
     const teamId = participant.teamId;
     const teamStats = getTeamStats(matchData, teamId);
     const teammates = getTeammates(matchData, player.puuid, participant.teamId);
+    analyzeMatchLineup(teammates, win, match, player.puuid);
     // await puuidMapRegisterTeammates(teammates);
     const teammatesWinObject = teammates.reduce((obj, teammate) => {
       obj[teammate] = {
@@ -749,7 +683,7 @@ export const analyzePlayerMatches = async (
   player.playerStats.currentStreak = winStreaksObj.currentStreak.length;
   player.champStats = champStats;
   player.playerStats = playerStats;
-  savePlayers();
+  saveFile(playersFilePath, players);
   saveFile(puuidMapFilePath, puuidMap);
   status = "Ready!";
   return true;
@@ -790,7 +724,7 @@ export const resetChampionStats = async (
   player.champStats = {};
   player.analyzedMatches = [];
   player.playerStats = getBlankPlayerStats();
-  savePlayers();
+  saveFile(playersFilePath, players);
   return 1;
 };
 
@@ -801,7 +735,7 @@ export const clearPlayerMatches = async (
   if (!player) return false;
   player.matches = [];
   resetChampionStats(userData);
-  savePlayers();
+  saveFile(playersFilePath, players);
   return true;
 };
 
@@ -820,7 +754,7 @@ export const resetAllChampionStats = async (): Promise<number> => {
     player.analyzedMatches = [];
     player.playerStats = getBlankPlayerStats();
   }
-  savePlayers();
+  saveFile(playersFilePath, players);
   return 1;
 };
 
@@ -832,7 +766,7 @@ export const clearAllPlayerMatches = async (): Promise<number> => {
     player.analyzedMatches = [];
     player.playerStats = getBlankPlayerStats();
   }
-  savePlayers();
+  saveFile(playersFilePath, players);
   return 1;
 };
 
@@ -852,7 +786,7 @@ export const attachAllMatches = async () => {
     }
   }
   log.info(`Finished match attachment!`);
-  savePlayers();
+  saveFile(playersFilePath, players);
 };
 
 export const getControllerStatus = () => status;
