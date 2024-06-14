@@ -16,6 +16,7 @@ import { UserData } from "./players/player.interface";
 import { getMatchData } from "./matches/match.controller";
 import { Match } from "./matches/match.interface";
 import { champRow } from "../components/tables/table.interface";
+import { getTopLineups } from "./lineups/lineup.controller";
 import { getSearchHistory, addSearchHistory } from "./searchHistory";
 import {
   generatePlayerGraphic,
@@ -139,3 +140,7 @@ ipcMain.on("generate-player-graphic", () =>
 ipcMain.on("generate-champion-graphic", () =>
   generateChampionGraphic({ gameName: "hsaito", tagLine: "NA1" }, "Leblanc")
 );
+
+ipcMain.handle("get-lineups-data", () => {
+  return getTopLineups();
+});

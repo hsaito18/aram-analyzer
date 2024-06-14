@@ -1,0 +1,60 @@
+#main {
+  padding: 0px;
+  background-color: transparent;
+  width: 100vw;
+  height: 100vh;
+  color: rgba(255, 255, 255, 0.7);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#lineupsMainBox {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lineupsSide {
+  height: 100vh;
+  width: 5vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lineupsButton {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: darkgray;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lineupsButton:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+#lineupsLeft {
+  grid-area: left;
+}
+
+#lineupsContent {
+  grid-area: mid;
+  height: 75vh;
+  width: 90vw;
+  background-color: rgb(29, 29, 29);
+  border-radius: 6px;
+  border: darkgray 4px solid;
+  padding: 8px;
+  font-family: "Roboto";
+}

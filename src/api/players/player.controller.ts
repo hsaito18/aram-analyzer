@@ -35,7 +35,10 @@ let puuidMap = loadFile(puuidMapFilePath);
 
 let status = "Ready!";
 
-async function getUserData(gameName: string, tagLine: string): Promise<any> {
+export async function getUserData(
+  gameName: string,
+  tagLine: string
+): Promise<any> {
   return new Promise((resolve, reject) => {
     const options = {
       method: "GET",
