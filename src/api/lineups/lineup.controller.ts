@@ -55,11 +55,15 @@ export const getTopLineups = (): PlayerLineup[] => {
 
 export const getLineupData = async (
   users: UserData[]
-): Promise<PlayerLineup> => {
+): Promise<PlayerLineup | null> => {
   const puuids = [];
   for (const user of users) {
-    const userdata = await getUserData(user.gameName, user.tagLine);
-    puuids.push(userdata.puuid);
+    try {
+      const userdata = await getUserData(user.gameName, user.tagLine);
+      puuids.push(userdata.puuid);
+    } catch (error) {
+      return null;
+    }
   }
   const lineupKey = puuids
     .map((tm) => tm.slice(0, 6))

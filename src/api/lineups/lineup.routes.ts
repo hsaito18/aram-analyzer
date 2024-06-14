@@ -16,6 +16,11 @@ lineupsRouter.get(
         { gameName: req.params.gn5, tagLine: req.params.tl5 },
       ];
       const lineupData = await getLineupData(users);
+      if (lineupData === null) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          error: "One or more players not found.",
+        });
+      }
       return res.status(StatusCodes.OK).send(lineupData);
     } catch (error) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
