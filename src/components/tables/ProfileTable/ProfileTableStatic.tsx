@@ -437,6 +437,13 @@ const ProfileTableStatic = ({
                             {formatLargeInteger(data.totalStats.totalGold)}
                           </td>
                         </tr>
+                        <tr>
+                          <td>Kills +/-</td>
+                          <td className="numberCell">
+                            {data.totalStats.killsPlusMinus > 0 ? "+" : ""}
+                            {Number(data.totalStats.killsPlusMinus)}
+                          </td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>

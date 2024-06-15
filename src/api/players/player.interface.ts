@@ -55,6 +55,7 @@ export interface TotalChampStats {
   quadrakills: number;
   triplekills: number;
   doublekills: number;
+  killsPlusMinus: number;
 }
 
 export interface ChampHighs {
@@ -193,6 +194,7 @@ export function getBlankPlayerStats(): PlayerStats {
       quadrakills: 0,
       triplekills: 0,
       doublekills: 0,
+      killsPlusMinus: 0,
     },
     stats: {
       damagePerMinute: 0,

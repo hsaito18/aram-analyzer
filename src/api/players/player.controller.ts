@@ -243,7 +243,10 @@ function getDetailedChampStats(
   };
 }
 
-function getMatchTotalStats(participant: Participant): TotalChampStats {
+function getMatchTotalStats(
+  participant: Participant,
+  killsPlusMinus: number
+): TotalChampStats {
   return {
     totalDamage: participant.totalDamageDealtToChampions,
     totalGold: participant.goldEarned,
@@ -260,6 +263,7 @@ function getMatchTotalStats(participant: Participant): TotalChampStats {
     quadrakills: participant.quadraKills,
     triplekills: participant.tripleKills,
     doublekills: participant.doubleKills,
+    killsPlusMinus,
   };
 }
 
@@ -618,7 +622,10 @@ export const analyzePlayerMatches = async (
       return obj;
     }, {} as Record<string, { wins: number; losses: number }>);
     const detailedChampStats = getDetailedChampStats(participant, teamStats);
-    const currentTotalStats = getMatchTotalStats(participant);
+    const currentTotalStats = getMatchTotalStats(
+      participant,
+      teamStats.totalKills - teamStats.totalDeaths
+    );
     const currentHighs = getMatchHighs(
       currentTotalStats,
       detailedChampStats,
