@@ -44,9 +44,24 @@ export function PlayerHighDateCell({
   );
 }
 
-export function matchTimeFormatter(seconds: number): string {
+export const WinRateCell = ({
+  data,
+}: {
+  data: { wins: number; losses: number };
+}) => {
+  const totalPlayed = data.wins + data.losses;
+  if (totalPlayed == 0) return <div style={{ marginRight: "1rem" }}>-</div>;
+  return <>{Number((data.wins / totalPlayed) * 100).toFixed(1)}%</>;
+};
+
+export function matchTimeFormatter(
+  seconds: number,
+  roundToSeconds = true
+): string {
   const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
+  const remainingSeconds = roundToSeconds
+    ? Number(Number(seconds % 60).toFixed(0))
+    : seconds % 60;
   return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
 }
 
@@ -67,15 +82,6 @@ const ProfileTableStatic = ({
   ///
   ///
   const IMG_SOURCE = "static://";
-  const WinRateCell = ({
-    data,
-  }: {
-    data: { wins: number; losses: number };
-  }) => {
-    const totalPlayed = data.wins + data.losses;
-    if (totalPlayed == 0) return <div style={{ marginRight: "1rem" }}>-</div>;
-    return <>{Number((data.wins / totalPlayed) * 100).toFixed(1)}%</>;
-  };
 
   return (
     <div id="profileMain">

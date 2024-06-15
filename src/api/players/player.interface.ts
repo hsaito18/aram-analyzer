@@ -103,7 +103,9 @@ export interface Superlative {
 export interface TeamStats {
   totalKills: number;
   totalDamage: number;
+  totalDamageTaken: number;
   totalGold: number;
+  totalDeaths: number;
 }
 
 interface WinRatePair {

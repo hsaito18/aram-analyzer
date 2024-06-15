@@ -8,15 +8,20 @@ import "./profileTopBar.css";
 import { styled } from "@mui/material";
 import Paper from "@mui/material/Paper";
 
-const TopBar = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#27303B" : "#fff",
+export const TopBar = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
-  padding: theme.spacing(1),
   textAlign: "center",
   color: theme.palette.text.secondary,
   display: "flex",
   alignItems: "flex-end",
   fontSize: "1.3rem",
+  borderBottom: "1px solid a0a0a0",
+  borderRadius: "0px",
+  padding: "8px 8px 2px 8px",
+  height: "10vh",
+  transform: "translateY(-1px), translateX(-1px)",
+  backgroundColor: "rgba(1, 1, 1, 0.7)",
+  scale: "calc(100%+2px)",
 }));
 
 export default function ProfileTopBar({

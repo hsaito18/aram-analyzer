@@ -192,18 +192,24 @@ export const saveARAMMatches = async (
 function getTeamStats(match: Match, teamId: number): TeamStats {
   let totalKills = 0;
   let totalDamage = 0;
+  let totalDamageTaken = 0;
   let totalGold = 0;
+  let totalDeaths = 0;
   for (const participant of match.info.participants) {
     if (participant.teamId === teamId) {
       totalKills += participant.kills;
       totalDamage += participant.totalDamageDealtToChampions;
+      totalDamageTaken += participant.totalDamageTaken;
       totalGold += participant.goldEarned;
+      totalDeaths += participant.deaths;
     }
   }
   const out: TeamStats = {
     totalKills,
     totalDamage,
+    totalDamageTaken,
     totalGold,
+    totalDeaths,
   };
   return out;
 }
@@ -595,7 +601,14 @@ export const analyzePlayerMatches = async (
     const teamId = participant.teamId;
     const teamStats = getTeamStats(matchData, teamId);
     const teammates = getTeammates(matchData, player.puuid, participant.teamId);
-    analyzeMatchLineup(teammates, win, match, player.puuid);
+    analyzeMatchLineup(
+      teammates,
+      win,
+      match,
+      player.puuid,
+      teamStats,
+      matchData.info.gameDuration
+    );
     // await puuidMapRegisterTeammates(teammates);
     const teammatesWinObject = teammates.reduce((obj, teammate) => {
       obj[teammate] = {

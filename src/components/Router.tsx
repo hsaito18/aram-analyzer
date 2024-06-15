@@ -1,5 +1,6 @@
 import Profile from "./profile/Profile";
 import Home from "./home/Home";
+import Lineups from "./lineups/Lineups";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material";
 
@@ -26,6 +27,7 @@ export default function Router() {
           <Routes>
             <Route path="/" Component={Home} />
             <Route path="/profile" Component={Profile} />
+            <Route path="/lineups" Component={Lineups} />
           </Routes>
         </div>
       </HashRouter>

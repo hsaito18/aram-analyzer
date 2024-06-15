@@ -1,16 +1,25 @@
 import { saveFile, loadFile } from "../fs.service";
 import { PlayerLineup, Lineups } from "./lineup.interface";
-import { UserData } from "../players/player.interface";
+import { UserData, TeamStats } from "../players/player.interface";
 import { getUserData } from "../players/player.controller";
 
 const lineupsFilePath = "lineups.json";
 let lineups: Lineups = loadFile(lineupsFilePath);
 
+const NUM_LINEUPS_SENT = 50;
+
+export const resetLineupsData = (): void => {
+  lineups = {};
+  saveFile(lineupsFilePath, lineups);
+};
+
 export const analyzeMatchLineup = (
   teammatesInput: string[],
   won: boolean,
   matchId: string,
-  userPuuid: string
+  userPuuid: string,
+  teamStats: TeamStats,
+  gameTime: number
 ): void => {
   const teammates = teammatesInput.slice();
   teammates.push(userPuuid);
@@ -25,6 +34,13 @@ export const analyzeMatchLineup = (
       losses: won ? 0 : 1,
       analyzedMatches: [matchId],
       players: teammates,
+      kills: teamStats.totalKills,
+      deaths: teamStats.totalDeaths,
+      averageGameTime: gameTime,
+      averageLossTime: won ? 0 : gameTime,
+      averageWinTime: won ? gameTime : 0,
+      averageDamage: teamStats.totalDamage,
+      averageDamageTaken: teamStats.totalDamageTaken,
     };
   } else {
     if (lineups[lineupKey].analyzedMatches.includes(matchId)) {
@@ -32,7 +48,34 @@ export const analyzeMatchLineup = (
     }
     lineups[lineupKey].wins += won ? 1 : 0;
     lineups[lineupKey].losses += won ? 0 : 1;
+    const totalPlayed = lineups[lineupKey].wins + lineups[lineupKey].losses;
     lineups[lineupKey].analyzedMatches.push(matchId);
+    lineups[lineupKey].kills += teamStats.totalKills;
+    lineups[lineupKey].deaths += teamStats.totalDeaths;
+    lineups[lineupKey].averageGameTime =
+      (lineups[lineupKey].averageGameTime * (totalPlayed - 1) + gameTime) /
+      totalPlayed;
+    if (won) {
+      lineups[lineupKey].averageWinTime =
+        (lineups[lineupKey].averageWinTime * (lineups[lineupKey].wins - 1) +
+          gameTime) /
+        lineups[lineupKey].wins;
+    } else {
+      lineups[lineupKey].averageLossTime =
+        (lineups[lineupKey].averageLossTime * (lineups[lineupKey].losses - 1) +
+          gameTime) /
+        lineups[lineupKey].losses;
+    }
+    lineups[lineupKey].averageDamage = Math.round(
+      (lineups[lineupKey].averageDamage * (totalPlayed - 1) +
+        teamStats.totalDamage) /
+        totalPlayed
+    );
+    lineups[lineupKey].averageDamageTaken = Math.round(
+      (lineups[lineupKey].averageDamageTaken * (totalPlayed - 1) +
+        teamStats.totalDamageTaken) /
+        totalPlayed
+    );
   }
   saveFile(lineupsFilePath, lineups);
 };
@@ -50,7 +93,7 @@ export const getTopLineups = (): PlayerLineup[] => {
     }
     return a.losses - b.losses;
   });
-  return lineupsArray.slice(0, 25);
+  return lineupsArray.slice(0, NUM_LINEUPS_SENT);
 };
 
 export const getLineupData = async (
@@ -75,6 +118,13 @@ export const getLineupData = async (
       losses: 0,
       analyzedMatches: [],
       players: puuids,
+      kills: 0,
+      deaths: 0,
+      averageGameTime: 0,
+      averageLossTime: 0,
+      averageWinTime: 0,
+      averageDamage: 0,
+      averageDamageTaken: 0,
     };
   }
   return lineups[lineupKey];

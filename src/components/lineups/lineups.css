@@ -10,12 +10,23 @@
   transform: translate(-50%, -50%);
 }
 
+#lineupsTopBar {
+  padding: 1rem;
+  height: 4rem;
+}
+
+#lineupsTitle {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
 #lineupsMainBox {
   height: 100vh;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: -6rem;
 }
 
 .lineupsSide {
@@ -57,4 +68,12 @@
   border: darkgray 4px solid;
   padding: 8px;
   font-family: "Roboto";
+}
+
+#lineupsTable {
+  width: 100%;
+}
+
+#lineupsTable th:nth-child(1) {
+  width: 34rem;
 }

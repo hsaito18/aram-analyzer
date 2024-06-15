@@ -45,6 +45,7 @@ export const playerAPI = {
   generatePlayerGraphic: () => ipcRenderer.send("generate-player-graphic"),
   generateChampionGraphic: () => ipcRenderer.send("generate-champion-graphic"),
   getLineupsData: () => ipcRenderer.invoke("get-lineups-data"),
+  resetLineupsData: () => ipcRenderer.send("reset-lineups-data"),
 };
 
 contextBridge.exposeInMainWorld("playerAPI", playerAPI);

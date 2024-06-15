@@ -6,6 +6,7 @@ import { Search } from "@mui/icons-material";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material";
 import Paper from "@mui/material/Paper";
+import { Groups } from "@mui/icons-material";
 import "./home.css";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -25,6 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 function resetAllPlayers() {
   playerAPI.resetAllPlayers();
+  playerAPI.resetLineupsData();
 }
 
 export default function Home() {
@@ -158,6 +160,19 @@ export default function Home() {
           <Button onClick={playerAPI.attachAllMatches}>
             Attach all matches
           </Button>
+          <div id="homeCardButtonRow">
+            {/* <Button>
+              <Groups></Groups>
+            </Button> */}
+            <Item
+              id="lineupsButton"
+              onClick={() => {
+                navigate("/lineups");
+              }}
+            >
+              <Groups />
+            </Item>
+          </div>
         </div>
       </div>
     </>

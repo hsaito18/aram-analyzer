@@ -16,7 +16,7 @@ import { UserData } from "./players/player.interface";
 import { getMatchData } from "./matches/match.controller";
 import { Match } from "./matches/match.interface";
 import { champRow } from "../components/tables/table.interface";
-import { getTopLineups } from "./lineups/lineup.controller";
+import { getTopLineups, resetLineupsData } from "./lineups/lineup.controller";
 import { getSearchHistory, addSearchHistory } from "./searchHistory";
 import {
   generatePlayerGraphic,
@@ -143,4 +143,8 @@ ipcMain.on("generate-champion-graphic", () =>
 
 ipcMain.handle("get-lineups-data", () => {
   return getTopLineups();
+});
+
+ipcMain.on("reset-lineups-data", () => {
+  resetLineupsData();
 });
