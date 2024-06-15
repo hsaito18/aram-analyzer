@@ -29,6 +29,10 @@ function resetAllPlayers() {
   playerAPI.resetLineupsData();
 }
 
+function resetLineups() {
+  playerAPI.resetLineupsData();
+}
+
 export default function Home() {
   const navigate = useNavigate();
   const [searchHistory, setSearchHistory] = useState<any[]>([]);
@@ -157,6 +161,7 @@ export default function Home() {
             </Stack>
           </div>
           <Button onClick={resetAllPlayers}>RESET ALL PLAYERS</Button>
+          <Button onClick={resetLineups}>RESET LINEUPS</Button>
           <Button onClick={playerAPI.attachAllMatches}>
             Attach all matches
           </Button>
