@@ -6,7 +6,7 @@ import { Search } from "@mui/icons-material";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import { Groups } from "@mui/icons-material";
+import { Groups, Airplay } from "@mui/icons-material";
 import "./home.css";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -176,6 +176,14 @@ export default function Home() {
               }}
             >
               <Groups />
+            </Item>
+            <Item
+              id="lineupsButton"
+              onClick={() => {
+                navigate("/match/NA1_4978023553");
+              }}
+            >
+              <Airplay />
             </Item>
           </div>
         </div>

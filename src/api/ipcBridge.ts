@@ -126,10 +126,6 @@ ipcMain.handle("get-search-history", async (event) => {
 
 ipcMain.handle("puuid-to-name", (event, puuid) => puuidToName(puuid));
 
-ipcMain.handle("get-match-data", (event, matchId) => {
-  return getMatchStats(event, matchId);
-});
-
 ipcMain.on("attach-all-matches", () => attachAllMatches());
 
 // Testing graphic generation API
@@ -147,4 +143,8 @@ ipcMain.handle("get-lineups-data", () => {
 
 ipcMain.on("reset-lineups-data", () => {
   resetLineupsData();
+});
+
+ipcMain.handle("get-match-data", (event, id) => {
+  return getMatchData(id);
 });

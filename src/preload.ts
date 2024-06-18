@@ -46,6 +46,8 @@ export const playerAPI = {
   generateChampionGraphic: () => ipcRenderer.send("generate-champion-graphic"),
   getLineupsData: () => ipcRenderer.invoke("get-lineups-data"),
   resetLineupsData: () => ipcRenderer.send("reset-lineups-data"),
+  getMatchData: (matchId: string) =>
+    ipcRenderer.invoke("get-match-data", matchId),
 };
 
 contextBridge.exposeInMainWorld("playerAPI", playerAPI);

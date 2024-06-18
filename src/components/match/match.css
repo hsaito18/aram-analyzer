@@ -1,0 +1,201 @@
+#main {
+  padding: 0px;
+  background-color: transparent;
+  width: 100vw;
+  height: 100vh;
+  color: rgba(255, 255, 255, 0.7);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+}
+
+#matchTopBar {
+  padding: 1rem;
+  height: 4rem;
+}
+
+#matchTitle {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+#matchMainBox {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -6rem;
+}
+
+#matchContent {
+  grid-area: mid;
+  height: 75vh;
+  width: 90vw;
+  background-color: rgb(29, 29, 29);
+  border-radius: 6px;
+  border: darkgray 4px solid;
+  padding: 8px;
+  font-family: "Roboto";
+}
+
+#playersBox {
+  width: 100%;
+  height: 32rem;
+  display: grid;
+  grid-template-rows: 4rem 1fr;
+  grid-template-columns: 1fr 2px 1fr;
+  grid-template-areas:
+    "playersHeader playersHeader playersHeader"
+    "bluePlayers divider redPlayers";
+}
+
+#playersHeader {
+  grid-area: playersHeader;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 2rem;
+}
+
+#blueTowers,
+#redTowers {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  width: 2rem;
+}
+
+.towerIcon {
+  height: 21px;
+  width: 16px;
+}
+
+#blueContainer {
+  grid-area: bluePlayers;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background: linear-gradient(to right, lightblue, transparent);
+  border-radius: 8px;
+}
+
+#divider {
+  grid-area: divider;
+  background-color: rgba(255, 255, 255, 0.2);
+  height: 95%;
+}
+
+#redContainer {
+  grid-area: redPlayers;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(to left, lightcoral, transparent);
+  border-radius: 8px;
+}
+
+.teamSideBox {
+  width: 99%;
+  height: 98%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(29, 29, 29);
+}
+
+#blueTeamPlayers {
+  border-radius: 6px 0 0 6px;
+  border-right: 0px;
+  padding-left: 0.2rem;
+}
+
+#redTeamPlayers {
+  border-left: 0px;
+  border-radius: 0 6px 6px 0;
+  padding-right: 0.2rem;
+}
+
+.playerCell {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  grid-template-columns: 1fr 5rem 3rem 4rem 4rem 14rem 1rem 3.5rem;
+  grid-template-areas: "playerName playerKDA playerCS playerDamage playerGold playerItems playerSpells playerChampion";
+}
+
+.playerCell > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.redPlayerCell {
+  grid-template-columns: 3.5rem 1rem 14rem 4rem 4rem 3rem 5rem 1fr;
+  grid-template-areas: "playerChampion playerSpells playerItems playerGold playerDamage playerCS playerKDA playerName";
+}
+
+.playerName {
+  grid-area: playerName;
+  font-weight: bold;
+  justify-content: flex-start !important;
+}
+
+.redPlayerName {
+  justify-content: flex-end !important;
+  text-align: end;
+}
+
+.playerKDA {
+  grid-area: playerKDA;
+}
+
+.playerCS {
+  grid-area: playerCS;
+}
+
+.playerDamage {
+  grid-area: playerDamage;
+}
+
+.playerGold {
+  grid-area: playerGold;
+}
+
+.playerItems {
+  grid-area: playerItems;
+  display: flex;
+  justify-content: center;
+}
+
+.playerSpells {
+  grid-area: playerSpells;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.spellIcon {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 25%;
+}
+
+.playerChampion {
+  grid-area: playerChampion;
+}
+
+.itemIcon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.championIcon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+}

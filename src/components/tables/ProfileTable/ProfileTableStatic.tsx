@@ -37,6 +37,7 @@ export function PlayerHighDateCell({
           p: "0.25rem",
           cursor: "pointer",
         }}
+        onClick={() => console.log(data.matchId)}
       >
         {stringDate}
       </Box>
