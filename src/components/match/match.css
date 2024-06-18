@@ -45,10 +45,11 @@
   width: 100%;
   height: 32rem;
   display: grid;
-  grid-template-rows: 4rem 1fr;
+  grid-template-rows: 4rem 5px 1fr;
   grid-template-columns: 1fr 2px 1fr;
   grid-template-areas:
     "playersHeader playersHeader playersHeader"
+    "playersSubtitles playersSubtitles playersSubtitles"
     "bluePlayers divider redPlayers";
 }
 
@@ -56,21 +57,164 @@
   grid-area: playersHeader;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
+  font-size: 1.5rem;
+  margin-top: 0.8rem;
+}
+
+#blueResult,
+#redResult,
+#gameTime {
   font-size: 2rem;
+}
+
+#blueGold,
+#redGold {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 5rem;
+  font-size: 1.5rem;
+}
+
+.goldIcon {
+  height: 16px;
+  width: 16px;
 }
 
 #blueTowers,
 #redTowers {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: baseline;
-  width: 2rem;
+  width: 2.5rem;
 }
 
 .towerIcon {
   height: 21px;
   width: 16px;
+}
+
+#redKills,
+#blueKills {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 3.5rem;
+}
+
+.killsIcon {
+  height: 16px;
+}
+
+#playersSubtitle {
+  grid-area: playersSubtitles;
+  margin: 0 0.2rem 0 0.2rem;
+  display: grid;
+  grid-template-columns: 1fr 5rem 3rem 4rem 4rem 14rem 1rem 3.5rem 2px 3.5rem 1rem 14rem 4rem 4rem 3rem 5rem 1fr;
+  grid-template-areas: "blueNameTitle blueKDATitle blueCSTitle blueDamageTitle blueGoldTitle blueItemsTitle blueSpellTitle blueChampTitle divider redChampTitle redSpellTitle redItemsTitle redGoldTitle redDamageTitle redCSTitle redKDATitle redNameTitle";
+}
+
+.subtitleIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+#blueNameTitle {
+  grid-area: blueNameTitle;
+  text-align: center;
+}
+
+#blueKDATitle {
+  grid-area: blueKDATitle;
+  text-align: center;
+}
+
+.iconTitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.iconWrapper {
+  z-index: 10;
+  background-color: rgb(29, 29, 29);
+  position: relative;
+  width: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#blueCSTitle {
+  grid-area: blueCSTitle;
+  text-align: center;
+}
+
+#blueDamageTitle {
+  grid-area: blueDamageTitle;
+  text-align: center;
+}
+
+#blueGoldTitle {
+  grid-area: blueGoldTitle;
+  text-align: center;
+}
+
+#blueItemsTitle {
+  grid-area: blueItemsTitle;
+  text-align: center;
+}
+
+#blueSpellTitle {
+  grid-area: blueSpellTitle;
+  text-align: center;
+}
+
+#blueChampTitle {
+  grid-area: blueChampTitle;
+  text-align: center;
+}
+
+#redNameTitle {
+  grid-area: redNameTitle;
+  text-align: center;
+}
+
+#redKDATitle {
+  grid-area: redKDATitle;
+  text-align: center;
+}
+
+#redCSTitle {
+  grid-area: redCSTitle;
+  text-align: center;
+}
+
+#redDamageTitle {
+  grid-area: redDamageTitle;
+  text-align: center;
+}
+
+#redGoldTitle {
+  grid-area: redGoldTitle;
+  text-align: center;
+}
+
+#redItemsTitle {
+  grid-area: redItemsTitle;
+  text-align: center;
+}
+
+#redSpellTitle {
+  grid-area: redSpellTitle;
+  text-align: center;
+}
+
+#redChampTitle {
+  grid-area: redChampTitle;
+  text-align: center;
 }
 
 #blueContainer {
@@ -85,7 +229,7 @@
 #divider {
   grid-area: divider;
   background-color: rgba(255, 255, 255, 0.2);
-  height: 95%;
+  height: 99%;
 }
 
 #redContainer {
