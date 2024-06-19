@@ -151,7 +151,6 @@ ipcMain.handle("get-match-data", (event, id) => {
 });
 
 ipcMain.on("navigate-back", () => {
-  Logger.log("navigating back");
   if (mainWindow.webContents.canGoBack()) {
     mainWindow.webContents.goBack();
   }
