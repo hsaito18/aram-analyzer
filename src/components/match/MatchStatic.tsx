@@ -1,6 +1,5 @@
 import "./match.css";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Match, Participant } from "../../api/matches/match.interface";
 import { summonerSpells } from "../../static/summonerSpells";
 import {

@@ -213,7 +213,8 @@ const ChampionTable = () => {
 
   // For testing. Should be removed later.
   function generateChampionGraphic() {
-    playerAPI.generateChampionGraphic();
+    // playerAPI.generateChampionGraphic();
+    playerAPI.generatePlayerGraphic();
   }
 
   //should be memoized or stable

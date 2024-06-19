@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { formatLargeInteger } from "../../../services/string.service";
 import { PerMinuteLabelCell } from "../championDetail/ChampionDetail";
 import { PlayerStats } from "../../../api/players/player.interface";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import "./profileTable.css";
 
 interface TeammateData {
@@ -22,7 +22,7 @@ export function PlayerHighDateCell({
   data: { value: number; matchId: string; date: string; champName: string };
   imgSrc: string;
 }) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const stringDate = new Date(Number(data.date)).toLocaleDateString();
   return (
     <div id="matchDateCell">
@@ -39,7 +39,7 @@ export function PlayerHighDateCell({
           p: "0.25rem",
           cursor: "pointer",
         }}
-        onClick={() => navigate(`/match/${data.matchId}`)}
+        // onClick={() => navigate(`/match/${data.matchId}`)}
       >
         {stringDate}
       </Box>

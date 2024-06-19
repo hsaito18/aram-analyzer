@@ -180,7 +180,7 @@ export default function Home() {
             <Item
               id="lineupsButton"
               onClick={() => {
-                navigate("/match/NA1_4978023553");
+                navigate("/match/NA1_5022997209");
               }}
             >
               <Airplay />
