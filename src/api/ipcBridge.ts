@@ -1,4 +1,5 @@
 import { ipcMain } from "electron";
+import { mainWindow } from "../main";
 import {
   puuidToName,
   createByUsername,
@@ -147,4 +148,11 @@ ipcMain.on("reset-lineups-data", () => {
 
 ipcMain.handle("get-match-data", (event, id) => {
   return getMatchData(id);
+});
+
+ipcMain.on("navigate-back", () => {
+  Logger.log("navigating back");
+  if (mainWindow.webContents.canGoBack()) {
+    mainWindow.webContents.goBack();
+  }
 });

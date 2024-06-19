@@ -12,7 +12,7 @@ import ChampionTable from "../tables/ChampionTable";
 import ProfileTable from "../tables/ProfileTable/ProfileTableClient";
 import ProfileTopBar from "../shared/ProfileTopBar";
 import { Button } from "@mui/material";
-import { Home } from "@mui/icons-material";
+import { ArrowBack } from "@mui/icons-material";
 
 export default function Match() {
   const [data, setData] = useState<Match>(null);
@@ -30,6 +30,10 @@ export default function Match() {
 
   const goHome = () => {
     navigate("/");
+  };
+
+  const goBack = () => {
+    playerAPI.navigateBack();
   };
 
   return (
@@ -52,9 +56,9 @@ export default function Match() {
           <Button
             variant="contained"
             sx={{ minWidth: "0px", width: "40px", height: "40px" }}
-            onClick={goHome}
+            onClick={goBack}
           >
-            <Home></Home>
+            <ArrowBack></ArrowBack>
           </Button>
         </div>
         <div id="matchMainBox">

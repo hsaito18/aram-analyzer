@@ -48,6 +48,7 @@ export const playerAPI = {
   resetLineupsData: () => ipcRenderer.send("reset-lineups-data"),
   getMatchData: (matchId: string) =>
     ipcRenderer.invoke("get-match-data", matchId),
+  navigateBack: () => ipcRenderer.send("navigate-back"),
 };
 
 contextBridge.exposeInMainWorld("playerAPI", playerAPI);

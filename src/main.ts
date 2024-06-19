@@ -19,13 +19,15 @@ if (require("electron-squirrel-startup")) {
   app.quit();
 }
 
+export let mainWindow: BrowserWindow | null;
+
 const createWindow = (
   scaleFactor: number,
   width: number,
   height: number
 ): void => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     height: Math.floor((height * 0.9) / scaleFactor),
     width: Math.floor((width * 0.625) / scaleFactor),
     webPreferences: {

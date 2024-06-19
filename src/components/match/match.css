@@ -32,13 +32,18 @@
 
 #matchContent {
   grid-area: mid;
-  height: 75vh;
+  height: 80vh;
   width: 90vw;
   background-color: rgb(29, 29, 29);
   border-radius: 6px;
   border: darkgray 4px solid;
   padding: 8px;
   font-family: "Roboto";
+}
+
+#matchHeader {
+  display: flex;
+  justify-content: space-between;
 }
 
 #playersBox {
@@ -63,8 +68,7 @@
 }
 
 #blueResult,
-#redResult,
-#gameTime {
+#redResult {
   font-size: 2rem;
 }
 
@@ -228,7 +232,12 @@
 
 #divider {
   grid-area: divider;
-  background-color: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(
+    to top,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   height: 99%;
 }
 

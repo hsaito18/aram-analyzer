@@ -94,6 +94,10 @@ const PlayerCell = ({
 };
 
 export default function MatchStatic({ matchData }: { matchData: Match }) {
+  const matchDateString = new Date(
+    matchData.info.gameCreation
+  ).toLocaleString();
+
   const blueSidePlayers = matchData.info.participants.filter(
     (player) => player.teamId === 100
   );
@@ -118,6 +122,10 @@ export default function MatchStatic({ matchData }: { matchData: Match }) {
 
   return (
     <div id="matchContent">
+      <div id="matchHeader">
+        <div id="matchId">{matchData.metadata.matchId}</div>
+        <div id="matchDate">{matchDateString}</div>
+      </div>
       <div id="playersBox">
         <div id="playersHeader">
           <div id="blueResult">{blueWon ? "Victory" : "Defeat"}</div>
