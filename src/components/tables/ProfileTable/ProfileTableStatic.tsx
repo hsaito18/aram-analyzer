@@ -18,11 +18,12 @@ interface TeammateData {
 export function PlayerHighDateCell({
   data,
   imgSrc,
+  navigateFunction = () => {},
 }: {
   data: { value: number; matchId: string; date: string; champName: string };
   imgSrc: string;
+  navigateFunction?: (matchId: string) => void;
 }) {
-  // const navigate = useNavigate();
   const stringDate = new Date(Number(data.date)).toLocaleDateString();
   return (
     <div id="matchDateCell">
@@ -39,7 +40,7 @@ export function PlayerHighDateCell({
           p: "0.25rem",
           cursor: "pointer",
         }}
-        // onClick={() => navigate(`/match/${data.matchId}`)}
+        onClick={() => navigateFunction(data.matchId)}
       >
         {stringDate}
       </Box>
@@ -73,13 +74,13 @@ const ProfileTableStatic = ({
   teammateData,
   gameName,
   tagLine,
-  isElectron,
+  navigateFunction = () => {},
 }: {
   data: PlayerStats;
   teammateData: TeammateData[];
   gameName: string;
   tagLine: string;
-  isElectron: boolean;
+  navigateFunction?: (matchId: string) => void;
 }) => {
   ///
   ///
@@ -470,6 +471,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.mostKills}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -482,6 +484,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.mostDeaths}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -494,6 +497,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.mostAssists}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -508,6 +512,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.mostDamage}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -524,6 +529,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.mostDamageTaken}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -538,6 +544,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.mostHealing}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -552,6 +559,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.mostShielding}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -566,6 +574,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.mostTotalCCTime}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -580,6 +589,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.mostGold}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -592,6 +602,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.mostTotalCS}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -607,6 +618,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.mostKillParticipation}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -622,6 +634,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.mostDamageShare}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -637,6 +650,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.mostGoldShare}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -649,6 +663,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.biggestCrit}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -661,6 +676,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.biggestKillingSpree}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -673,6 +689,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.longestGame}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>
@@ -685,6 +702,7 @@ const ProfileTableStatic = ({
                             <PlayerHighDateCell
                               imgSrc={IMG_SOURCE}
                               data={data.highs.shortestGame}
+                              navigateFunction={navigateFunction}
                             />
                           </td>
                         </tr>

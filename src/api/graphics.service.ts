@@ -145,7 +145,6 @@ export const generatePlayerGraphic = async (
     teammateData: teammateData,
     gameName: userData.gameName,
     tagLine: userData.tagLine,
-    isElectron: false,
   });
   const output = renderToStaticMarkup(reactComp);
 

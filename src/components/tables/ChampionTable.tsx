@@ -297,28 +297,28 @@ const ChampionTable = () => {
   });
 
   return (
-    <div id="tableMain">
-      <div className="content">
-        {isLoading ? (
-          <div id="loadingBox">
-            <div id="loadingText">Downloading Matches...</div>
-            <div id="loadingSpinner">
-              <CircularProgress />
-            </div>
+    <>
+      {isLoading ? (
+        <div id="loadingBox">
+          <div id="loadingText">Downloading Matches...</div>
+          <div id="loadingSpinner">
+            <CircularProgress />
           </div>
-        ) : (
-          <>
-            {data.length > 0 ? (
-              <MaterialReactTable table={table} />
-            ) : (
-              // <div className="test">HELLOHELLOHELLOHELLOHELLOHELLOHELLO</div>
-              <div id="noDataFound">No Matches Saved</div>
-            )}
-          </>
-        )}
-      </div>
-      <button onClick={generateChampionGraphic}>Test Champion Graphic</button>
-    </div>
+        </div>
+      ) : (
+        <div id="tableMain">
+          <div className="content">
+            <>
+              {data.length > 0 ? (
+                <MaterialReactTable table={table} />
+              ) : (
+                <div id="noDataFound">No Matches Saved</div>
+              )}
+            </>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

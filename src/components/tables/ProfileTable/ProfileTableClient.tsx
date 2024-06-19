@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import {
   PlayerStats,
@@ -98,22 +99,30 @@ const ProfileTable = ({
   const testGraphic = async () => {
     playerAPI.generatePlayerGraphic();
   };
-  //isLoading ? (
-  //         <div id="loadingBox">
-  //           <div id="loadingText">Downloading Matches...</div>
-  //           <div id="loadingSpinner">
-  //             <CircularProgress />
-  //           </div>
-  //         </div>
+
+  const navigate = useNavigate();
+  const navigateFunction = (matchId: string) => {
+    navigate(`/match/${matchId}`);
+  };
+
   return (
     <>
-      <ProfileTableStatic
-        data={data}
-        teammateData={teammateData}
-        gameName={gameName}
-        tagLine={tagLine}
-        isElectron={true}
-      />
+      {isLoading ? (
+        <div id="loadingBox">
+          <div id="loadingText">Downloading Matches...</div>
+          <div id="loadingSpinner">
+            <CircularProgress />
+          </div>
+        </div>
+      ) : (
+        <ProfileTableStatic
+          data={data}
+          teammateData={teammateData}
+          gameName={gameName}
+          tagLine={tagLine}
+          navigateFunction={navigateFunction}
+        />
+      )}
     </>
   );
 };

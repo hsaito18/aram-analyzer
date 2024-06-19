@@ -185,10 +185,14 @@ hr {
 }
 
 #loadingBox {
+  width: 90vw;
+  height: 100%;
+  border-radius: 8px;
+  border: rgba(255, 255, 255, 0.7) 2px solid;
+  background-color: rgb(29, 29, 29);
+  position: relative !important;
   color: rgba(255, 255, 255, 0.8);
   font-size: 2rem;
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
