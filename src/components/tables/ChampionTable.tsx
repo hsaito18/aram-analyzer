@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -211,11 +212,10 @@ const ChampionTable = () => {
     };
   }, []);
 
-  // For testing. Should be removed later.
-  function generateChampionGraphic() {
-    // playerAPI.generateChampionGraphic();
-    playerAPI.generatePlayerGraphic();
-  }
+  const navigate = useNavigate();
+  const navigateFunction = (matchId: string) => {
+    navigate(`/match/${matchId}`);
+  };
 
   //should be memoized or stable
   const columns = useMemo<MRT_ColumnDef<champRow>[]>(() => allColumns, []);
@@ -268,7 +268,10 @@ const ChampionTable = () => {
     },
     renderDetailPanel: ({ row }) => (
       <div id="detailBoxContainer">
-        <ChampionDetail champData={row.original} />
+        <ChampionDetail
+          champData={row.original}
+          navigateFunction={navigateFunction}
+        />
       </div>
     ),
     renderTopToolbar: () => (

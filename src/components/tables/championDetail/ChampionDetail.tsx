@@ -6,14 +6,16 @@ import "./championDetail.css";
 export function MatchDateCell({
   date,
   matchId,
+  matchNavigateFunction = () => {},
 }: {
   date: number;
   matchId: string;
+  matchNavigateFunction?: (id: string) => void;
 }) {
   const stringDate = new Date(Number(date)).toLocaleDateString();
 
   function handleClick() {
-    console.log(`Match ID: ${matchId}`);
+    matchNavigateFunction(matchId);
   }
 
   return (
@@ -51,7 +53,13 @@ const MULTIKILL_NAME_MAP: { [key: number]: keyof TotalChampStats } = {
   5: "pentakills",
 };
 
-export default function ChampionDetail({ champData }: { champData: champRow }) {
+export default function ChampionDetail({
+  champData,
+  navigateFunction,
+}: {
+  champData: champRow;
+  navigateFunction: (matchId: string) => void;
+}) {
   let biggestMultikillText = champData.highs.biggestMultikill.value.toString();
   const biggestMultikillName =
     champData.highs.biggestMultikill.value > 1
@@ -258,6 +266,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.mostKills.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.mostKills.matchId}
                 />
               </td>
@@ -270,6 +279,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.mostDeaths.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.mostDeaths.matchId}
                 />
               </td>
@@ -282,6 +292,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.mostAssists.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.mostAssists.matchId}
                 />
               </td>
@@ -296,6 +307,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.mostDamage.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.mostDamage.matchId}
                 />
               </td>
@@ -308,6 +320,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.mostTotalDamage.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.mostTotalDamage.matchId}
                 />
               </td>
@@ -322,6 +335,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.mostDamageTaken.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.mostDamageTaken.matchId}
                 />
               </td>
@@ -336,6 +350,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.mostHealing.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.mostHealing.matchId}
                 />
               </td>
@@ -350,6 +365,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.mostShielding.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.mostShielding.matchId}
                 />
               </td>
@@ -362,6 +378,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.mostTotalCCTime.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.mostTotalCCTime.matchId}
                 />
               </td>
@@ -376,6 +393,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.mostGold.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.mostGold.matchId}
                 />
               </td>
@@ -388,6 +406,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.mostTotalCS.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.mostTotalCS.matchId}
                 />
               </td>
@@ -401,6 +420,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.mostDamageShare.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.mostDamageShare.matchId}
                 />
               </td>
@@ -413,6 +433,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.mostGoldShare.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.mostGoldShare.matchId}
                 />
               </td>
@@ -425,6 +446,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.biggestCrit.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.biggestCrit.matchId}
                 />
               </td>
@@ -437,6 +459,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.biggestKillingSpree.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.biggestKillingSpree.matchId}
                 />
               </td>
@@ -447,6 +470,7 @@ export default function ChampionDetail({ champData }: { champData: champRow }) {
               <td>
                 <MatchDateCell
                   date={champData.highs.biggestMultikill.date}
+                  matchNavigateFunction={navigateFunction}
                   matchId={champData.highs.biggestMultikill.matchId}
                 />
               </td>
