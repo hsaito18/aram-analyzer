@@ -34,7 +34,7 @@ export function PlayerHighDateCell({
       <Box
         component="span"
         sx={{
-          backgroundColor: "orange",
+          backgroundColor: "rgb(205,127,50)",
           borderRadius: "0.25rem",
           color: "#fff",
           p: "0.25rem",
