@@ -37,6 +37,10 @@ export const mergeMax = (obj1: any, obj2: any) => {
 const MINIMIZE_PROPERTIES = new Set(["shortestGame"]);
 export const mergeChampHighs = (obj1: ChampHighs, obj2: ChampHighs) => {
   for (const [key, val] of Object.entries(obj2)) {
+    if (!(key in obj1)) {
+      obj1[key as keyof ChampHighs] = val;
+      continue;
+    }
     if (MINIMIZE_PROPERTIES.has(key)) {
       if (
         val.value < obj1[key as keyof ChampHighs].value ||

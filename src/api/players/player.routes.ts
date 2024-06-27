@@ -39,6 +39,15 @@ playerRouter.get("/puuid/:id", async (req: Request, res: Response) => {
   }
 });
 
+playerRouter.get("/puuid-to-name/:id", async (req: Request, res: Response) => {
+  try {
+    const userData = await playerController.puuidToName(req.params.id);
+    return res.status(StatusCodes.OK).json(userData);
+  } catch (error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
+  }
+});
+
 playerRouter.get(
   "/username/:gameName/:tagLine",
   async (req: Request, res: Response) => {
@@ -169,8 +178,7 @@ playerRouter.post("/reset-stats", async (req: Request, res: Response) => {
 
 playerRouter.post("/reset-all-stats", async (req: Request, res: Response) => {
   try {
-    const success: number | null =
-      await playerController.resetAllChampionStats();
+    const success: number | null = await playerController.resetAllStats();
     if (!success) {
       return res
         .status(StatusCodes.BAD_REQUEST)
@@ -210,6 +218,27 @@ playerRouter.post("/update-player-set", async (req: Request, res: Response) => {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
   }
 });
+
+playerRouter.post(
+  "/register-player-set",
+  async (req: Request, res: Response) => {
+    let counter = 0;
+    try {
+      const players: UserData[] = req.body;
+      for (const playerData of players) {
+        const res = await playerController.createByUsername(playerData);
+        if (res !== "ALREADY_EXISTS" && res !== "NOT_FOUND" && res !== "BUSY") {
+          counter += 1;
+        }
+      }
+      return res
+        .status(StatusCodes.OK)
+        .json({ success: true, num_registered: counter });
+    } catch (error) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
+    }
+  }
+);
 
 playerRouter.get(
   "/player-controller-status",

@@ -7,7 +7,7 @@ export function MatchDateCell({
   date,
   matchId,
 }: {
-  date: string;
+  date: number;
   matchId: string;
 }) {
   const stringDate = new Date(Number(date)).toLocaleDateString();

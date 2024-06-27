@@ -94,7 +94,7 @@ const PlayerCell = ({
 
 export default function MatchStatic({ matchData }: { matchData: Match }) {
   const matchDateString = new Date(
-    matchData.info.gameCreation
+    Number(matchData.info.gameCreation)
   ).toLocaleString();
 
   const blueSidePlayers = matchData.info.participants.filter(

@@ -58,7 +58,7 @@ export default function ProfileTopBar({
     if (dateNum == 0) {
       return "-";
     }
-    return new Date(dateNum)
+    return new Date(Number(dateNum))
       .toLocaleString()
       .replace(/T/, " ") // replace T with a space
       .replace(/\..+/, ""); // delete the dot and everything after;

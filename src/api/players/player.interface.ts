@@ -97,7 +97,7 @@ export interface PlayerHighs extends ChampHighs {
 export interface Superlative {
   value: number;
   matchId: string;
-  date: string;
+  date: number;
   champName: string;
 }
 
@@ -168,7 +168,85 @@ export interface SimplePlayerStats {
 }
 
 function getBlankSuperlative(): Superlative {
-  return { value: 0, matchId: "", date: "", champName: "" };
+  return { value: 0, matchId: "", date: 0, champName: "" };
+}
+
+export function getBlankChampHighs(): ChampHighs {
+  return {
+    mostKills: getBlankSuperlative(),
+    mostDeaths: getBlankSuperlative(),
+    mostAssists: getBlankSuperlative(),
+    mostDamage: getBlankSuperlative(),
+    mostTotalDamage: getBlankSuperlative(),
+    mostGold: getBlankSuperlative(),
+    mostTotalGold: getBlankSuperlative(),
+    mostTotalCS: getBlankSuperlative(),
+    mostCCTime: getBlankSuperlative(),
+    mostTotalCCTime: getBlankSuperlative(),
+    mostHealing: getBlankSuperlative(),
+    mostTotalHealing: getBlankSuperlative(),
+    mostShielding: getBlankSuperlative(),
+    mostTotalShielding: getBlankSuperlative(),
+    mostObjectiveDamage: getBlankSuperlative(),
+    mostTotalObjectiveDamage: getBlankSuperlative(),
+    mostDamageTaken: getBlankSuperlative(),
+    mostTotalDamageTaken: getBlankSuperlative(),
+    mostSelfMitigated: getBlankSuperlative(),
+    mostTotalSelfMitigated: getBlankSuperlative(),
+    mostDamageShare: getBlankSuperlative(),
+    mostGoldShare: getBlankSuperlative(),
+    mostKillParticipation: getBlankSuperlative(),
+    biggestCrit: getBlankSuperlative(),
+    biggestMultikill: getBlankSuperlative(),
+    biggestKillingSpree: getBlankSuperlative(),
+    longestGame: getBlankSuperlative(),
+    shortestGame: getBlankSuperlative(),
+  };
+}
+
+export function getBlankAverageStats(): DetailedChampStats {
+  return {
+    damagePerMinute: 0,
+    goldPerMinute: 0,
+    ccPerMinute: 0,
+    healingPerMinute: 0,
+    shieldingPerMinute: 0,
+    objectiveDamagePerMinute: 0,
+    damageTakenPerMinute: 0,
+    selfMitigatedPerMinute: 0,
+    killsPerMinute: 0,
+    deathsPerMinute: 0,
+    assistsPerMinute: 0,
+    killParticipation: 0,
+    damageShare: 0,
+    goldShare: 0,
+    killShare: 0,
+    killsPerGame: 0,
+    deathsPerGame: 0,
+    assistsPerGame: 0,
+    kda: 0,
+  };
+}
+
+export function getBlankTotalStats(): TotalChampStats {
+  return {
+    totalDamage: 0,
+    totalGold: 0,
+    totalCCTime: 0,
+    totalHealing: 0,
+    totalShielding: 0,
+    totalObjectiveDamage: 0,
+    totalDamageTaken: 0,
+    totalSelfMitigated: 0,
+    totalKills: 0,
+    totalDeaths: 0,
+    totalAssists: 0,
+    pentakills: 0,
+    quadrakills: 0,
+    triplekills: 0,
+    doublekills: 0,
+    killsPlusMinus: 0,
+  };
 }
 
 export function getBlankPlayerStats(): PlayerStats {
@@ -178,86 +256,12 @@ export function getBlankPlayerStats(): PlayerStats {
     winRate: 0,
     totalPlayed: 0,
     lastUpdatedTime: 0,
-    totalStats: {
-      totalDamage: 0,
-      totalGold: 0,
-      totalCCTime: 0,
-      totalHealing: 0,
-      totalShielding: 0,
-      totalObjectiveDamage: 0,
-      totalDamageTaken: 0,
-      totalSelfMitigated: 0,
-      totalKills: 0,
-      totalDeaths: 0,
-      totalAssists: 0,
-      pentakills: 0,
-      quadrakills: 0,
-      triplekills: 0,
-      doublekills: 0,
-      killsPlusMinus: 0,
-    },
-    stats: {
-      damagePerMinute: 0,
-      goldPerMinute: 0,
-      ccPerMinute: 0,
-      healingPerMinute: 0,
-      shieldingPerMinute: 0,
-      objectiveDamagePerMinute: 0,
-      damageTakenPerMinute: 0,
-      selfMitigatedPerMinute: 0,
-      killsPerMinute: 0,
-      deathsPerMinute: 0,
-      assistsPerMinute: 0,
-      killParticipation: 0,
-      damageShare: 0,
-      goldShare: 0,
-      killShare: 0,
-      killsPerGame: 0,
-      deathsPerGame: 0,
-      assistsPerGame: 0,
-      kda: 0,
-    },
+    totalStats: getBlankTotalStats(),
+    stats: getBlankAverageStats(),
     highs: {
-      mostKills: getBlankSuperlative(),
-      mostDeaths: getBlankSuperlative(),
-      mostAssists: getBlankSuperlative(),
-      mostDamage: getBlankSuperlative(),
-      mostTotalDamage: getBlankSuperlative(),
-      mostGold: getBlankSuperlative(),
-      mostTotalGold: getBlankSuperlative(),
-      mostTotalCS: getBlankSuperlative(),
-      mostCCTime: getBlankSuperlative(),
-      mostTotalCCTime: getBlankSuperlative(),
-      mostHealing: getBlankSuperlative(),
-      mostTotalHealing: getBlankSuperlative(),
-      mostShielding: getBlankSuperlative(),
-      mostTotalShielding: getBlankSuperlative(),
-      mostObjectiveDamage: getBlankSuperlative(),
-      mostTotalObjectiveDamage: {
-        value: 0,
-        matchId: "",
-        date: "",
-        champName: "",
-      },
-      mostDamageTaken: getBlankSuperlative(),
-      mostTotalDamageTaken: getBlankSuperlative(),
-      mostSelfMitigated: getBlankSuperlative(),
-      mostTotalSelfMitigated: {
-        value: 0,
-        matchId: "",
-        date: "",
-        champName: "",
-      },
-      mostDamageShare: getBlankSuperlative(),
-      mostGoldShare: getBlankSuperlative(),
-      mostKillParticipation: getBlankSuperlative(),
-      biggestCrit: getBlankSuperlative(),
-      biggestMultikill: getBlankSuperlative(),
-      biggestKillingSpree: getBlankSuperlative(),
+      ...getBlankChampHighs(),
       longestWinStreak: 0,
       longestLossStreak: 0,
-      longestGame: getBlankSuperlative(),
-      shortestGame: getBlankSuperlative(),
     },
     classWinRates: {
       enchanter: { wins: 0, losses: 0 },
@@ -278,4 +282,24 @@ export function getBlankPlayerStats(): PlayerStats {
     currentStreak: 0,
     teammates: {},
   };
+}
+
+export interface PlayerInfo {
+  puuid: string;
+  gameName: string;
+  tagLine: string;
+}
+
+export interface PlayerStatsBasic {
+  puuid: string;
+  wins: number;
+  losses: number;
+  winRate: number;
+  totalPlayed: number;
+  lastUpdatedTime: number;
+  results: number[];
+  lastTen: number[];
+  currentStreak: number;
+  longestWinStreak: number;
+  longestLossStreak: number;
 }

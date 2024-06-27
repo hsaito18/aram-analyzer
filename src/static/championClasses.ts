@@ -167,3 +167,18 @@ export const ChampionClasses = {
   Zoe: "burst",
   Zyra: "battlemage",
 };
+
+export const Classes = [
+  "enchanter",
+  "catcher",
+  "juggernaut",
+  "diver",
+  "burst",
+  "battlemage",
+  "artillery",
+  "marksman",
+  "assassin",
+  "skirmisher",
+  "vanguard",
+  "warden",
+];

@@ -10,8 +10,9 @@ import {
   getPlayerStats,
   findByUsername,
   resetChampionStats,
-  resetAllChampionStats,
+  resetAllStats,
   attachAllMatches,
+  isPlayerRegistered,
 } from "./players/player.controller";
 import { UserData } from "./players/player.interface";
 import { getMatchData } from "./matches/match.controller";
@@ -70,7 +71,7 @@ async function getMatchStats(
 }
 
 ipcMain.on("analyze-matches", async (event, userData) => {
-  Logger.log("analyzing matches for user", userData);
+  Logger.log(`Analyzing matches for ${userData.gameName}`);
   event.sender.send("loadingData", true);
   await saveARAMMatches(userData);
   await analyzePlayerMatches(userData);
@@ -89,17 +90,16 @@ function champDataArrayizer(obj: any) {
 ipcMain.handle("get-champ-stats", getChampStats);
 
 ipcMain.handle("get-profile-icon", async (event, userData) => {
-  console.log("getting profile icon for user", userData);
   const icon = await getPlayerProfileIcon(userData);
   return icon;
 });
 
 ipcMain.on("get-player-stats", getPlayerStatsHandle);
 
-ipcMain.handle("check-player", async (event, userData) => {
-  const player = await findByUsername(userData);
-  return !!player;
-});
+ipcMain.handle(
+  "check-player",
+  async (event, userData) => await isPlayerRegistered(userData)
+);
 
 ipcMain.handle("create-player", async (event, userData) => {
   const out = await createByUsername(userData);
@@ -111,13 +111,12 @@ ipcMain.on("reset-player", async (event, userData) => {
 });
 
 ipcMain.on("reset-all", async (event) => {
-  resetAllChampionStats();
+  resetAllStats();
 });
 
 ipcMain.handle("player-search", async (event, userData) => {
   addSearchHistory(userData);
   const player = await findByUsername(userData);
-  console.log(`searched for player ${userData.gameName}#${userData.tagLine}`);
   return { gameName: player.gameName, tagLine: player.tagLine };
 });
 

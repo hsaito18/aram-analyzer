@@ -13,7 +13,6 @@ let searchHistory: Search[] = loadSearchHistory();
 
 function loadSearchHistory() {
   log.info("Loading search history!");
-  log.info("Loading from path: " + searchHistoryFilePath);
   try {
     const data = fs.readFileSync(searchHistoryFilePath, "utf-8");
     return JSON.parse(data);
@@ -24,7 +23,6 @@ function loadSearchHistory() {
 }
 
 function saveSearchHistory() {
-  log.info("Saving search history!");
   fs.writeFileSync(
     searchHistoryFilePath,
     JSON.stringify(searchHistory),

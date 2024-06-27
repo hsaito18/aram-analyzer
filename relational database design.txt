@@ -1,0 +1,58 @@
+Players
+puuid | gameName | tagLine |			// | matches        | analyzedMatches  | champStats | playerStats | profileIcon
+
+afj0..| hsaito   | NA1     |    		//  [NA1_asdaw,...] | [NA1_asdaw,...]  |
+
+Player_Stats_Basic
+puuid | wins | losses | last_updated_time | results | last_ten | current_streak | longest_win_streak | longest_loss_streak
+VARCHAR	INT 	INT 	BIGINT			INT[]	INT[]		INT	       Int			INT
+
+Results
+puuid | match_id | win | date
+str	str	   bool bigint
+
+Class_Win_Rates
+puuid | class | wins | losses
+VARCHAR	VARCHAR	INT	INT
+
+Lineups
+lineup_id | wins | losses | kills | deaths | average_game_time | average_loss_time | average_win_time | average_damage | average_damage_taken
+
+Matches
+match_id  | data_version | end_of_game_result | game_creation | game_duration | game_end_timestamp | game_id | game_mode | game_name | game_start_timestamp | game_type | game_version | map_id | queue_id | tournament_code
+
+Participants
+puuid | matchid | ...... | game_creation_time
+Player_Match
+puuid | matchid
+afj0  |	NA1_asdaw
+afj0  | NA1_qwert
+3f9j  | NA1_asdaw
+3f9j  | NA1_asfcv
+
+Analyzed_Player_Match
+puuid | matchid
+
+Analyzed_Lineup_Match
+lineup_id | match_id
+
+Lineup_Members
+lineup_id | puuid
+
+Teammates
+puuid | teammate_puuid | wins | losses
+
+
+Champions
+champ_name | puuid | wins | losses |
+
+Champion_Averages
+champ_name | puuid | damage | gold | cc | healing | shielding | objective | taken | mitigated | kills | deaths | assists | kp | damage_share | gold_share | kill_share | kills_per_game | deaths_per_game | assists_per_game | kda
+
+Champion_Totals
+champ_name | puuid | wins | losses| damage | gold | cc | healing | shielding | objective | taken | mitigated | kills | deaths | assists | pentakills | quadrakills | triplekills | doublekills | kpm
+
+Champion_Highs
+champName | puuid | most_kills_value | most_kills_date | most_kills_match_id | most_deaths_value | ....
+
+

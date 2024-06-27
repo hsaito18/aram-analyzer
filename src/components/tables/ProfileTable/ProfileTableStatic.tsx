@@ -20,7 +20,7 @@ export function PlayerHighDateCell({
   imgSrc,
   navigateFunction = () => {},
 }: {
-  data: { value: number; matchId: string; date: string; champName: string };
+  data: { value: number; matchId: string; date: number; champName: string };
   imgSrc: string;
   navigateFunction?: (matchId: string) => void;
 }) {
