@@ -171,6 +171,7 @@ export const generateChampionGraphic = async (
   const champRow = { ...champData, champName };
   const reactComp = React.createElement(ChampionDetail, {
     champData: champRow,
+    navigateFunction: () => {},
   });
   const output =
     '<div id="playerTitle">' +
