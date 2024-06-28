@@ -1,5 +1,6 @@
 import { champRow } from "../table.interface";
 import { TotalChampStats } from "../../../api/players/player.interface";
+import MatchHistoryShort from "../../matchHistory/matchHistoryShort/MatchHistoryShort";
 import { Box } from "@mui/material";
 import "./championDetail.css";
 
@@ -248,7 +249,7 @@ export default function ChampionDetail({
         </table>
       </div>
       <div id="highlightsRow">
-        <div id="gameHighsTitle">Game Highs</div>
+        <div className="champDetailSubtitle">Game Highs</div>
         <table id="highlightsTable">
           <thead>
             <tr>
@@ -478,7 +479,35 @@ export default function ChampionDetail({
           </tbody>
         </table>
       </div>
-      <div id="matchHistoryRow">Match History</div>
+      <div id="matchHistoryRow">
+        <div className="champDetailSubtitle">Match History</div>
+        <div id="matchHistoryPanel">
+          <MatchHistoryShort
+            matchId="NA1_asdasdasd"
+            participant={{
+              championName: "Corki",
+              kills: 15,
+              deaths: 10,
+              assists: 40,
+              gameCreationTime: Date.now(),
+              gameDuration: 1105,
+              spell1: "SummonerSnowball",
+              spell2: "SummonerFlash",
+              items: [
+                { id: "a", imageUrl: "1506" },
+                { id: "b", imageUrl: "1506" },
+                { id: "c", imageUrl: "1506" },
+                { id: "d", imageUrl: "1506" },
+                { id: "e", imageUrl: "1506" },
+                { id: "f", imageUrl: "1506" },
+              ],
+              damage: 42257,
+              gold: 22123,
+              win: true,
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

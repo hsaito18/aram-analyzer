@@ -1,0 +1,97 @@
+.matchHistoryShortGrid {
+  border-radius: 12px;
+  border: 8px solid darkgray;
+  width: 95%;
+  padding: 0.25rem;
+  display: grid;
+  grid-template-rows: 1fr 0.9fr;
+  grid-template-columns: 3rem 1rem 5rem 8rem 1fr;
+  grid-template-areas:
+    "champPic champSpells champKDA champStats date"
+    "champPic champSpells champItems champItems duration";
+}
+
+.matchHistoryChampIcon {
+  grid-area: champPic;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.matchHistoryChampSpells {
+  grid-area: champSpells;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.matchHistorySpellIcon {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+}
+
+.matchHistoryKDA {
+  grid-area: champKDA;
+  font-size: 1rem;
+  padding-left: 0.25rem;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 0.5rem;
+}
+
+.matchHistoryChampStats {
+  grid-area: champStats;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.champStat {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 0.5rem;
+}
+
+.matchHistoryDamageIcon,
+.matchHistoryGoldIcon {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.matchHistoryShortIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.matchHistoryItems {
+  grid-area: champItems;
+  padding-left: 0.25rem;
+}
+
+.matchHistoryItemIcon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.matchHistoryDate,
+.matchHistoryTime {
+  font-size: 0.75rem;
+}
+
+.matchHistoryInfo {
+  grid-area: date;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+
+.matchHistoryDuration {
+  grid-area: duration;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  justify-content: flex-end;
+}

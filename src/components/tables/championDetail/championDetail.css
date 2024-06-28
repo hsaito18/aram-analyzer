@@ -80,7 +80,7 @@
   align-items: center;
 }
 
-#gameHighsTitle {
+.champDetailSubtitle {
   width: 100%;
   font-weight: bold;
 }
