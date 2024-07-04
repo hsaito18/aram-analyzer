@@ -172,6 +172,7 @@ export const generateChampionGraphic = async (
   const reactComp = React.createElement(ChampionDetail, {
     champData: champRow,
     navigateFunction: () => {},
+    isGraphic: true,
   });
   const output =
     '<div id="playerTitle">' +
@@ -184,7 +185,9 @@ export const generateChampionGraphic = async (
     "src/main.css",
     "src/components/tables/championDetail/championDetail.css",
     "src/components/tables/championDetail/championDetailGraphic.css",
+    "src/components/matchHistory/matchHistoryShort/matchHistoryShort.css",
+    "src/components/match/match.css",
   ];
 
-  return generateGraphic(output, cssFilePaths, 1480, 440);
+  return generateGraphic(output, cssFilePaths, 1600, 560);
 };

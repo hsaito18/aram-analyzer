@@ -15,6 +15,7 @@ export interface SingleChampStats {
   stats: DetailedChampStats;
   totalStats: TotalChampStats;
   highs: ChampHighs;
+  matchHistory: MatchHistory[];
 }
 
 export interface DetailedChampStats {
@@ -99,6 +100,22 @@ export interface Superlative {
   matchId: string;
   date: number;
   champName: string;
+}
+
+export interface MatchHistory {
+  matchId: string;
+  champName: string;
+  win: boolean;
+  kills: number;
+  deaths: number;
+  assists: number;
+  damage: number;
+  gold: number;
+  gameCreationTime: number;
+  gameDuration: number;
+  spell1: string;
+  spell2: string;
+  items: { id: string; imageUrl: string }[];
 }
 
 export interface TeamStats {

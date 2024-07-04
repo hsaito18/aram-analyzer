@@ -1,25 +1,26 @@
 import { Box } from "@mui/material";
+import { MatchHistory } from "../../../api/players/player.interface";
 import "./matchHistoryShort.css";
 
 export default function MatchHistoryShort({
-  participant,
+  data,
   matchId,
   matchNavigateFunction = () => {},
 }: {
-  participant: any;
+  data: MatchHistory;
   matchId: string;
   matchNavigateFunction?: (id: string) => void;
 }) {
   function handleClick() {
     matchNavigateFunction(matchId);
   }
-  const dateObj = new Date(Number(participant.gameCreationTime));
+  const dateObj = new Date(Number(data.gameCreationTime));
   const stringDate = dateObj.toLocaleDateString();
   const stringTime = dateObj.toLocaleString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
-  const stringDuration = matchTimeFormatter(participant.gameDuration);
+  const stringDuration = matchTimeFormatter(data.gameDuration);
 
   function matchTimeFormatter(seconds: number, roundToSeconds = true): string {
     const minutes = Math.floor(seconds / 60);
@@ -41,27 +42,30 @@ export default function MatchHistoryShort({
       <Box
         onClick={handleClick}
         className="matchHistoryShortGrid"
-        sx={{ backgroundColor: participant.win ? "lightblue" : "salmon" }}
+        sx={{ backgroundColor: data.win ? "#395CB5" : "salmon" }}
       >
         <div className="matchHistoryChampIcon">
           <img
             className="championIcon"
-            src={`static://assets/champion_icons/${participant.championName}.jpg`}
+            src={`static://assets/champion_icons/${data.champName}.jpg`}
           ></img>
         </div>
 
         <div className="matchHistoryChampSpells">
           <img
             className="matchHistorySpellIcon"
-            src={`static://assets/summoner_spells/${participant.spell1}.png`}
+            src={`static://assets/summoner_spells/${data.spell1}.png`}
           />
           <img
             className="matchHistorySpellIcon"
-            src={`static://assets/summoner_spells/${participant.spell2}.png`}
+            src={`static://assets/summoner_spells/${data.spell2}.png`}
           />
         </div>
-        <div className="matchHistoryKDA">
-          {participant.kills}/{participant.deaths}/{participant.assists}
+        <div className="matchHistoryKDA champStat">
+          <div className="kdaText">KDA</div>
+          <div>
+            {data.kills}/{data.deaths}/{data.assists}
+          </div>
         </div>
         <div className="matchHistoryChampStats">
           <div className="champDamage champStat">
@@ -71,7 +75,7 @@ export default function MatchHistoryShort({
                 src="static://assets/match/icon_damage.png"
               />
             </div>
-            {statFormatter(participant.damage)}
+            {statFormatter(data.damage)}
           </div>
           <div className="champGold champStat">
             <div className="matchHistoryGoldIcon">
@@ -80,11 +84,11 @@ export default function MatchHistoryShort({
                 src="static://assets/match/icon_gold_single.png"
               />
             </div>
-            {statFormatter(participant.gold)}
+            {statFormatter(data.gold)}
           </div>
         </div>
         <div className="matchHistoryItems">
-          {participant.items.map((item: any, index: number) => (
+          {data.items.map((item: any, index: number) => (
             <img
               key={item.id}
               className="matchHistoryItemIcon"

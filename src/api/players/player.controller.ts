@@ -8,6 +8,7 @@ import {
   TotalChampStats,
   ChampHighs,
   PlayerHighs,
+  MatchHistory,
   TeamStats,
   PlayerStats,
   getBlankPlayerStats,
@@ -28,8 +29,8 @@ import {
 import { analyzeMatchLineup } from "../lineups/lineup.controller";
 import { mergeAverages, mergeTotals, mergeChampHighs } from "../object.service";
 import { ChampionClasses, Classes } from "../../static/championClasses";
+import { summonerSpells } from "../../static/summonerSpells";
 import { RIOT_API_KEY } from "../../config/API_KEY/apiConfig";
-import { loadFile, saveFile } from "../fs.service";
 import * as db from "../db/index";
 import axios from "axios";
 import log from "electron-log/main";
@@ -572,6 +573,56 @@ export const getChampionHighs = async (
   return out;
 };
 
+export const getChampMatchHistories = async (puuid: string) => {
+  const { rows } = await queryDB(
+    `SELECT 
+      Participants."championName", 
+      Participants."win", 
+      Participants."kills", Participants."deaths", Participants."assists",
+      Participants."totalDamageDealtToChampions", Participants."goldEarned",
+      Matches."gameCreation", Matches."gameDuration",
+      Participants."summoner1Id", Participants."summoner2Id",
+      Participants."item0", Participants."item1", Participants."item2", 
+      Participants."item3", Participants."item4", Participants."item5",
+      Matches."match_id"
+    FROM Participants
+    INNER JOIN Matches ON Participants.match_id = Matches.match_id
+    WHERE
+      Participants.puuid = $1
+    ORDER BY Matches."gameCreation" DESC`,
+    [puuid]
+  );
+  const out: { [key: string]: MatchHistory[] } = {};
+  for (const row of rows) {
+    if (!(row["championName"] in out)) {
+      out[row["championName"]] = [];
+    }
+    out[row["championName"] as keyof typeof out].push({
+      champName: row["championName"],
+      win: row["win"],
+      kills: row["kills"],
+      deaths: row["deaths"],
+      assists: row["assists"],
+      damage: row["totalDamageDealtToChampions"],
+      gold: row["goldEarned"],
+      gameCreationTime: row["gameCreation"],
+      gameDuration: row["gameDuration"],
+      spell1: summonerSpells[row["summoner1Id"] as keyof typeof summonerSpells],
+      spell2: summonerSpells[row["summoner2Id"] as keyof typeof summonerSpells],
+      items: [
+        { id: "0", imageUrl: row["item0"] },
+        { id: "1", imageUrl: row["item1"] },
+        { id: "2", imageUrl: row["item2"] },
+        { id: "3", imageUrl: row["item3"] },
+        { id: "4", imageUrl: row["item4"] },
+        { id: "5", imageUrl: row["item5"] },
+      ],
+      matchId: row["match_id"],
+    });
+  }
+  return out;
+};
+
 export const getPlayerClassWinRates = async (
   puuid: string
 ): Promise<ClassWinRates> => {
@@ -668,6 +719,9 @@ const generateChampionStats = async (
   champTotalStats: ChampionTotals[],
   champHighStats: ChampionHighs[]
 ): Promise<ChampStats> => {
+  const matchHistories = await getChampMatchHistories(
+    champAverageStats[0].puuid
+  );
   const champStats: ChampStats = {};
   for (const champ of champAverageStats) {
     const champName = champ.champName;
@@ -680,6 +734,7 @@ const generateChampionStats = async (
     if (champHigh === undefined) {
       champHigh = getBlankChampHighs();
     }
+    const champMatchHistory = matchHistories[champName] || [];
     champStats[champName] = {
       wins: champTotal.wins,
       losses: champTotal.losses,
@@ -688,6 +743,7 @@ const generateChampionStats = async (
       stats: champ,
       totalStats: champTotal,
       highs: champHigh,
+      matchHistory: champMatchHistory,
     };
   }
   return champStats;
@@ -1457,9 +1513,8 @@ export const analyzePlayerMatches = async (
   status = `Downloading matches for ${player.gameName}#${player.tagLine}...`;
   await downloadMatches(player.matches);
   status = `Analyzing matches for ${player.gameName}#${player.tagLine}...`;
-  // vv Maybe we can rewrite this with another SQL request every time. vv
-  const currentResults = []; // This should work as long as all the games that have not been analyzed are all newer than all the analyzed games
-  for (const match of player.matches) {
+  const reversedMatches = player.matches.slice().reverse();
+  for (const match of reversedMatches) {
     if (player.analyzedMatches.includes(match)) continue;
     const matchData = await getMatchData(match);
     if (!matchData) continue;
@@ -1526,6 +1581,30 @@ export const analyzePlayerMatches = async (
       }
     }
 
+    const matchHistoryObj = {
+      champName: champion,
+      win,
+      matchId: match,
+      kills: participant.kills,
+      deaths: participant.deaths,
+      assists: participant.assists,
+      damage: participant.totalDamageDealtToChampions,
+      gold: participant.goldEarned,
+      spell1:
+        summonerSpells[participant.summoner1Id as keyof typeof summonerSpells],
+      spell2:
+        summonerSpells[participant.summoner2Id as keyof typeof summonerSpells],
+      items: [
+        { id: "0", imageUrl: String(participant.item0) },
+        { id: "1", imageUrl: String(participant.item1) },
+        { id: "2", imageUrl: String(participant.item2) },
+        { id: "3", imageUrl: String(participant.item3) },
+        { id: "4", imageUrl: String(participant.item4) },
+        { id: "5", imageUrl: String(participant.item5) },
+      ],
+      gameCreationTime: matchData.info.gameCreation,
+      gameDuration: matchData.info.gameDuration,
+    };
     if (champStats[champion]) {
       champStats[champion].wins += win ? 1 : 0;
       champStats[champion].losses += win ? 0 : 1;
@@ -1543,6 +1622,7 @@ export const analyzePlayerMatches = async (
         (champStats[champion].stats.killsPerGame +
           champStats[champion].stats.assistsPerGame) /
         champStats[champion].stats.deathsPerGame;
+      champStats[champion].matchHistory.push(matchHistoryObj);
     } else {
       champStats[champion] = {
         wins: win ? 1 : 0,
@@ -1552,13 +1632,14 @@ export const analyzePlayerMatches = async (
         totalStats: currentTotalStats,
         stats: detailedChampStats,
         highs: currentHighs,
+        matchHistory: [matchHistoryObj],
       };
     }
     playerStats.wins += win ? 1 : 0;
     playerStats.losses += win ? 0 : 1;
     playerStats.winRate =
       (playerStats.wins / (playerStats.wins + playerStats.losses)) * 100;
-    currentResults.push(win ? 1 : 0);
+    playerStats.results.push(win ? 1 : 0);
     mergeTotals(playerStats.teammates, teammatesWinObject);
     mergeAverages(
       playerStats.stats,
@@ -1572,11 +1653,8 @@ export const analyzePlayerMatches = async (
       (playerStats.stats.killsPerGame + playerStats.stats.assistsPerGame) /
       playerStats.stats.deathsPerGame;
     player.analyzedMatches.push(match);
-    player.playerStats.lastUpdatedTime = Date.now();
+    playerStats.lastUpdatedTime = Date.now();
   }
-  player.playerStats.results = currentResults.concat(
-    player.playerStats.results
-  );
   const winStreaksObj = analyzeWinStreaks(player.playerStats.results);
   player.playerStats.highs.longestWinStreak = winStreaksObj.longestWinStreak;
   player.playerStats.highs.longestLossStreak = winStreaksObj.longestLossStreak;

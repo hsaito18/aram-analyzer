@@ -57,9 +57,11 @@ const MULTIKILL_NAME_MAP: { [key: number]: keyof TotalChampStats } = {
 export default function ChampionDetail({
   champData,
   navigateFunction,
+  isGraphic = false,
 }: {
   champData: champRow;
   navigateFunction: (matchId: string) => void;
+  isGraphic?: boolean;
 }) {
   let biggestMultikillText = champData.highs.biggestMultikill.value.toString();
   const biggestMultikillName =
@@ -75,24 +77,32 @@ export default function ChampionDetail({
     biggestMultikillText = `${biggestMultikillText} (x${highestMultkillOccurrences})`;
   }
 
+  const limitedMatchHistory = isGraphic
+    ? champData.matchHistory.slice(0, 5)
+    : champData.matchHistory;
+
   return (
     <div id="champDetailMain">
-      <div id="picRow">
-        <h1 id="champTitle"> {champData.champName}</h1>
-        <img
-          id="champPic"
-          src={`static://assets/champion/${champData.champName}_0.jpg`}
-        ></img>
-        <div id="picStatsRow">
-          <div id="wlRow">
-            <h3>W: {champData.wins}</h3>
-            <h3>L: {champData.losses}</h3>
-            <h3>WR: {Number(champData.winRate).toFixed(0)}%</h3>
-            <h3>KDA: {Number(champData.stats.kda).toFixed(2)}</h3>
+      <div id="picRowContainer">
+        <div id="picRow">
+          <h1 id="champTitle"> {champData.champName}</h1>
+          <img
+            id="champPic"
+            src={`static://assets/champion/${champData.champName}_0.jpg`}
+          ></img>
+          <div id="picStatsRow">
+            <div id="wlRow">
+              <h3>W: {champData.wins}</h3>
+              <h3>L: {champData.losses}</h3>
+              <h3>WR: {Number(champData.winRate).toFixed(0)}%</h3>
+              <h3>KDA: {Number(champData.stats.kda).toFixed(2)}</h3>
+            </div>
           </div>
         </div>
       </div>
+
       <div id="statsRow">
+        <div className="champDetailSubtitle">Basic Stats</div>
         <table className="champStatsTable" id="perGameStats">
           <thead>
             <tr>
@@ -253,7 +263,7 @@ export default function ChampionDetail({
         <table id="highlightsTable">
           <thead>
             <tr>
-              <th></th>
+              <th>&nbsp;</th>
               <th></th>
               <th></th>
             </tr>
@@ -481,31 +491,18 @@ export default function ChampionDetail({
       </div>
       <div id="matchHistoryRow">
         <div className="champDetailSubtitle">Match History</div>
-        <div id="matchHistoryPanel">
-          <MatchHistoryShort
-            matchId="NA1_asdasdasd"
-            participant={{
-              championName: "Corki",
-              kills: 15,
-              deaths: 10,
-              assists: 40,
-              gameCreationTime: Date.now(),
-              gameDuration: 1105,
-              spell1: "SummonerSnowball",
-              spell2: "SummonerFlash",
-              items: [
-                { id: "a", imageUrl: "1506" },
-                { id: "b", imageUrl: "1506" },
-                { id: "c", imageUrl: "1506" },
-                { id: "d", imageUrl: "1506" },
-                { id: "e", imageUrl: "1506" },
-                { id: "f", imageUrl: "1506" },
-              ],
-              damage: 42257,
-              gold: 22123,
-              win: true,
-            }}
-          />
+        <div
+          id="matchHistoryPanel"
+          className={isGraphic ? "" : "scrollEnabled"}
+        >
+          {limitedMatchHistory.map((match) => (
+            <MatchHistoryShort
+              key={match.matchId}
+              data={match}
+              matchId={match.matchId}
+              matchNavigateFunction={navigateFunction}
+            />
+          ))}
         </div>
       </div>
     </div>

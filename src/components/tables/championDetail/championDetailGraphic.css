@@ -12,16 +12,15 @@
   font-size: 1.5rem;
   padding-top: 4px;
   margin-bottom: -1rem;
-}
-
-#highlightsRow {
-  padding-top: 0.5rem;
-}
-
-#matchHistoryRow {
-  display: none !important;
+  transform: translateY(10vh);
 }
 
 .textHeader {
   text-align: left;
+}
+
+#matchHistoryPanel {
+  overflow: hidden !important;
+  transform: none !important;
+  width: 380px !important;
 }
